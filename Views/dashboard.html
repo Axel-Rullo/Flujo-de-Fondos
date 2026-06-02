@@ -1,0 +1,77 @@
+<header class="header">
+    <div class="header-title">
+        <img class="dashboard-logo" src="./Icons/logo.png" alt="Logo" width="72" height="72">
+        <h1>Flujo de Fondos</h1>
+    </div>
+    <aside class="accordion">
+
+        <div class="menu-group">
+            <button data-target="sub-movimientos">Movimientos <span class="chevron">▶</span></button>
+            <div id="sub-movimientos" class="submenu">
+                <a href="#">Subir</a>
+                <a href="#">Bajar</a>
+            </div>
+        </div>
+
+        <div class="menu-group">
+            <button data-target="sub-cheques">Cheques <span class="chevron">▶</span></button>
+            <div id="sub-cheques" class="submenu">
+                <div class="submenu-nivel2">
+                    <button data-target="sub-emitidos">Emitidos <span class="chevron">▶</span></button>
+                    <div id="sub-emitidos" class="submenu-nivel3-container">
+                        <a data-modal="Views/forms/1.html" href="#">1</a>
+                        <a href="#">2</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+</header>
+
+<nav class="nav">
+    <ul class="nav-list">
+        <li class="nav-item ff">
+            <button data-view="Views/queries/ff_anual.html">
+                <img src="./Icons/ff.png" alt="" height="48">
+            </button>
+        </li>
+        <li class="nav-item">
+            <button data-view="Views/queries/movimientos.html">Movimientos</button>
+        </li>
+        <li class="nav-item cheques">
+            <button data-target="sub-cheques-nav">Cheques</button>
+            <ul class="nav-submenu" id="sub-cheques-nav">
+                <li><a href="#" data-view="Views/queries/ch_a_cobrar.html">A Cobrar</a></li>
+                <li><a href="#" data-view="Views/queries/ch_emitidos.html">Emitidos</a></li>
+            </ul>
+        </li>
+        <li class="nav-item">
+            <button data-view="Views/queries/cuentas.html">Cuentas</button>
+        </li>
+        <li class="nav-item">
+            <button data-view="Views/queries/operaciones.html">Operaciones</button>
+        </li>
+        <li class="nav-item calendario">
+            <button>
+                <img src="./Icons/calendario.png" alt="" height="48">
+            </button>
+        </li>
+    </ul>
+</nav>
+
+<main id="content" class="main"></main>
+
+<!-- ─── MODAL ─── -->
+<div id="modal-overlay" class="modal-overlay">
+
+    <div class="modal-box">
+        <button class="modal-close">&times;</button>
+
+        <div id="modal-body"></div>
+    </div>
+</div>
+
+<script src="Scripts/dashboard/menus.js"></script>
+<script src="Scripts/dashboard/nav.js"></script>
+<script src="Scripts/dashboard/modal.js"></script>

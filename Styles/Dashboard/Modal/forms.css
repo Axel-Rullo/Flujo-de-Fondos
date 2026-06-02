@@ -1,0 +1,99 @@
+/* ================================================================
+    ESTILOS GLOBALES PARA FORMULARIOS
+================================================================ */
+
+.form-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--white);
+    margin: 0 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--white);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.form-group input,
+.form-group select {
+    background: var(--white);
+    border: 2px solid transparent;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    color: var(--black);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.form-group input::placeholder {
+    color: var(--color-input);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--button-1);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 2px solid var(--white);
+}
+
+.btn {
+    width: 50%;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.btn:active {
+    transform: scale(0.96);
+}
+
+.btn-secondary {
+    background: var(--button-secundary-1);
+    color: var(--white);
+    border: 2px solid transparent;
+}
+
+.btn-secondary:hover {
+    background: transparent;
+    border: 2px solid var(--button-secundary-1);
+}
+
+.btn-primary {
+    background: var(--button-1);
+    color: var(--white);
+    border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+    background: transparent;
+    border: 2px solid var(--button-1);
+}

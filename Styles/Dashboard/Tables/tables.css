@@ -1,0 +1,71 @@
+.tabla-contenedor {
+    overflow-x: auto;
+}
+
+.tabla-flujo {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* ENCABEZADO */
+.tabla-flujo thead tr {
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+}
+
+.tabla-flujo th {
+    padding: 0.5rem 0.4rem;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.tabla-flujo thead th:not(:last-child) {
+    border-right: 1px solid var(--border-button-color-1);
+}
+
+/* CUERPO */
+.tabla-flujo tbody tr {
+    background-color: var(--white);
+    color: var(--black);
+    font-size: 0.82rem;
+    font-weight: bold;
+}
+
+.tabla-flujo td {
+    padding: 0.35rem 0.4rem;
+}
+
+.tabla-flujo tbody td,
+.tabla-flujo tfoot td {
+    border-right: 1px solid var(--black);
+    border-bottom: 1px solid var(--black);
+}
+
+.tabla-flujo tbody td:last-child,
+.tabla-flujo tfoot td:last-child {
+    border-right: none;
+}
+
+.tabla-flujo tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* PIE DE TABLA */
+.tabla-flujo tfoot tr {
+    background: var(--black);
+    color: var(--white);
+    font-weight: bold;
+}
+
+.tabla-flujo tfoot td {
+    padding: 0.55rem 0.4rem;
+    font-size: 0.85rem;
+    border-bottom: none;
+}
+
+.tabla-flujo tfoot td:not(:last-child) {
+    border-right: 1px solid var(--border-button-color-1);
+}

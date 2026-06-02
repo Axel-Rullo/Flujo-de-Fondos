@@ -1,0 +1,40 @@
+:root {
+    /* ── COLORES ───────────────────────────────────────────────────── */
+    --white: white;
+    --black: black;
+
+    /* ── TITLEBAR ──────────────────────────────────────────────────── */
+    --titlebar-bg:           #0b121e;
+    --titlebar-border:       rgba(255, 255, 255, 0.05);
+    --titlebar-icon:         rgba(255, 255, 255, 0.6);
+    --titlebar-icon-hover:   rgba(255, 255, 255, 1);
+    --titlebar-btn-hover:    rgba(255, 255, 255, 0.08);
+    --titlebar-btn-active:   rgba(255, 255, 255, 0.15);
+    --titlebar-close-hover:  red;
+    --titlebar-close-active: #f1707a;
+
+    /* ── FORMULARIOS ────────────────────────────────────────────────── */
+    --form-label:           #555;
+    --form-input-bg:        #f9f9f9;
+    --form-input-border:    #ddd;
+    --form-input-focus:     #4a7cdc;
+    --form-input-error:     #e74c3c;
+    --form-radius:          8px;
+    --form-gap:             16px;
+    --form-group-gap:       6px;
+    --form-transition:      0.2s ease;
+
+    /* ── TEMA PRINCIPAL ────────────────────────────────────────────── */
+    --background-1: #111C2E;
+
+    --button-1: #2DD4BF;
+
+    --button-secundary-1: #0d1319;
+
+    --button-hover-1: #1A2740;
+
+    /* ── NAV ───────────────────────────────────────────────────────── */
+    --border-button-color-1: rgba(255, 255, 255, 0.4);
+
+    --color-input: #666;
+}

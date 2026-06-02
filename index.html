@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEGURITY -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' file:;">
+
+    <!-- FONTS FAMILY (Dancing+Script y Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- THEME -->
+    <link rel="stylesheet" href="./Theme/theme.css">
+
+    <!-- STYLES -->
+    <link rel="stylesheet" href="./Styles/Body/body.css">
+    <link rel="stylesheet" href="./Styles/Body/titlebar.css">
+    <link rel="stylesheet" href="./Styles/Dashboard/Header/header.css">
+    <link rel="stylesheet" href="./Styles/Dashboard/Header/menus.css">
+    <link rel="stylesheet" href="./Styles/Dashboard/Nav/nav.css">
+    <link rel="stylesheet" href="./Styles/Dashboard/Tables/tables.css">
+    <link rel="stylesheet" href="./Styles/Login/login.css">
+    <link rel="stylesheet" href="./Styles/Dashboard/Modal/modal.css">
+    <link rel="stylesheet" href="./Styles/Dashboard/Modal/forms.css">
+</head>
+
+<body>
+    <div id="titlebar">
+        <div class="tb-controls">
+            <button class="tb-btn minimize" aria-label="Minimizar">
+                <svg width="12" height="12" viewBox="0 0 12 12"><line x1="1.5" y1="6" x2="10.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </button>
+            <button class="tb-btn maximize" aria-label="Maximizar">
+                <svg class="icon-maximize" width="12" height="12" viewBox="0 0 12 12"><rect fill="none" stroke="currentColor" stroke-width="1.2" x="2" y="2" width="8" height="8" rx="0.5"/></svg>
+                <svg class="icon-restore" style="display:none;" width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M4 2h6v6M2 4h6v6H2z"/></svg>
+            </button>
+            <button class="tb-btn close" aria-label="Cerrar">
+                <svg width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" d="M2.5 2.5l7 7m-7 0l7-7"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div id="app"></div>
+
+    <!-- Precarga de imágenes para evitar flash -->
+    <div style="display:none;">
+        <img src="./Icons/logo.png" alt="">
+        <img src="./Icons/ff.png" alt="">
+        <img src="./Icons/calendario.png" alt="">
+        <img src="./Icons/eyes.png" alt="">
+        <img src="./Icons/buscador.png" alt="">
+    </div>
+
+    <script src="router.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+/* ── BARRA DE TÍTULO ──────────────────────────────────────────── */
+
+#titlebar {
+    -webkit-app-region: drag;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 38px;
+    padding: 0 12px;
+    background-color: var(--titlebar-bg);
+    border-bottom: 1px solid var(--titlebar-border);
+    flex-shrink: 0;
+    user-select: none;
+}
+
+#titlebar .tb-controls {
+    -webkit-app-region: no-drag;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+#titlebar .tb-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--titlebar-icon);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+#titlebar .tb-btn svg { display: block; }
+
+#titlebar .tb-btn:hover {
+    color: var(--titlebar-icon-hover);
+    background-color: var(--titlebar-btn-hover);
+}
+
+#titlebar .tb-btn:active {
+    background-color: var(--titlebar-btn-active);
+}
+
+#titlebar .tb-btn.close:hover  { background-color: var(--titlebar-close-hover);  color: var(--white); }
+#titlebar .tb-btn.close:active { background-color: var(--titlebar-close-active); color: var(--white); }

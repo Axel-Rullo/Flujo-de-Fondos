@@ -1,0 +1,39 @@
+<style>
+    .tabla-flujo tbody td:nth-child(1) {
+        text-align: center;
+    }
+</style>
+
+<div class="tabla-contenedor">
+    <table class="tabla-flujo">
+        <thead>
+            <tr>
+                <th style="width:10%">Fecha</th>
+                <th style="width:45%">Operación</th>
+                <th style="width:45%">Observación</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>01/01/25</td><td>La empresa cuenta con un saldo inicial de $1.000.000, conformado por $400.000 en efectivo, $200.000 en Cheque del Banco El Tornillo al 30/12/24 y $400.000 en la cta. cte. del Banco El Tornillo</td><td></td></tr>
+            <tr><td>10/01/25</td><td>Compra de mercaderías por $50.000, se abona mediante transferencia bancaria</td><td></td></tr>
+            <tr><td>10/01/25</td><td>Se abonan los sueldos adeudados de noviembre por $20.000 mediante transferencia bancaria</td><td></td></tr>
+            <tr><td>05/02/25</td><td>Se vende mercaderías por $80.000, se cobra en efectivo. Cliente Boca</td><td></td></tr>
+            <tr><td>07/02/25</td><td>Se vende mercaderías por $60.000 a 30 días. Cliente River</td><td>No impacta en el FFn de febrero</td></tr>
+            <tr><td>20/02/25</td><td>Se vende mercaderías por $100.000, se recibe cheque N° 1 del Banco Macro con vencimiento el 30/03. Cliente Boca</td><td>Impacta en el FFn de marzo</td></tr>
+            <tr><td>20/02/25</td><td>Se vende mercaderías por $200.000, se recibe cheque N° 2 del NBSF con vencimiento el 30/04. Cliente River</td><td></td></tr>
+            <tr><td>28/02/25</td><td>Se compra mercaderías al proveedor XX por $200.000, se abona mediante endoso del cheque N° 2 recibido del cliente River</td><td>Impacta en el FFn de febrero porque se utiliza antes de su vto. para pagar, debe entrar y salir en el flujo en esa fecha</td></tr>
+            <tr><td>07/03/25</td><td>El cliente River cancela su saldo adeudado por $60.000 en efectivo</td><td></td></tr>
+            <tr><td>10/03/25</td><td>Se compra mercaderías al proveedor XX por $25.000 con cheque propio N° 1 del BNA con vto. 10/04/25</td><td>Impacta en el FFn de abril</td></tr>
+            <tr><td>30/03/25</td><td>Se cobra el cheque N° 1 recibido del cliente Boca por $100.000</td><td></td></tr>
+            <tr><td>10/04/25</td><td>Vence cheque N° 1 emitido para abonar al proveedor XX por $25.000</td><td></td></tr>
+            <tr><td>15/04/25</td><td>Se vende mercaderías por $150.000, se cobra mediante transferencia bancaria. Cliente Boca</td><td></td></tr>
+            <tr><td>20/04/25</td><td>Se abona alquiler del local comercial por $30.000 mediante transferencia bancaria</td><td></td></tr>
+            <tr><td>30/04/25</td><td>Se cobra cheque N° 2 del NBSF recibido del cliente River por $200.000</td><td></td></tr>
+            <tr><td>05/05/25</td><td>Se abona cuota de préstamo bancario por $40.000 mediante débito automático. Banco Nación</td><td></td></tr>
+            <tr><td>10/05/25</td><td>Se compra rodado por $500.000, se abona $200.000 en efectivo y el saldo en 3 cuotas mensuales</td><td>El pago en cuotas impacta en los FFn de junio, julio y agosto</td></tr>
+            <tr><td>20/05/25</td><td>El cliente Boca cancela saldo adeudado por $60.000 mediante transferencia bancaria</td><td></td></tr>
+            <tr><td>31/05/25</td><td>Se abonan sueldos de mayo por $25.000 mediante transferencia bancaria</td><td></td></tr>
+            <tr><td>10/06/25</td><td>Vence primera cuota del rodado adquirido, se debita $100.000 de la cta. cte. del Banco Nación</td><td></td></tr>
+        </tbody>
+    </table>
+</div>

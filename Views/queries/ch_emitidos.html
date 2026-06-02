@@ -1,0 +1,89 @@
+<style>
+    .cheques .layout {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 8px;
+        align-items: start;
+    }
+
+    .cheques .tabla-flujo tbody td:nth-child(1),
+    .cheques .tabla-flujo tbody td:nth-child(2) {
+        text-align: center;
+    }
+
+    .cheques .resumen-card {
+        position: sticky;
+        top: 0;
+    }
+
+    .cheques .btn-resumen {
+        margin-bottom: 0.5rem;
+        padding: 0.35rem 0.75rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.82rem;
+        font-weight: bold;
+        background: var(--black);
+        color: var(--white);
+        border: none;
+        cursor: pointer;
+    }
+
+    .cheques .btn-resumen:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<div class="cheques">
+    <div class="tabla-contenedor">
+        <div class="layout">
+
+            <table class="tabla-flujo">
+                <thead>
+                    <tr>
+                        <th style="width:8%">Año</th>
+                        <th style="width:15%">Fecha de Cobro</th>
+                        <th style="width:20%">Banco</th>
+                        <th style="width:15%">Número</th>
+                        <th style="width:15%">Monto</th>
+                        <th style="width:30%">Destino</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>2025</td><td>10/04/25</td><td>BNA</td><td>1</td><td>$25.000</td><td>Proveedor XX</td></tr>
+                    <tr><td>2025</td><td>15/04/25</td><td>MACRO</td><td>2</td><td>$30.000</td><td>Proveedor AA</td></tr>
+                    <tr><td>2025</td><td>20/04/25</td><td>GALICIA</td><td>3</td><td>$18.000</td><td>Proveedor BB</td></tr>
+                    <tr><td>2025</td><td>25/04/25</td><td>NBSF</td><td>4</td><td>$42.000</td><td>Proveedor CC</td></tr>
+                    <tr><td>2025</td><td>30/04/25</td><td>SANTANDER</td><td>5</td><td>$15.000</td><td>Proveedor DD</td></tr>
+                    <tr><td>2025</td><td>05/05/25</td><td>BBVA</td><td>6</td><td>$60.000</td><td>Proveedor EE</td></tr>
+                    <tr><td>2025</td><td>10/05/25</td><td>BNA</td><td>7</td><td>$22.000</td><td>Proveedor FF</td></tr>
+                    <tr><td>2025</td><td>15/05/25</td><td>MACRO</td><td>8</td><td>$38.000</td><td>Proveedor GG</td></tr>
+                    <tr><td>2025</td><td>20/05/25</td><td>GALICIA</td><td>9</td><td>$11.000</td><td>Proveedor HH</td></tr>
+                    <tr><td>2025</td><td>25/05/25</td><td>NBSF</td><td>10</td><td>$55.000</td><td>Proveedor II</td></tr>
+                    <tr><td>2025</td><td>30/05/25</td><td>SANTANDER</td><td>11</td><td>$29.000</td><td>Proveedor JJ</td></tr>
+                    <tr><td>2025</td><td>04/06/25</td><td>BBVA</td><td>12</td><td>$47.000</td><td>Proveedor KK</td></tr>
+                    <tr><td>2025</td><td>09/06/25</td><td>BNA</td><td>13</td><td>$33.000</td><td>Proveedor LL</td></tr>
+                    <tr><td>2025</td><td>14/06/25</td><td>MACRO</td><td>14</td><td>$19.000</td><td>Proveedor MM</td></tr>
+                    <tr><td>2025</td><td>19/06/25</td><td>GALICIA</td><td>15</td><td>$72.000</td><td>Proveedor NN</td></tr>
+                    <tr><td>2025</td><td>24/06/25</td><td>NBSF</td><td>16</td><td>$14.000</td><td>Proveedor OO</td></tr>
+                    <tr><td>2025</td><td>29/06/25</td><td>SANTANDER</td><td>17</td><td>$51.000</td><td>Proveedor PP</td></tr>
+                    <tr><td>2025</td><td>04/07/25</td><td>BBVA</td><td>18</td><td>$26.000</td><td>Proveedor QQ</td></tr>
+                    <tr><td>2025</td><td>09/07/25</td><td>BNA</td><td>19</td><td>$44.000</td><td>Proveedor RR</td></tr>
+                    <tr><td>2025</td><td>14/07/25</td><td>MACRO</td><td>20</td><td>$37.000</td><td>Proveedor SS</td></tr>
+                </tbody>
+            </table>
+
+            <div class="resumen-card">
+                <table class="tabla-flujo">
+                    <thead>
+                        <tr><th colspan="2">Totales</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>CH Vencidos</td><td>$25.000</td></tr>
+                        <tr><td>CH a Vencer</td><td>$0</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div id="login" class="login">
+    <div class="login-card">
+        <div class="login-title">
+            <img class="login-logo" src="./Icons/logo.png" alt="Logo" width="75" height="75">
+            <h1>Flujo de Fondos</h1>
+        </div>
+        <form id="login-form" class="login-form">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Contraseña:</label>
+            <div class="password-container">
+                <input id="password" class="password-input" type="password" name="password" required>
+                <button type="button" id="toggle-password" class="toggle-password">
+                    <img src="./Icons/eyes.png" alt="Mostrar contraseña" width="48" height="48">
+                </button>
+            </div>
+
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+    </div>
+</div>
+
+<script src="Scripts/Login/view_password.js"></script>
+<script src="Scripts/Login/login.js"></script>
