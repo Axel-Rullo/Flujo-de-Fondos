@@ -30,11 +30,12 @@
 .tabla-flujo tbody tr {
     background-color: var(--white);
     color: var(--black);
-    font-size: 0.82rem;
+    font-size: 0.70rem;
     font-weight: bold;
 }
 
 .tabla-flujo td {
+    font-size: 0.70rem;
     padding: 0.35rem 0.4rem;
 }
 
@@ -62,10 +63,14 @@
 
 .tabla-flujo tfoot td {
     padding: 0.55rem 0.4rem;
-    font-size: 0.85rem;
+    font-size: 0.70rem;
     border-bottom: none;
 }
 
 .tabla-flujo tfoot td:not(:last-child) {
     border-right: 1px solid var(--border-button-color-1);
+}
+
+.letra {
+    font-size: 0.80rem!important;
 }
