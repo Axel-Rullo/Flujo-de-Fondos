@@ -54,12 +54,16 @@
 
 .login-form input {
     border: 3px solid transparent;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.15);
     color: var(--black);
     background-color: var(--white);
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .login-form input:focus {
-    border-color: var(--button-1);
+    border-color: transparent;
+    border-bottom-color: var(--button-1);
+    box-shadow: 0 2px 0 0 var(--button-1);
     outline: none;
 }
 

@@ -1,8 +1,97 @@
 <style>
-    .tabla-flujo tbody td:last-child {
-        background-color: rgb(229, 229, 229);
+    .report-header {
+        background-color: transparent;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-wrap: wrap;
+        margin: 0.5rem 0;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        font-weight: bold;
+        width: auto;
+    }
+
+    .date {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        width: auto;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .report-group {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        width: auto;
+        padding: 0.50rem 0;
+    }
+
+    .report-group:last-child {
+        margin-right: 1rem;
+    }
+
+    .report-group label {
+        white-space: nowrap;
+        font-weight: bold;
+    }
+
+    .report-group input,
+    .report-group select {
+        font-size: 0.85rem;
+        min-width: 9.3rem;
+        padding: 0.50rem;
+    }
+
+    .report-group input:last-child {
+        margin-right: 1rem;
+    }
+
+    .report-group input[type="checkbox"] {
+        min-width: auto;
+        width: 1.1rem;
+        height: 1.1rem;
+        cursor: pointer;
     }
 </style>
+
+<div>
+    <div class="report-header">
+        <h2 class="subtitle">Reporte Periódico</h2>
+        <div class="date">
+            <div class="report-group">
+                <label for="month">Mes</label>
+                <select id="month" name="month">
+                    <option value="1">Todos</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+
+            <div class="report-group">
+                <label for="anio">Año</label>
+                <input type="number" id="anio" name="anio" placeholder="2026">
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="tabla-contenedor">
     <table class="tabla-flujo">
