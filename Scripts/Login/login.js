@@ -11,23 +11,30 @@ function iniciarLogin() {
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch('http://localhost:8080/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user: usuario, pass: password })
-            });
-
-            const data = await response.json();
+            const data = await apiPost('/login', { user: usuario, pass: password });
 
             if (data.ok) {
                 window.location.hash = 'dashboard';
             } else {
-                alert(data.mensaje);
+                mostrarError(data.mensaje);
             }
 
         } catch (error) {
-            alert('No se pudo conectar con el servidor.');
+            mostrarError('No se pudo conectar con el servidor.');
             console.error(error);
         }
     });
+}
+
+function mostrarError(mensaje) {
+    const errorP = document.getElementById('login-error');
+    if (!errorP) return;
+
+    errorP.textContent = mensaje;
+    errorP.classList.add('visible');
+
+    clearTimeout(errorP._timeout);
+    errorP._timeout = setTimeout(() => {
+        errorP.classList.remove('visible');
+    }, 4000);
 }
