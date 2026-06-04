@@ -11,7 +11,7 @@ public class Login {
 	
 	public static User login(String usuario, String password) {
 	
-	    String sql = "SELECT user, pass, nombre FROM usuarios WHERE user = ? AND pass = ?";
+	    String sql = "SELECT user, pass FROM usuarios WHERE user = ? AND pass = ?";
 	
 	    try (
 	        Connection conn = Conector.getConnection();
