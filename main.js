@@ -126,7 +126,7 @@ function createWindow() {
     win.on('move', saveState);
     win.on('close', saveState);
 
-    // win.webContents.openDevTools(); // desarrollo
+    // win.webContents.openDevTools(); // Solo en el desarrollo
 }
 
 //////////////////////////////////////////////
