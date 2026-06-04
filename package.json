@@ -28,7 +28,8 @@
             "Scripts/**/*",
             "Styles/**/*",
             "Theme/**/*",
-            "Views/**/*"
+            "Views/**/*",
+            "Backend/**/*"
         ],
         "win": {
             "target": "nsis",

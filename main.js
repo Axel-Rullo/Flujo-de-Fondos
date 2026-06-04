@@ -6,6 +6,7 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 const fs = require('node:fs');
+const { spawn } = require('child_process');
 
 Menu.setApplicationMenu(null);
 
@@ -58,6 +59,39 @@ function saveState() {
 }
 
 //////////////////////////////////////////////
+// ☕ BACKEND JAVA (SPRING / SPARK SERVER)
+//////////////////////////////////////////////
+
+let javaServer;
+
+function startJavaBackend() {
+    const backendDir = path.join(__dirname, 'Backend', 'Flujo de Fondos');
+    const mavenBin = path.join(require('os').homedir(), 'apache-maven-3.9.16', 'bin');
+    
+    const env = Object.assign({}, process.env);
+    env.PATH = `${mavenBin}${path.delimiter}${env.PATH}`;
+
+    // En desarrollo: usar mvn compile exec:java para compilar y ejecutar
+    javaServer = spawn('mvn', ['compile', 'exec:java'], {
+        cwd: backendDir,
+        shell: true,
+        env: env
+    });
+
+    javaServer.stdout.on('data', (data) => {
+        console.log(`JAVA: ${data}`);
+    });
+
+    javaServer.stderr.on('data', (data) => {
+        console.error(`JAVA ERROR: ${data}`);
+    });
+
+    javaServer.on('close', (code) => {
+        console.log(`Servidor Java cerrado con código ${code}`);
+    });
+}
+
+//////////////////////////////////////////////
 // 🪟 CREAR VENTANA PRINCIPAL
 //////////////////////////////////////////////
 
@@ -85,7 +119,6 @@ function createWindow() {
 
     win.loadFile(path.join(__dirname, 'index.html'));
 
-    // Eventos de estado de ventana
     win.on('maximize', () => win.webContents.send('window-state', 'maximized'));
     win.on('unmaximize', () => win.webContents.send('window-state', 'restored'));
 
@@ -93,7 +126,7 @@ function createWindow() {
     win.on('move', saveState);
     win.on('close', saveState);
 
-    // win.webContents.openDevTools(); // SOLO desarrollo
+    // win.webContents.openDevTools(); // desarrollo
 }
 
 //////////////////////////////////////////////
@@ -117,18 +150,14 @@ ipcMain.handle('window-is-maximized', () =>
 //////////////////////////////////////////////
 
 function setupAutoUpdater() {
-    // Buscar actualizaciones al iniciar
     autoUpdater.checkForUpdatesAndNotify();
 
-    // Eventos opcionales (debug / control)
     autoUpdater.on('update-available', () => {
         console.log("🔄 Actualización disponible");
     });
 
     autoUpdater.on('update-downloaded', () => {
         console.log("✅ Actualización descargada");
-        // Aquí podrías hacer auto-restart si quieres:
-        // autoUpdater.quitAndInstall();
     });
 
     autoUpdater.on('error', (err) => {
@@ -141,7 +170,14 @@ function setupAutoUpdater() {
 //////////////////////////////////////////////
 
 app.whenReady().then(() => {
+
+    // 1. INICIAR BACKEND JAVA
+    startJavaBackend();
+
+    // 2. INICIAR FRONTEND ELECTRON
     createWindow();
+
+    // 3. AUTO UPDATE
     setupAutoUpdater();
 
     app.on('activate', () => {
@@ -156,5 +192,12 @@ app.whenReady().then(() => {
 //////////////////////////////////////////////
 
 app.on('window-all-closed', () => {
+    if (javaServer && !javaServer.killed) {
+        if (process.platform === 'win32') {
+            require('child_process').spawn('taskkill', ['/pid', javaServer.pid, '/f', '/t']);
+        } else {
+            javaServer.kill();
+        }
+    }
     if (process.platform !== 'darwin') app.quit();
 });
