@@ -27,7 +27,7 @@ public class Login {
 	                User user = new User(
 	                    rs.getString("user"),
 	                    rs.getString("pass"),
-	                    rs.getString("nombre")
+                        null
 	                );
 	                
 	                return user;

@@ -21,7 +21,6 @@ public class LoginRoutes {
 
             if (user != null) {
                 respuesta.addProperty("ok", true);
-                respuesta.addProperty("nombre", user.getName());
             } else {
                 res.status(401);
                 respuesta.addProperty("ok", false);
