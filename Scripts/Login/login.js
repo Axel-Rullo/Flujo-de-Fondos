@@ -11,7 +11,7 @@ function iniciarLogin() {
         const password = document.getElementById('password').value;
 
         try {
-            const data = await apiPost('/login', { user: usuario, pass: password });
+            const data = await apiPost('/login', { usuario: usuario, password: password });
 
             if (data.ok) {
                 window.location.hash = 'dashboard';

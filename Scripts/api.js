@@ -2,23 +2,25 @@
 // 🌐 API - CONECTOR GLOBAL
 //////////////////////////////////////////////
 
-const API_URL = 'http://localhost:8080';
+const API_URL = "http://localhost:8080/api";
 
-async function apiPost(endpoint, body) {
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+async function apiPost(ruta, body) {
+    const response = await fetch(`${API_URL}${ruta}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
 
-    return await response.json();
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
 }
 
-async function apiGet(endpoint) {
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+async function apiGet(ruta) {
+    const response = await fetch(`${API_URL}${ruta}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
     });
 
-    return await response.json();
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
 }

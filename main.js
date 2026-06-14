@@ -6,6 +6,7 @@ const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 const fs = require('node:fs');
+const http = require('node:http');
 const { spawn } = require('child_process');
 
 Menu.setApplicationMenu(null);
@@ -65,17 +66,11 @@ function saveState() {
 let javaServer;
 
 function startJavaBackend() {
-    const backendDir = path.join(__dirname, 'Backend', 'Flujo de Fondos');
-    const mavenBin = path.join(require('os').homedir(), 'apache-maven-3.9.16', 'bin');
-    
-    const env = Object.assign({}, process.env);
-    env.PATH = `${mavenBin}${path.delimiter}${env.PATH}`;
+    const backendDir = path.join(__dirname, 'Backend', 'flujodefondos'); // 👈 carpeta nueva
 
-    // En desarrollo: usar mvn compile exec:java para compilar y ejecutar
-    javaServer = spawn('mvn', ['compile', 'exec:java'], {
+    javaServer = spawn('cmd', ['/c', 'mvnw.cmd spring-boot:run'], { // 👈 comando nuevo
         cwd: backendDir,
-        shell: true,
-        env: env
+        shell: false // 👈 false para evitar el warning de seguridad
     });
 
     javaServer.stdout.on('data', (data) => {
@@ -88,6 +83,28 @@ function startJavaBackend() {
 
     javaServer.on('close', (code) => {
         console.log(`Servidor Java cerrado con código ${code}`);
+    });
+}
+
+function waitForBackend(url = 'http://localhost:8080', timeout = 180000) {
+    return new Promise((resolve, reject) => {
+        const start = Date.now();
+
+        function check() {
+            const req = http.get(url, () => resolve());
+
+            req.on('error', () => {
+                if (Date.now() - start > timeout) {
+                    reject(new Error('Backend no respondió a tiempo'));
+                } else {
+                    setTimeout(check, 1000);
+                }
+            });
+
+            req.setTimeout(2000, () => req.destroy());
+        }
+
+        check();
     });
 }
 
@@ -169,15 +186,24 @@ function setupAutoUpdater() {
 // ▶️ INICIO DE LA APP
 //////////////////////////////////////////////
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
 
     // 1. INICIAR BACKEND JAVA
     startJavaBackend();
 
-    // 2. INICIAR FRONTEND ELECTRON
+    // 2. ESPERAR A QUE EL BACKEND ESTÉ LISTO
+    try {
+        await waitForBackend();
+    } catch (err) {
+        console.error('❌ No se pudo iniciar el backend:', err.message);
+        app.quit();
+        return;
+    }
+
+    // 3. INICIAR FRONTEND ELECTRON
     createWindow();
 
-    // 3. AUTO UPDATE
+    // 4. AUTO UPDATE
     setupAutoUpdater();
 
     app.on('activate', () => {

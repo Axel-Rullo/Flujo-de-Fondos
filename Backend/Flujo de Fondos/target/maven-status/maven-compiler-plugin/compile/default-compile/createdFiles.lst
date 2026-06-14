@@ -1,5 +1,0 @@
-com\flujodefondos\apiserver\ApiServer.class
-com\flujodefondos\conector\Conector.class
-com\flujodefondos\objects\User.class
-com\flujodefondos\login\Login.class
-com\flujodefondos\login\LoginRoutes.class
