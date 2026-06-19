@@ -66,9 +66,9 @@ function saveState() {
 let javaServer;
 
 function startJavaBackend() {
-    const backendDir = path.join(__dirname, 'Backend', 'flujodefondos'); // 👈 carpeta nueva
+    const backendDir = path.join(__dirname, 'Backend', 'flujodefondos');
 
-    javaServer = spawn('cmd', ['/c', 'mvnw.cmd spring-boot:run'], { // 👈 comando nuevo
+    javaServer = spawn('cmd', ['/c', 'mvnw.cmd spring-boot:run'], {
         cwd: backendDir,
         shell: false // 👈 false para evitar el warning de seguridad
     });

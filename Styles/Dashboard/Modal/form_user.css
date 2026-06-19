@@ -1,0 +1,116 @@
+/* ──────────────────────────────────────────────
+    TARJETA DE USUARIO
+────────────────────────────────────────────── */
+
+.form_user {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.50rem;
+    color: var(--white);
+}
+
+/* ── HEADER ───────────────────────────────── */
+
+.header_user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 2.25rem;
+}
+
+.header_user_left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header_user img {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--button-1);
+}
+
+.range {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--button-1);
+    background-color: rgba(45, 212, 191, 0.1);
+    border: 1px solid rgba(45, 212, 191, 0.25);
+    border-radius: 1.25rem;
+    padding: 0.25rem 0.75rem;
+}
+
+/* ── NOMBRE Y USUARIO ─────────────────────── */
+
+.user_name {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.name {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--white);
+}
+
+.user {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── CAMPOS DE DATOS ──────────────────────── */
+
+.user_dni,
+.user_contact,
+.phone,
+.user_email,
+.user_branch {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.user_contact {
+    gap: 1rem;
+}
+
+.label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ── BOTÓN CONTRASEÑA ─────────────────────── */
+
+.btn-pass {
+    width: 100%;
+    background-color: var(--button-1);
+    margin-top: 0.75rem;
+    padding: 0.70rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid var(--button-1);
+}
+
+.btn-pass:hover {
+    background-color: var(--button-hover-1);
+    color: var(--white);
+}

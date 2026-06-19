@@ -1,6 +1,6 @@
 <header class="header">
     <div class="header-title">
-        <img class="dashboard-logo" src="./Icons/logo.png" alt="Logo" width="72" height="72">
+        <img class="dashboard-logo" src="./Icons/logo.png" alt="Logo" width="50" height="50">
         <h1>Flujo de Fondos</h1>
     </div>
     <aside class="accordion">
@@ -19,11 +19,15 @@
                 <div class="submenu-nivel2">
                     <button data-target="sub-emitidos">Emitidos <span class="chevron">▶</span></button>
                     <div id="sub-emitidos" class="submenu-nivel3-container">
-                        <a data-modal="Views/forms/1.html" href="#">1</a>
-                        <a href="#">2</a>
+                        <a data-modal="Views/forms/cheques/1.html" href="#">1</a>
+                        <a data-modal="./Views/forms/users/users-list.html" href="#">2</a>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="menu-group">
+            <img src="./Icons/usuarios.png" alt="" data-modal="./Views/forms/users/users.html" height="50">
         </div>
 
     </aside>
@@ -33,7 +37,7 @@
     <ul class="nav-list">
         <li class="nav-item ff">
             <button data-view="Views/queries/datos.html">
-                <img src="./Icons/ff.png" alt="" height="48">
+                <img src="./Icons/ff.png" alt="" height="50">
             </button>
         </li>
         <li class="nav-item">
@@ -57,7 +61,7 @@
         </li>
         <li class="nav-item calendario">
             <button>
-                <img src="./Icons/calendario.png" alt="" height="48">
+                <img src="./Icons/calendario.png" alt="" height="50">
             </button>
         </li>
     </ul>

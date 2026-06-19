@@ -94,3 +94,7 @@ button .chevron {
     transition: transform 0.2s;
 }
 button.active .chevron { transform: rotate(90deg); }
+
+.menu-group {
+    cursor: pointer;
+}
