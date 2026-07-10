@@ -20,5 +20,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
         const handler = (_event, state) => callback(state);
         ipcRenderer.on('window-state', handler);
         return () => ipcRenderer.off('window-state', handler);
-    }
+    },
+
+    onBackendReady: (callback) => ipcRenderer.once('backend-ready', callback),
+    onBackendError: (callback) => ipcRenderer.once('backend-error', callback)
 });

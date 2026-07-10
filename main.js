@@ -65,19 +65,27 @@ function saveState() {
 let javaServer;
 
 function startJavaBackend() {
-    const backendDir = path.join(__dirname, 'Backend', 'flujodefondos');
-
-    javaServer = spawn('mvnw.cmd', ['spring-boot:run'], {
-        cwd:   backendDir,
-        shell: true
-    });
+    if (app.isPackaged) {
+        // Producción: JAR precompilado (arranque rápido)
+        const jarPath = path.join(process.resourcesPath, 'Backend', 'flujodefondos.jar');
+        javaServer = spawn('java', ['-jar', jarPath], {
+            cwd: path.dirname(jarPath)
+        });
+    } else {
+        // Desarrollo: Maven Wrapper (permite hot-reload)
+        const backendDir = path.join(__dirname, 'Backend', 'flujodefondos');
+        javaServer = spawn('mvnw.cmd', ['spring-boot:run'], {
+            cwd:   backendDir,
+            shell: true
+        });
+    }
 
     javaServer.stdout.on('data',  (data) => console.log(`JAVA: ${data}`));
     javaServer.stderr.on('data',  (data) => console.error(`JAVA ERROR: ${data}`));
-    javaServer.on('close', (code) => console.log(`Servidor Java cerrado con código ${code}`));
+    javaServer.on('close', (code) => console.log(`Servidor Java cerrado con codigo ${code}`));
 }
 
-function waitForBackend(url = 'http://localhost:8080', timeout = 180000) {
+function waitForBackend(url = 'http://localhost:8080', timeout = 1000000) {
     return new Promise((resolve, reject) => {
         const start = Date.now();
 
@@ -88,7 +96,7 @@ function waitForBackend(url = 'http://localhost:8080', timeout = 180000) {
                 if (Date.now() - start > timeout)
                     reject(new Error('Backend no respondió a tiempo'));
                 else
-                    setTimeout(check, 1000);
+                    setTimeout(check, 300);
             });
 
             req.setTimeout(2000, () => req.destroy());
@@ -165,17 +173,22 @@ function setupAutoUpdater() {
 
 app.whenReady().then(async () => {
     startJavaBackend();
+    createWindow();
+    setupAutoUpdater();
+
+    async function sendToRenderer(channel) {
+        if (win.webContents.isLoading())
+            await new Promise(r => win.webContents.once('did-finish-load', r));
+        win.webContents.send(channel);
+    }
 
     try {
         await waitForBackend();
+        await sendToRenderer('backend-ready');
     } catch (err) {
         console.error('❌ No se pudo iniciar el backend:', err.message);
-        app.quit();
-        return;
+        await sendToRenderer('backend-error');
     }
-
-    createWindow();
-    setupAutoUpdater();
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();

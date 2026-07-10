@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////
 
 const rutas = {
-    '':          'Views/login.html',
+    '':          'Views/loading.html',
     'login':     'Views/login.html',
     'dashboard': 'Views/dashboard.html',
 };
@@ -64,7 +64,7 @@ async function cargarRuta() {
         if (hash === 'dashboard') {
             iniciarMenus?.();
             iniciarNav?.();
-        } else {
+        } else if (hash === 'login') {
             iniciarViewPassword?.();
             iniciarLogin?.();
         }
@@ -136,9 +136,33 @@ function iniciarTitlebar() {
 }
 
 ////////////////////////////////////////////////////
+// ⏳ BACKEND LISTENERS
+////////////////////////////////////////////////////
+
+function iniciarBackendListeners() {
+    window.electronAPI?.onBackendReady(() => {
+        location.hash = 'login';
+    });
+
+    window.electronAPI?.onBackendError(() => {
+        const spinner = document.querySelector('.loading-spinner');
+        const text    = document.querySelector('.loading-text');
+        const error   = document.getElementById('loading-error');
+
+        if (spinner) spinner.style.display = 'none';
+        if (text)    text.textContent = '';
+        if (error)   error.textContent = 'No se pudo conectar al servidor';
+    });
+}
+
+////////////////////////////////////////////////////
 // 🚀 INICIALIZACIÓN
 ////////////////////////////////////////////////////
 
-window.addEventListener('hashchange',    cargarRuta);
-window.addEventListener('DOMContentLoaded', cargarRuta);
-window.addEventListener('DOMContentLoaded', iniciarTitlebar);
+window.addEventListener('hashchange', cargarRuta);
+
+window.addEventListener('DOMContentLoaded', () => {
+    cargarRuta();
+    iniciarTitlebar();
+    iniciarBackendListeners();
+});

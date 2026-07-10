@@ -6,7 +6,8 @@
 
     "scripts": {
         "start": "electron .",
-        "build": "electron-builder"
+        "build:backend": "cd Backend/flujodefondos && mvnw.cmd package -DskipTests -q && copy target\\flujodefondos.jar ..\\flujodefondos.jar",
+        "build": "npm run build:backend && electron-builder"
     },
 
     "keywords": [],
@@ -38,8 +39,14 @@
             "Scripts/**/*",
             "Styles/**/*",
             "Theme/**/*",
-            "Views/**/*",
-            "Backend/**/*"
+            "Views/**/*"
+        ],
+
+        "extraResources": [
+            {
+                "from": "Backend/flujodefondos.jar",
+                "to": "Backend/flujodefondos.jar"
+            }
         ],
 
         "win": {
