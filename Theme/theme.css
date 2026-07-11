@@ -2,6 +2,7 @@
     /* ── COLORES ───────────────────────────────────────────────────── */
     --white: white;
     --black: black;
+    --text-muted: rgba(255, 255, 255, 0.4);
 
     /* ── TITLEBAR ──────────────────────────────────────────────────── */
     --titlebar-bg:           #0b121e;
@@ -19,10 +20,10 @@
     --form-input-border:    #ddd;
     --form-input-focus:     #4a7cdc;
     --form-input-error:     #e74c3c;
-    --form-radius:          8px;
-    --form-gap:             16px;
-    --form-group-gap:       6px;
-    --form-transition:      0.2s ease;
+
+    /* ICONOS */
+    --edit-1: #f0a500;
+    --view-1: #4a90e2;
 
     /* ── TEMA PRINCIPAL ────────────────────────────────────────────── */
     --background-1: #111C2E;
@@ -40,7 +41,24 @@
 
     --error: red;
 
-    /* ICONOS */
-    --edit-1: #f0a500;
-    --view-1: #4a90e2;
+    /* ── LOADING ───────────────────────────────────────────────────── */
+    --loading-track: rgba(45, 212, 191, 0.12);
+
+    /* ── TARJETA DE USUARIO ────────────────────────────────────────── */
+    --user-range-bg:     rgba(45, 212, 191, 0.1);
+    --user-range-border: rgba(45, 212, 191, 0.25);
+    --user-divider:      rgba(255, 255, 255, 0.08);
+    --user-subtitle:     rgba(255, 255, 255, 0.45);
+    --user-value:        rgba(255, 255, 255, 0.85);
+
+    /* ── LISTA DE USUARIOS ─────────────────────────────────────────── */
+    --username-color: #6c757d;
+    --range-bg:       #e8f0fe;
+
+    /* ── LOGIN ─────────────────────────────────────────────────────── */
+    --login-input-border: rgba(255, 255, 255, 0.15);
+
+    /* ── MODAL ─────────────────────────────────────────────────────── */
+    --modal-box-bg:  #1a2540;
+    --modal-close:   #888;
 }

@@ -95,7 +95,7 @@
 
 .username-list {
     font-size: 0.8rem;
-    color: #6c757d;
+    color: var(--username-color);
 }
 
 /* ── Rango ── */
@@ -103,8 +103,8 @@
     font-size: 0.8rem;
     padding: 0.2rem 0.6rem;
     border-radius: 999px;
-    background: #e8f0fe;
-    color: #4a90e2;
+    background: var(--range-bg);
+    color: var(--view-1);
     flex-shrink: 0;
 }
 

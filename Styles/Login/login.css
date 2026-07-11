@@ -54,7 +54,7 @@
 
 .login-form input {
     border: 3px solid transparent;
-    border-bottom: 3px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 3px solid var(--login-input-border);
     color: var(--black);
     background-color: var(--white);
     transition: border-color 0.2s, box-shadow 0.2s;

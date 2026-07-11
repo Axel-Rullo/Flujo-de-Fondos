@@ -55,7 +55,10 @@
 .nav-item:hover                  { background-color: var(--button-hover-1); }
 .nav-item:hover button           { border-bottom-color: var(--border-button-color-1); }
 .nav-item button:active          { transform: translateY(1px) scale(0.98); }
-.nav-item button.active          { border-bottom-color: var(--white); }
+
+.nav-item button.active,
+.nav-item.active > button        { border-bottom-color: var(--white); }
+
 .nav-item.active button          { color: var(--white); }
 
 .nav-item::after {

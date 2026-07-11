@@ -39,8 +39,8 @@
     letter-spacing: 1.5px;
     text-transform: uppercase;
     color: var(--button-1);
-    background-color: rgba(45, 212, 191, 0.1);
-    border: 1px solid rgba(45, 212, 191, 0.25);
+    background-color: var(--user-range-bg);
+    border: 1px solid var(--user-range-border);
     border-radius: 1.25rem;
     padding: 0.25rem 0.75rem;
 }
@@ -52,7 +52,7 @@
     flex-direction: column;
     gap: 0.25rem;
     padding-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--user-divider);
 }
 
 .name {
@@ -64,7 +64,7 @@
 .user {
     font-size: 1rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--user-subtitle);
 }
 
 /* ── CAMPOS DE DATOS ──────────────────────── */
@@ -88,13 +88,13 @@
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
 }
 
 .value {
     font-size: 1rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--user-value);
 }
 
 /* ── BOTÓN CONTRASEÑA ─────────────────────── */
