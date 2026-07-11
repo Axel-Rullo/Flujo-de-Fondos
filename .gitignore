@@ -5,4 +5,5 @@ release/
 *.log
 
 Apuntes/
-Backend/flujodefondos.jar
+Backend/flujodefondos.jar
+DataBase/

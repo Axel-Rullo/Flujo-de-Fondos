@@ -80,9 +80,9 @@ function startJavaBackend() {
         });
     }
 
-    javaServer.stdout.on('data',  (data) => console.log(`JAVA: ${data}`));
-    javaServer.stderr.on('data',  (data) => console.error(`JAVA ERROR: ${data}`));
-    javaServer.on('close', (code) => console.log(`Servidor Java cerrado con codigo ${code}`));
+    javaServer.stdout.on('data',  (data) => console.log('JAVA: ' + data));
+    javaServer.stderr.on('data',  (data) => console.error('JAVA ERROR: ' + data));
+    javaServer.on('close', (code) => console.log('Servidor Java cerrado con codigo ' + code));
 }
 
 function waitForBackend(url = 'http://localhost:8080', timeout = 1000000) {

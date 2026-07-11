@@ -16,7 +16,7 @@ async function leerArchivo(archivo) {
     if (window.electronAPI?.readView) return window.electronAPI.readView(archivo);
 
     const res = await fetch(archivo);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     return res.text();
 }
 

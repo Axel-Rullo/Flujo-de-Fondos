@@ -4,18 +4,18 @@
 
 const API_URL = "http://localhost:8080/api";
 
-async function api(ruta, opciones = {}) {
+async function api(ruta, { method = "GET", body } = {}) {
     try {
-        const response = await fetch(`${API_URL}${ruta}`, {
-            method:  opciones.method || "GET",
+        const response = await fetch(API_URL + ruta, {
+            method,
             headers: { "Content-Type": "application/json" },
-            body:    opciones.body ? JSON.stringify(opciones.body) : undefined
+            body: body ? JSON.stringify(body) : undefined
         });
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) throw new Error("HTTP " + response.status);
         return response.json();
     } catch (err) {
-        console.error(`api ${ruta}:`, err);
+        console.error("api " + ruta + ":", err);
         throw err;
     }
 }
