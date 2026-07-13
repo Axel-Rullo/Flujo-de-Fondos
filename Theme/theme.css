@@ -59,6 +59,8 @@
     --login-input-border: rgba(255, 255, 255, 0.15);
 
     /* ── MODAL ─────────────────────────────────────────────────────── */
+    --modal-overlay: rgba(0, 0, 0, 0.5);
     --modal-box-bg:  #1a2540;
+    --modal-shadow:  rgba(0, 0, 0, 0.4);
     --modal-close:   #888;
 }

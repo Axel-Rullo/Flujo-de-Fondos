@@ -5,7 +5,7 @@
     position: fixed;
     inset: 0;
     z-index: 1000;
-    background: var(--black);
+    background: var(--modal-overlay);
     justify-content: center;
     align-items: center;
 }
@@ -23,7 +23,7 @@
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
-    box-shadow: 0 10px 40px var(--black);
+    box-shadow: 0 10px 40px var(--modal-shadow);
 }
 
 .modal-close {

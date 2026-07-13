@@ -4,6 +4,18 @@ function iniciarLogin() {
 
     if (!loginForm) return;
 
+    const inputUser = document.getElementById('username');
+    const inputPass = document.getElementById('password');
+
+    inputUser?.focus();
+
+    inputUser?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            inputPass?.focus();
+        }
+    });
+
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
