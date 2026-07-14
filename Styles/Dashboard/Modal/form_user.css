@@ -8,6 +8,7 @@
     gap: 1.25rem;
     padding: 1.50rem;
     color: var(--white);
+    width: 34rem;
 }
 
 /* ── HEADER ───────────────────────────────── */
@@ -31,6 +32,18 @@
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--button-1);
+}
+
+.user_photo .avatar-list {
+    width: 96px;
+    height: 96px;
+}
+
+.user_photo .avatar-initials {
+    width: 96px;
+    height: 96px;
+    border: 2px solid var(--button-1);
+    font-size: 1.75rem;
 }
 
 .range {

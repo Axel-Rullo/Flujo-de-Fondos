@@ -1,3 +1,16 @@
+function mostrarError(mensaje) {
+    const errorP = document.getElementById('login-error');
+    if (!errorP) return;
+
+    errorP.textContent = mensaje;
+    errorP.classList.add('visible');
+
+    clearTimeout(errorP._timeout);
+    errorP._timeout = setTimeout(() => {
+        errorP.classList.remove('visible');
+    }, 4000);
+}
+
 function iniciarLogin() {
 
     const loginForm = document.getElementById('login-form');
@@ -23,7 +36,7 @@ function iniciarLogin() {
         const password = document.getElementById('password').value;
 
         try {
-            const data = await apiPost('/login', { usuario: usuario, password: password });
+            const data = await apiPost('/login', { usuario, password });
 
             if (data.ok) {
                 window.location.hash = 'dashboard';
@@ -38,15 +51,4 @@ function iniciarLogin() {
     });
 }
 
-function mostrarError(mensaje) {
-    const errorP = document.getElementById('login-error');
-    if (!errorP) return;
-
-    errorP.textContent = mensaje;
-    errorP.classList.add('visible');
-
-    clearTimeout(errorP._timeout);
-    errorP._timeout = setTimeout(() => {
-        errorP.classList.remove('visible');
-    }, 4000);
-}
+iniciarLogin();

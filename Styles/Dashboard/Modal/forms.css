@@ -15,6 +15,7 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 14px;
+    width: 26rem;
 }
 
 .form-group {

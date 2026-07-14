@@ -8,8 +8,7 @@
         <div class="menu-group">
             <button data-target="sub-movimientos">Movimientos <span class="chevron">▶</span></button>
             <div id="sub-movimientos" class="submenu">
-                <a href="#">Subir</a>
-                <a href="#">Bajar</a>
+
             </div>
         </div>
 
@@ -19,15 +18,14 @@
                 <div class="submenu-nivel2">
                     <button data-target="sub-emitidos">Emitidos <span class="chevron">▶</span></button>
                     <div id="sub-emitidos" class="submenu-nivel3-container">
-                        <a data-modal="Views/forms/cheques/1.html" href="#">1</a>
-                        <a data-modal="./Views/forms/users/users-list.html" href="#">2</a>
+                        <a data-modal="Views/forms/cheques/1.html" href="#">Formulario</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="menu-group">
-            <img src="./Icons/usuarios.png" alt="" data-modal="./Views/forms/users/users.html" height="50">
+            <img src="./Icons/usuarios.png" alt="" data-modal="./Views/forms/users/users-list.html" height="50">
         </div>
 
     </aside>
@@ -56,12 +54,9 @@
         <li class="nav-item">
             <button data-view="Views/queries/operaciones.html">Operaciones</button>
         </li>
-        <li class="nav-item">
-            <button data-view="Views/queries/reportes.html">Reportes</button>
-        </li>
         <li class="nav-item calendario">
             <button>
-                <img src="./Icons/calendario.png" alt="" height="50">
+                <img data-view="Views/queries/reportes.html" src="./Icons/calendario.png" alt="" height="50">
             </button>
         </li>
     </ul>

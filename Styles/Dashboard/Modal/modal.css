@@ -18,8 +18,8 @@
     background: var(--modal-box-bg);
     border-radius: 8px;
     padding: 20px;
-    width: 90%;
-    max-width: 480px;
+    width: auto;
+    max-width: 90%;
     max-height: 80vh;
     overflow-y: auto;
     position: relative;

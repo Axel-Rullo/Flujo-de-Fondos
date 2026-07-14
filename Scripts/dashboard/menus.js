@@ -69,3 +69,11 @@ function cerrarHermanos(boton) {
             if (otroBoton) cerrarMenu(otroBoton, document.getElementById(otroBoton.dataset.target));
         });
 }
+
+window.cerrarTodosLosMenus = function() {
+    document.querySelectorAll('[data-target].active').forEach(boton => {
+        cerrarMenu(boton, document.getElementById(boton.dataset.target));
+    });
+};
+
+iniciarMenus();

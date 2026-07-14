@@ -7,8 +7,6 @@ function iniciarNav() {
     const items   = document.querySelectorAll('.nav-item');
     const botones = document.querySelectorAll('.nav-item > button');
 
-    const ignorar = ['calendario'];
-
     ////////////////////////////////////////////////////
     // 🟢 ESTADO INICIAL: "ff" activo por defecto
     ////////////////////////////////////////////////////
@@ -23,8 +21,6 @@ function iniciarNav() {
 
     items.forEach(item => {
         item.addEventListener('click', () => {
-            if (ignorar.some(cls => item.classList.contains(cls))) return;
-
             items.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
         });
@@ -36,9 +32,6 @@ function iniciarNav() {
 
     botones.forEach(btn => {
         btn.addEventListener('click', () => {
-            const padre = btn.closest('.nav-item');
-            if (padre && ignorar.some(cls => padre.classList.contains(cls))) return;
-
             // Si tiene data-target es abridor de submenu
             if (btn.dataset.target) return;
 
@@ -72,8 +65,10 @@ function iniciarNav() {
 
             // Carga la vista si tiene data-view con valor
             if (link.dataset.view) {
-                cargarVista(link.dataset.view);
+                cargarParcial(link.dataset.view);
             }
         });
     });
 }
+
+iniciarNav();

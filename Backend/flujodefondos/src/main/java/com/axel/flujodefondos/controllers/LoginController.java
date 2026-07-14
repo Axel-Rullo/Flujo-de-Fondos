@@ -20,12 +20,12 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
 
-        boolean valido = loginService.validar(
+        boolean ok = loginService.login(
             user.getUsuario(),
             user.getPassword()
         );
 
-        if (valido) {
+        if (ok) {
             return ResponseEntity.ok(Map.of("ok", true));
         }
 

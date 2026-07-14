@@ -6,15 +6,13 @@ function iniciarViewPassword() {
     if (!passwordInput || !togglePassword) return;
 
     passwordInput.addEventListener('input', () => {
-        if (passwordInput.value.length > 0) {
-            togglePassword.style.display = 'flex';
-        } else {
-            togglePassword.style.display = 'none';
-            passwordInput.type = 'password';
-        }
+        togglePassword.style.display = passwordInput.value.length > 0 ? 'flex' : 'none';
+        if (!passwordInput.value.length) passwordInput.type = 'password';
     });
 
     togglePassword.addEventListener('click', () => {
         passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
     });
 }
+
+iniciarViewPassword();

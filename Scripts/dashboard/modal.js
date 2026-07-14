@@ -10,9 +10,12 @@ const closeBtn = document.querySelector('.modal-close');
  */
 window.abrirModal = async function(archivo) {
     try {
-        await cargarVista(archivo, document.getElementById('modal-body'));
+        window.cerrarTodosLosMenus?.();
+        const modalBody = document.getElementById('modal-body');
+        await cargarParcial(archivo, modalBody);
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
+        return modalBody;
     } catch (error) {
         console.error('Error al abrir modal:', error);
     }

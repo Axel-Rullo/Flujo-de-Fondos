@@ -1,168 +1,102 @@
-////////////////////////////////////////////////////
-// 🗺️ RUTAS DE LA APLICACIÓN
-////////////////////////////////////////////////////
-
+// 🗺️ RUTAS
 const rutas = {
     '':          'Views/loading.html',
     'login':     'Views/login.html',
     'dashboard': 'Views/dashboard.html',
 };
 
-////////////////////////////////////////////////////
-// 🛠️ HELPERS
-////////////////////////////////////////////////////
-
-async function leerArchivo(archivo) {
-    if (window.electronAPI?.readView) return window.electronAPI.readView(archivo);
-
-    const res = await fetch(archivo);
+// 🛠️ UTILIDADES
+async function leerHtml(ruta) {
+    if (window.electronAPI?.readView) return window.electronAPI.readView(ruta);
+    const res = await fetch(ruta);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     return res.text();
 }
 
-async function cargarScripts(container) {
-    document.querySelectorAll('script[data-vista]').forEach(s => s.remove());
-
-    for (const old of container.querySelectorAll('script')) {
-        const script = document.createElement('script');
-        script.setAttribute('data-vista', '');
-
-        if (old.src) {
-            await new Promise((resolve, reject) => {
-                script.onload  = resolve;
-                script.onerror = reject;
-                script.src     = old.src;
-                document.head.appendChild(script);
-            });
+async function ejecutarScripts(contenedor, grupo) {
+    document.querySelectorAll(`script[${grupo}]`).forEach(s => s.remove());
+    for (const viejo of contenedor.querySelectorAll('script')) {
+        const nuevo = document.createElement('script');
+        nuevo.setAttribute(grupo, '');
+        let listo;
+        if (viejo.src) {
+            listo = new Promise((ok, err) => { nuevo.onload = ok; nuevo.onerror = err; });
+            nuevo.src = viejo.src;
         } else {
-            script.textContent = old.textContent;
-            document.head.appendChild(script);
+            nuevo.textContent = viejo.textContent;
         }
-
-        old.remove();
+        document.head.appendChild(nuevo);
+        await listo;
+        viejo.remove();
     }
 }
 
-////////////////////////////////////////////////////
-// 🧭 ROUTER PRINCIPAL
-////////////////////////////////////////////////////
+// 📄 CARGADORES
+async function cargarParcial(ruta, destino = document.getElementById('content')) {
+    try {
+        destino.innerHTML = await leerHtml(ruta);
+        await ejecutarScripts(destino, 'data-parcial');
+    } catch (e) { console.error('Error al cargar parcial:', e); }
+}
 
 async function cargarRuta() {
-    const hash    = location.hash.replace('#', '');
-    const archivo = rutas[hash] ?? rutas[''];
-    const app     = document.getElementById('app');
-
+    const hash = location.hash.slice(1);
+    const app  = document.getElementById('app');
     try {
-        app.innerHTML = await leerArchivo(archivo);
-
+        app.innerHTML = await leerHtml(rutas[hash] ?? rutas['']);
         app.classList.remove('vista-enter');
-        void app.offsetWidth;
+        void app.offsetWidth; // reflow → reinicia animación
         app.classList.add('vista-enter');
-
-        await cargarScripts(app);
-
-        if (hash === 'dashboard') {
-            iniciarMenus?.();
-            iniciarNav?.();
-        } else if (hash === 'login') {
-            iniciarViewPassword?.();
-            iniciarLogin?.();
-        }
-
-        app.querySelectorAll('[data-view]').forEach(btn => {
-            btn.addEventListener('click', e => {
-                e.preventDefault();
-                if (btn.dataset.target || !btn.dataset.view) return;
-                cargarVista(btn.dataset.view);
-            });
-        });
-
-        app.querySelectorAll('[data-modal]').forEach(btn => {
-            btn.addEventListener('click', e => {
-                e.preventDefault();
-                if (!btn.dataset.view) return;
-                abrirModal(btn.dataset.view);
-            });
-        });
-
-    } catch (err) {
-        console.error('Error al cargar la vista:', err);
+        await ejecutarScripts(app, 'data-ruta');
+    } catch (e) {
+        console.error('Error al cargar ruta:', e);
         app.innerHTML = '<p>Vista no encontrada</p>';
     }
 }
 
-////////////////////////////////////////////////////
-// 📄 CARGADOR DE VISTAS PARCIALES
-////////////////////////////////////////////////////
+// 🖱️ DELEGACIÓN — data-view
+document.addEventListener('click', e => {
+    const boton = e.target.closest('[data-view]');
+    if (!boton || boton.dataset.target || !boton.dataset.view) return;
+    e.preventDefault();
+    window.cerrarTodosLosMenus?.();
+    cargarParcial(boton.dataset.view);
+});
 
-async function cargarVista(
-    archivo,
-    destino = document.getElementById('content')
-) {
-    try {
-        destino.innerHTML = await leerArchivo(archivo);
-    } catch (err) {
-        console.error('Error al cargar la vista:', err);
-    }
-}
-
-////////////////////////////////////////////////////
 // 🪟 TITLEBAR
-////////////////////////////////////////////////////
-
-function actualizarIconoMaximizar(isMax) {
+function iconoMaximizar(max) {
     const btn = document.querySelector('#titlebar .maximize');
     if (!btn) return;
-
-    btn.querySelector('.icon-maximize')?.style.setProperty('display', isMax ? 'none'  : 'block');
-    btn.querySelector('.icon-restore') ?.style.setProperty('display', isMax ? 'block' : 'none');
+    btn.querySelector('.icon-maximize').style.display = max ? 'none'  : 'block';
+    btn.querySelector('.icon-restore').style.display  = max ? 'block' : 'none';
 }
 
 function iniciarTitlebar() {
-    const titlebar = document.getElementById('titlebar');
-    if (!titlebar) return;
-
-    titlebar.querySelector('.minimize')?.addEventListener('click', () => window.electronAPI?.minimizeWindow());
-    titlebar.querySelector('.maximize')?.addEventListener('click', () => window.electronAPI?.maximizeWindow());
-    titlebar.querySelector('.close')   ?.addEventListener('click', () => window.electronAPI?.closeWindow());
-
-    window.electronAPI?.isMaximized()
-        ?.then(actualizarIconoMaximizar)
-        ?.catch(err => console.error('Error al obtener estado de ventana:', err));
-
-    window.electronAPI?.onWindowStateChange(
-        state => actualizarIconoMaximizar(state === 'maximized')
+    const barra = document.getElementById('titlebar');
+    if (!barra) return;
+    const api = window.electronAPI;
+    ['minimize', 'maximize', 'close'].forEach(a =>
+        barra.querySelector('.' + a)?.addEventListener('click', () => api?.[a + 'Window']())
     );
+    api?.isMaximized()?.then(iconoMaximizar);
+    api?.onWindowStateChange(estado => iconoMaximizar(estado === 'maximized'));
 }
 
-////////////////////////////////////////////////////
-// ⏳ BACKEND LISTENERS
-////////////////////////////////////////////////////
-
-function iniciarBackendListeners() {
-    window.electronAPI?.onBackendReady(() => {
-        location.hash = 'login';
-    });
-
+// ⏳ BACKEND
+function iniciarBackend() {
+    window.electronAPI?.onBackendReady(() => location.hash = 'login');
     window.electronAPI?.onBackendError(() => {
-        const spinner = document.querySelector('.loading-spinner');
-        const text    = document.querySelector('.loading-text');
-        const error   = document.getElementById('loading-error');
-
-        if (spinner) spinner.style.display = 'none';
-        if (text)    text.textContent = '';
-        if (error)   error.textContent = 'No se pudo conectar al servidor';
+        document.querySelector('.loading-spinner')?.style.setProperty('display', 'none');
+        document.querySelector('.loading-text')?.replaceChildren();
+        const err = document.getElementById('loading-error');
+        if (err) err.textContent = 'No se pudo conectar al servidor';
     });
 }
 
-////////////////////////////////////////////////////
-// 🚀 INICIALIZACIÓN
-////////////////////////////////////////////////////
-
+// 🚀 INICIO
 window.addEventListener('hashchange', cargarRuta);
-
 window.addEventListener('DOMContentLoaded', () => {
     cargarRuta();
     iniciarTitlebar();
-    iniciarBackendListeners();
+    iniciarBackend();
 });

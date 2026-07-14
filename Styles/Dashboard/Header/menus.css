@@ -2,6 +2,7 @@
     width: auto;
     display: flex;
     flex-direction: row;
+    align-self: stretch;
     margin-right: 1.5rem;
     border-radius: 0.25rem;
     gap: 1rem;
@@ -9,18 +10,23 @@
 
 .menu-group {
     position: relative;
+    height: 100%;
 }
 
 /* Nivel 1 - botón */
 .menu-group > button {
     color: var(--white);
-    width: 8rem;
+    min-width: 8.8rem;
+    width: auto;
+    height: 100%;
     background: none;
     border: none;
-    padding: 0.75rem 1rem;
+    padding: 0.675rem 0.9rem;
+    box-sizing: border-box;
     text-align: center;
     cursor: pointer;
     display: flex;
+    align-items: center;
     justify-content: center;
 }
 .menu-group > button:hover { background: var(--button-hover-1); }
@@ -40,13 +46,13 @@
     flex-direction: column;
     box-sizing: border-box;
 }
-.submenu.open { max-height: 25rem; }
+.submenu.open { max-height: 15rem; }
 
 /* Items del submenu y botón nivel 2 */
 .submenu > a,
 .submenu > .submenu-nivel2 > button {
     text-align: center;
-    padding: 0.75rem 1rem;
+    padding: 0.675rem 0.9rem;
     color: var(--white);
     text-decoration: none;
     background: none;
@@ -75,11 +81,11 @@
     flex-direction: column;
     box-sizing: border-box;
 }
-.submenu-nivel3-container.open { max-height: 25rem; }
+.submenu-nivel3-container.open { max-height: 8rem; }
 
 .submenu-nivel3-container > a {
     text-align: center;
-    padding: 0.75rem 1rem 0.75rem 1.875rem;
+    padding: 0.675rem 0.9rem 0.675rem 1.6875rem;
     color: var(--white);
     text-decoration: none;
     width: 100%;
