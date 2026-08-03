@@ -1,5 +1,6 @@
 package com.axel.flujodefondos.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     private Long id;
     private String usuario;
@@ -19,4 +21,7 @@ public class User {
     private String telefono;
     private String rango;
     private String id_sucursal;
+    private String photo;
+    private String estado;
+    private String sucursalNombre;
 }

@@ -1,37 +1,49 @@
+/* ── MENÚ ACORDEÓN ────────────────────────────────── */
+
+/* Contenedor principal del menú de navegación */
 .accordion {
     width: auto;
     display: flex;
-    flex-direction: row;
     align-self: stretch;
-    margin-right: 1.5rem;
-    border-radius: 0.25rem;
-    gap: 1rem;
+    margin-right: 1.2rem;
+    border-radius: 0.2rem;
+    gap: 0.8rem;
 }
 
+/* Contenedor de cada grupo del menú principal */
 .menu-group {
     position: relative;
     height: 100%;
+    cursor: pointer;
 }
 
-/* Nivel 1 - botón */
+/* ── NIVEL 1 ──────────────────────────────────────── */
+
+/* Botón principal del menú */
 .menu-group > button {
     color: var(--white);
-    min-width: 8.8rem;
+    min-width: 7.04rem;
     width: auto;
     height: 100%;
     background: none;
     border: none;
-    padding: 0.675rem 0.9rem;
+    padding: 0.42rem 0.72rem;
     box-sizing: border-box;
     text-align: center;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.64rem;
+    font-weight: bold;
 }
-.menu-group > button:hover { background: var(--button-hover-1); }
 
-/* Nivel 1 - submenu */
+/* Efecto al pasar el cursor sobre un botón principal */
+.menu-group > button:hover {
+    background: var(--button-hover-1);
+}
+
+/* Submenú desplegable del primer nivel */
 .submenu {
     position: absolute;
     top: 100%;
@@ -46,13 +58,21 @@
     flex-direction: column;
     box-sizing: border-box;
 }
-.submenu.open { max-height: 15rem; }
 
-/* Items del submenu y botón nivel 2 */
+/* Expande el submenú cuando está abierto */
+.submenu.open {
+    max-height: 12rem;
+}
+
+/* Enlaces y botones del primer submenú */
 .submenu > a,
 .submenu > .submenu-nivel2 > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 0.675rem 0.9rem;
+    min-height: 2.5rem;
+    padding: 0.42rem 0.72rem;
     color: var(--white);
     text-decoration: none;
     background: none;
@@ -60,18 +80,28 @@
     width: 100%;
     cursor: pointer;
     box-sizing: border-box;
+    font-size: 0.64rem;
+    font-weight: bold;
 }
-.submenu > a:hover,
-.submenu > .submenu-nivel2 > button:hover { background: var(--button-hover-1); }
 
-/* Nivel 2 */
+/* Efecto al pasar el cursor sobre las opciones del submenú */
+.submenu > a:hover,
+.submenu > .submenu-nivel2 > button:hover {
+    background: var(--button-hover-1);
+}
+
+/* ── NIVEL 2 ──────────────────────────────────────── */
+
+/* Contenedor de un submenú de segundo nivel */
 .submenu-nivel2 {
     width: 100%;
     position: relative;
     box-sizing: border-box;
 }
 
-/* Nivel 3 */
+/* ── NIVEL 3 ──────────────────────────────────────── */
+
+/* Contenedor desplegable del tercer nivel */
 .submenu-nivel3-container {
     width: 100%;
     max-height: 0;
@@ -81,26 +111,43 @@
     flex-direction: column;
     box-sizing: border-box;
 }
-.submenu-nivel3-container.open { max-height: 8rem; }
 
+/* Expande el submenú de tercer nivel */
+.submenu-nivel3-container.open {
+    max-height: 6.4rem;
+}
+
+/* Enlaces del tercer nivel */
 .submenu-nivel3-container > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 0.675rem 0.9rem 0.675rem 1.6875rem;
+    min-height: 2.5rem;
+    padding: 0.42rem 0.72rem 0.42rem 1.35rem;
     color: var(--white);
     text-decoration: none;
     width: 100%;
     box-sizing: border-box;
+    font-size: 0.64rem;
+    font-weight: bold;
 }
-.submenu-nivel3-container > a:hover { background: var(--button-hover-1); }
 
-/* Chevron */
+/* Efecto al pasar el cursor sobre las opciones del tercer nivel */
+.submenu-nivel3-container > a:hover {
+    background: var(--button-hover-1);
+}
+
+/* ── INDICADOR DE DESPLIEGUE ───────────────────────── */
+
+/* Flecha que indica si un menú puede desplegarse */
 button .chevron {
-    margin-left: 0.4rem;
+    margin-left: 0.32rem;
     display: inline-block;
     transition: transform 0.2s;
 }
-button.active .chevron { transform: rotate(90deg); }
 
-.menu-group {
-    cursor: pointer;
+/* Rota la flecha cuando el menú está abierto */
+button.active .chevron {
+    transform: rotate(90deg);
 }

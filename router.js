@@ -78,6 +78,10 @@ function iniciarTitlebar() {
     ['minimize', 'maximize', 'close'].forEach(a =>
         barra.querySelector('.' + a)?.addEventListener('click', () => api?.[a + 'Window']())
     );
+    barra.querySelector('.bt-block-login')?.addEventListener('click', () => {
+        location.hash = 'login';
+        barra.querySelector('.bt-block-login').classList.remove('visible');
+    });
     api?.isMaximized()?.then(iconoMaximizar);
     api?.onWindowStateChange(estado => iconoMaximizar(estado === 'maximized'));
 }

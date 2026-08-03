@@ -1,3 +1,4 @@
+/* Contenedor principal del login */
 .login {
     display: flex;
     align-items: center;
@@ -6,11 +7,13 @@
     width: 100%;
 }
 
+/* Tarjeta que contiene el título y el formulario del login */
 .login-card {
     display: flex;
     flex-direction: column;
 }
 
+/* Contenedor del título y del logo */
 .login-title {
     position: relative;
     display: flex;
@@ -20,6 +23,7 @@
     padding-bottom: 1rem;
 }
 
+/* Título principal "Flujo de Fondos" */
 .login-title h1 {
     margin: 0;
     font-weight: bold;
@@ -28,20 +32,23 @@
     padding-bottom: 2rem;
 }
 
+/* Logo ubicado junto al título */
 .login-logo {
     position: absolute;
     bottom: 3rem;
     left: -2.8rem;
 }
 
+/* Formulario que contiene los campos y el botón de inicio de sesión */
 .login-form {
-    padding: 1rem 2.5rem 0 2.5rem;
+    padding: 1rem 2.5rem 3.7rem 2.5rem;
     display: flex;
     flex-direction: column;
     font-weight: bold;
     gap: 0.8rem;
 }
 
+/* Estilos generales para los campos de texto y el botón */
 .login-form input,
 .login-form button {
     width: 18.75rem;
@@ -52,6 +59,7 @@
     box-sizing: border-box;
 }
 
+/* Apariencia de los campos de entrada */
 .login-form input {
     border: 3px solid transparent;
     border-bottom: 3px solid var(--login-input-border);
@@ -60,6 +68,7 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+/* Estilo aplicado cuando un campo recibe el foco */
 .login-form input:focus {
     border-color: transparent;
     border-bottom-color: var(--button-1);
@@ -67,6 +76,7 @@
     outline: none;
 }
 
+/* Botón para iniciar sesión */
 .login-form button {
     background-color: var(--button-1);
     margin-top: 1.5rem;
@@ -74,21 +84,25 @@
     border: 2px solid var(--button-1);
 }
 
+/* Efecto al pasar el mouse sobre el botón de iniciar sesión */
 .login-form button:not(.toggle-password):hover {
     background-color: var(--button-hover-1);
     color: var(--white);
 }
 
+/* Contenedor del campo de contraseña y del botón para mostrarla */
 .password-container {
     position: relative;
     width: 18.75rem;
 }
 
+/* Campo de contraseña con espacio para el botón del ojo */
 .password-input {
     width: 100%;
     padding-right: 3rem !important;
 }
 
+/* Botón para mostrar u ocultar la contraseña */
 .toggle-password {
     display: none;
     position: absolute;
@@ -108,22 +122,15 @@
     transition: background-color 0.2s, transform 0.2s;
 }
 
+/* Imagen del ícono del ojo */
 .toggle-password img {
     object-fit: contain;
     opacity: 0.7;
     transition: opacity 0.2s, transform 0.2s;
 }
 
+/* Efecto al pasar el mouse sobre el ícono del ojo */
 .toggle-password:hover img {
     opacity: 1;
     transform: scale(1.08);
-}
-
-.login-error {
-    min-height: 1.2rem;
-    padding-bottom: 2.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--error);
-    text-align: center;
 }

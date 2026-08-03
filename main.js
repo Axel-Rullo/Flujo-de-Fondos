@@ -5,58 +5,12 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
-const fs = require('node:fs');
 const http = require('node:http');
 const { spawn } = require('child_process');
 
 Menu.setApplicationMenu(null);
 
-//////////////////////////////////////////////
-// 🧠 ESTADO DE VENTANA
-//////////////////////////////////////////////
-
 let win;
-
-const stateFilePath = path.join(app.getPath('userData'), 'window-state.json');
-
-const STATE_DEFAULT = {
-    width:       1280,
-    height:      800,
-    x:           undefined,
-    y:           undefined,
-    isMaximized: false
-};
-
-function loadState() {
-    try {
-        if (fs.existsSync(stateFilePath))
-            return JSON.parse(fs.readFileSync(stateFilePath, 'utf8'));
-    } catch (e) {
-        console.error('No se pudo cargar el estado de la ventana:', e);
-    }
-    return { ...STATE_DEFAULT };
-}
-
-let windowState = loadState();
-
-function saveState() {
-    if (!win || win.isDestroyed()) return;
-
-    const isMaximized = win.isMaximized();
-
-    if (!isMaximized) {
-        const { x, y, width, height } = win.getBounds();
-        windowState = { ...windowState, x, y, width, height };
-    }
-
-    windowState.isMaximized = isMaximized;
-
-    try {
-        fs.writeFileSync(stateFilePath, JSON.stringify(windowState), 'utf8');
-    } catch (e) {
-        console.error('No se pudo guardar el estado de la ventana:', e);
-    }
-}
 
 //////////////////////////////////////////////
 // ☕ BACKEND JAVA
@@ -71,18 +25,14 @@ function startJavaBackend() {
         javaServer = spawn('java', ['-jar', jarPath], {
             cwd: path.dirname(jarPath)
         });
-    } else {
-        // Desarrollo: Maven Wrapper (permite hot-reload)
-        const backendDir = path.join(__dirname, 'Backend', 'flujodefondos');
-        javaServer = spawn('mvnw.cmd', ['spring-boot:run'], {
-            cwd:   backendDir,
-            shell: true
-        });
-    }
 
-    javaServer.stdout.on('data',  (data) => console.log('JAVA: ' + data));
-    javaServer.stderr.on('data',  (data) => console.error('JAVA ERROR: ' + data));
-    javaServer.on('close', (code) => console.log('Servidor Java cerrado con codigo ' + code));
+        javaServer.stdout.on('data',  (data) => console.log('JAVA: ' + data));
+        javaServer.stderr.on('data',  (data) => console.error('JAVA ERROR: ' + data));
+        javaServer.on('close', (code) => console.log('Servidor Java cerrado con codigo ' + code));
+    } else {
+        // Desarrollo: Ejecutar el backend manualmente desde tu IDE/terminal
+        console.log('Modo Desarrollo: Asegúrate de tener el backend de Spring Boot corriendo manualmente en el puerto 8080.');
+    }
 }
 
 function waitForBackend(url = 'http://localhost:8080', timeout = 1000000) {
@@ -113,10 +63,6 @@ function waitForBackend(url = 'http://localhost:8080', timeout = 1000000) {
 function createWindow() {
     win = new BrowserWindow({
         frame:           false,
-        x:               windowState.x,
-        y:               windowState.y,
-        width:           windowState.width,
-        height:          windowState.height,
         minWidth:        800,
         minHeight:       500,
         icon:            path.join(__dirname, 'Icons/logo.ico'),
@@ -130,15 +76,22 @@ function createWindow() {
         }
     });
 
-    if (windowState.isMaximized) win.maximize();
+    win.webContents.on('console-message', (event, level, message) => {
+        console.log(message);
+    });
+
+    win.webContents.on('before-input-event', (event, input) => {
+        if (input.key === 'F5' && input.type === 'keyDown') {
+            win.webContents.reload();
+        }
+    });
+
+    win.maximize();
 
     win.loadFile(path.join(__dirname, 'index.html'));
 
     win.on('maximize',   () => win.webContents.send('window-state', 'maximized'));
     win.on('unmaximize', () => win.webContents.send('window-state', 'restored'));
-    win.on('resize',     saveState);
-    win.on('move',       saveState);
-    win.on('close',      saveState);
 }
 
 //////////////////////////////////////////////
@@ -199,13 +152,66 @@ app.whenReady().then(async () => {
 // ❌ CERRAR APP
 //////////////////////////////////////////////
 
-app.on('window-all-closed', () => {
-    if (javaServer && !javaServer.killed) {
-        if (process.platform === 'win32')
-            require('child_process').spawn('taskkill', ['/pid', javaServer.pid, '/f', '/t']);
-        else
-            javaServer.kill();
+let backendKilled = false;
+
+function killBackend() {
+    if (backendKilled) return;
+    backendKilled = true;
+    console.log('Iniciando cierre de backend...');
+
+    // Opcional: Llamada al endpoint de shutdown del backend (comentada por ahora)
+    /*
+    const http = require('node:http');
+    const req = http.request({
+        hostname: 'localhost',
+        port:     8080,
+        path:     '/api/shutdown',
+        method:   'POST'
+    }, (res) => {
+        console.log('Petición de shutdown enviada al backend');
+    });
+    req.on('error', (e) => console.error('Error al enviar shutdown: ' + e.message));
+    req.end();
+    */
+
+    // En desarrollo, no matamos el backend para dejarlo prendido independiente de Electron
+    if (!app.isPackaged) {
+        console.log('Modo Desarrollo: Se deja el backend de Spring Boot encendido.');
+        return;
     }
 
+    // 1. Matar el árbol de procesos de javaServer de forma síncrona
+    if (javaServer && !javaServer.killed) {
+        try {
+            if (process.platform === 'win32') {
+                const { spawnSync } = require('child_process');
+                spawnSync('taskkill', ['/pid', javaServer.pid, '/f', '/t'], { stdio: 'ignore' });
+            } else {
+                javaServer.kill('SIGTERM');
+            }
+        } catch (e) {
+            console.error('Error al cerrar javaServer: ' + e.message);
+        }
+    }
+
+    // 2. Liberar específicamente el puerto 8080 en caso de procesos huérfanos con comando simple
+    try {
+        const { execSync } = require('child_process');
+        if (process.platform === 'win32') {
+            execSync('powershell -Command "Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }"', { stdio: 'ignore' });
+        } else {
+            execSync('lsof -t -i:8080 | xargs kill -9', { stdio: 'ignore' });
+        }
+    } catch (e) {
+        // Ignorar si no hay procesos en el puerto 8080
+    }
+}
+
+app.on('window-all-closed', () => {
+    killBackend();
     if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('before-quit', () => {
+    killBackend();
 });

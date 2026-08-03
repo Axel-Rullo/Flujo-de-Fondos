@@ -1,29 +1,37 @@
-/* ================================================================
-    ESTILOS GLOBALES PARA FORMULARIOS
-================================================================ */
+/* ── FORMULARIOS ──────────────────────────────────── */
 
+/* Título principal del formulario */
 .form-title {
     font-size: 1rem;
     font-weight: bold;
     color: var(--white);
-    margin: 0 0 16px 0;
+    margin: 0 0 12px 0;
     padding-bottom: 12px;
     border-bottom: 2px solid var(--white);
 }
 
+/* Contenedor principal de los campos del formulario */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 14px;
-    width: 26rem;
+    width: 25rem;
 }
 
+/* Distribuye los campos del formulario en dos columnas al ser mas de 6 */
+.form-grid.multiple-columns {
+    grid-template-columns: 1fr 1fr;
+    width: 50rem;
+}
+
+/* Divide en grupos: etiqueta y campo */
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
+/* Etiquetas */
 .form-group label {
     font-size: 0.8rem;
     font-weight: 600;
@@ -32,6 +40,7 @@
     letter-spacing: 0.02em;
 }
 
+/* Estilo base de los campos de entrada y selección */
 .form-group input,
 .form-group select {
     background: var(--white);
@@ -44,15 +53,30 @@
     transition: border-color 0.15s;
 }
 
+/* Color del texto de ayuda (placeholder) */
 .form-group input::placeholder {
     color: var(--color-input);
 }
 
+/* Resalta el campo cuando recibe el foco */
 .form-group input:focus,
 .form-group select:focus {
-    border-color: var(--button-1);
+    border-color: transparent;
+    border-bottom-color: var(--button-1);
+    box-shadow: inset 0 -2px 0 0 var(--button-1);
+    outline: none;
 }
 
+/* Permite que un botón ocupe todo el ancho del formulario */
+.form-group-full {
+    width: 100%;
+}
+
+.form-group-full .btn {
+    width: 100%;
+}
+
+/* Contenedor de las acciones del formulario */
 .form-actions {
     display: flex;
     justify-content: space-around;
@@ -62,8 +86,11 @@
     border-top: 2px solid var(--white);
 }
 
+/* ── BOTONES ──────────────────────────────────────── */
+
+/* Estilo base para todos los botones del formulario */
 .btn {
-    width: 50%;
+    flex: 1;
     padding: 8px 16px;
     border-radius: 6px;
     font-size: 0.85rem;
@@ -73,28 +100,155 @@
     white-space: nowrap;
 }
 
+/* Efecto al presionar un botón */
 .btn:active {
     transform: scale(0.96);
 }
 
-.btn-secondary {
+/* Botón principal utilizado para confirmar acciones */
+.btn-primary {
+    background: var(--button-1);
+    color: var(--black);
+    border: 2px solid transparent;
+}
+
+/* Efecto al pasar el cursor sobre el botón principal */
+.btn-primary:hover {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid var(--button-1);
+}
+
+/* Botón utilizado para seleccionar o cargar una imagen */
+.btn-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--white);
+    border: 2px dashed var(--white);
+}
+
+/* Efecto al pasar el cursor sobre el botón de imagen */
+.btn-photo:hover {
+    color: var(--button-1);
+    border-style: solid;
+    border: 2px dashed var(--button-1);
+}
+
+/* Botón utilizado para eliminar registros */
+.btn-delete {
+    background: var(--red);
+    color: var(--white);
+    border: 2px solid transparent;
+}
+
+/* Efecto al pasar el cursor sobre el botón de eliminar */
+.btn-delete:hover {
+    background: transparent;
+    border: 2px solid var(--red);
+}
+
+/* Botón utilizado para cancelar una acción */
+.btn-cancel {
     background: var(--button-secundary-1);
     color: var(--white);
     border: 2px solid transparent;
 }
 
-.btn-secondary:hover {
+/* Efecto al pasar el cursor sobre el botón de cancelar */
+.btn-cancel:hover {
     background: transparent;
     border: 2px solid var(--button-secundary-1);
 }
 
-.btn-primary {
-    background: var(--button-1);
-    color: var(--white);
+/* ── TOM SELECT ───────────────────────────────────── */
+
+/* Campo principal generado por Tom Select */
+.ts-control {
+    background: var(--white);
     border: 2px solid transparent;
+    border-radius: 0;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    color: var(--black);
 }
 
-.btn-primary:hover {
-    background: transparent;
+/* Contenedor del componente Tom Select */
+.ts-wrapper {
+    position: relative;
+}
+
+/* Resalta el componente cuando tiene el foco */
+.ts-wrapper.focus .ts-control {
+    border-color: var(--button-1);
+}
+
+/* Contenedor del listado desplegable */
+.ts-dropdown {
+    position: absolute;
     border: 2px solid var(--button-1);
+    border-top: none;
+    border-radius: 0;
+    box-shadow: 0 4px 12px var(--modal-shadow);
+    background: var(--modal-box-bg);
+    z-index: 1000;
+    margin-top: 0;
+    overflow: hidden;
+}
+
+/* Área desplazable de las opciones */
+.ts-dropdown .ts-dropdown-content {
+    max-height: calc(2.25rem * 4);
+    overflow-y: auto;
+}
+
+/* Estilo de cada opción del listado */
+.ts-dropdown .option {
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    color: var(--white);
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+/* Resalta la opción seleccionada o bajo el cursor */
+.ts-dropdown .option.active,
+.ts-dropdown .option:hover {
+    background: var(--button-1);
+    color: var(--black);
+}
+
+/* Botón para eliminar una opción del listado */
+.ts-dropdown .btn-delete-option {
+    background: transparent;
+    border: none;
+    color: var(--red);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.15s, color 0.15s;
+    z-index: 10;
+    padding: 0;
+}
+
+/* Efecto al pasar el cursor sobre el botón de eliminación */
+.ts-dropdown .btn-delete-option:hover {
+    background: var(--delete-hover-bg);
+}
+
+/* Hereda el color del botón para el ícono SVG */
+.ts-dropdown .btn-delete-option svg {
+    stroke: currentColor;
+    fill: none;
 }

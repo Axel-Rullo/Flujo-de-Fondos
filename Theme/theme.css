@@ -2,6 +2,11 @@
     /* ── COLORES ───────────────────────────────────────────────────── */
     --white: white;
     --black: black;
+    --red: red;
+    --green: green;
+    --yellow: yellow;
+    --orange: orange;
+    --blue: blue;
     --text-muted: rgba(255, 255, 255, 0.4);
 
     /* ── TITLEBAR ──────────────────────────────────────────────────── */
@@ -11,19 +16,16 @@
     --titlebar-icon-hover:   rgba(255, 255, 255, 1);
     --titlebar-btn-hover:    rgba(255, 255, 255, 0.08);
     --titlebar-btn-active:   rgba(255, 255, 255, 0.15);
-    --titlebar-close-hover:  red;
-    --titlebar-close-active: #f1707a;
 
-    /* ── FORMULARIOS ────────────────────────────────────────────────── */
-    --form-label:           #555;
-    --form-input-bg:        #f9f9f9;
-    --form-input-border:    #ddd;
-    --form-input-focus:     #4a7cdc;
-    --form-input-error:     #e74c3c;
+    --block-login-active: #7EE8DA;
+    --titlebar-minimize-active: #6fcf6f;
+    --titlebar-maximize-active: #f7d566;
+    --titlebar-close-active: #f1707a;
 
     /* ICONOS */
     --edit-1: #f0a500;
     --view-1: #4a90e2;
+    --delete-hover-bg: rgb(225, 66, 66);
 
     /* ── TEMA PRINCIPAL ────────────────────────────────────────────── */
     --background-1: #111C2E;
@@ -36,20 +38,17 @@
 
     /* ── NAV ───────────────────────────────────────────────────────── */
     --border-button-color-1: rgba(255, 255, 255, 0.4);
-
     --color-input: #666;
-
-    --error: red;
 
     /* ── LOADING ───────────────────────────────────────────────────── */
     --loading-track: rgba(45, 212, 191, 0.12);
 
     /* ── TARJETA DE USUARIO ────────────────────────────────────────── */
-    --user-range-bg:     rgba(45, 212, 191, 0.1);
-    --user-range-border: rgba(45, 212, 191, 0.25);
     --user-divider:      rgba(255, 255, 255, 0.08);
     --user-subtitle:     rgba(255, 255, 255, 0.45);
     --user-value:        rgba(255, 255, 255, 0.85);
+    --range-overlay-bg:     rgba(0, 0, 0, 0.4);
+    --range-overlay-border: rgba(0, 0, 0, 0.5);
 
     /* ── LISTA DE USUARIOS ─────────────────────────────────────────── */
     --username-color: #6c757d;

@@ -1,60 +1,30 @@
-/* ================= HEADER ================= */
+/* ── ENCABEZADO ───────────────────────────────────── */
 
+/* Contenedor principal del encabezado */
 .header {
     display: flex;
-    flex-direction: row;
     width: 100%;
     justify-content: space-between;
     align-items: center;
     padding: 0;
 }
 
+/* Contenedor del logo y el título de la aplicación */
 .header-title {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    padding: 0 0 0 0.95rem;
+    padding: 0 0 0 0.76rem;
 }
 
+/* Título principal de la aplicación */
 .header-title h1 {
     margin: 0;
     font-weight: bold;
-    font-size: 1.8rem;
+    font-size: 1.44rem;
     font-family: "Dancing Script", cursive;
 }
 
+/* Espaciado entre el logo y el título */
 .header-title img {
-    margin-right: 0.4rem;
-}
-
-/* ================= MENU HEADER ================= */
-
-.header-menu {
-    display: flex;
-    padding: 0 0.95rem 0 0;
-}
-
-.menu-list {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    list-style: none;
-    padding: 0 1rem;
-    margin: 0;
-}
-
-.menu-item button {
-    background-color: transparent;
-    color: var(--white);
-    border: none;
-    width: 8rem;
-    padding: 0.95rem;
-    margin: 0 0.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.menu-item button:hover {
-    background-color: var(--button-hover-1);
+    margin-right: 0.32rem;
 }

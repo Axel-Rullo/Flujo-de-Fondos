@@ -3,61 +3,55 @@
     "version": "1.0.0",
     "description": "",
     "main": "main.js",
-
     "scripts": {
         "start": "electron .",
         "build:backend": "cd Backend/flujodefondos && mvnw.cmd package -DskipTests -q && copy target\\flujodefondos.jar ..\\flujodefondos.jar",
         "build": "npm run build:backend && electron-builder"
     },
-
     "keywords": [],
     "author": "Axel Rullo",
     "license": "ISC",
     "type": "commonjs",
-
     "dependencies": {
-        "electron-updater": "^6.8.3"
+        "@fontsource/dancing-script": "^5.3.0",
+        "@fontsource/inter": "^5.3.0",
+        "electron-updater": "^6.8.9",
+        "tabulator-tables": "^6.5.2",
+        "tom-select": "^2.6.2",
+        "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
     },
-
     "devDependencies": {
-        "electron": "^40.8.0",
-        "electron-builder": "^26.8.1"
+        "electron": "^40.10.6",
+        "electron-builder": "^26.15.7"
     },
-
     "build": {
         "appId": "com.axelrullo.flujo-de-fondos",
         "productName": "Flujo de Fondos",
-
         "files": [
             "main.js",
             "preload.js",
             "router.js",
             "index.html",
             "package.json",
-
             "Icons/**/*",
             "Scripts/**/*",
             "Styles/**/*",
             "Theme/**/*",
             "Views/**/*"
         ],
-
         "extraResources": [
             {
                 "from": "Backend/flujodefondos.jar",
                 "to": "Backend/flujodefondos.jar"
             }
         ],
-
         "win": {
             "target": "nsis",
-            "icon": "Icons/logo.ico"
+            "icon": "Backend/flujodefondos/uploads/icons/logo.ico"
         },
-
         "mac": {
             "target": "dmg"
         },
-
         "linux": {
             "target": "AppImage"
         }

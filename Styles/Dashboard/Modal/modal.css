@@ -1,19 +1,6 @@
-/* ── MODAL ────────────────────────────────────────────────────── */
+/* ── MODAL ────────────────────────────────────────── */
 
-.modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: var(--modal-overlay);
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-overlay.open {
-    display: flex;
-}
-
+/* Contenedor principal del contenido del modal */
 .modal-box {
     background: var(--modal-box-bg);
     border-radius: 8px;
@@ -26,6 +13,7 @@
     box-shadow: 0 10px 40px var(--modal-shadow);
 }
 
+/* Botón para cerrar el modal */
 .modal-close {
     position: absolute;
     top: 12px;
@@ -45,6 +33,7 @@
     transition: color 0.15s;
 }
 
+/* Cambia el color del botón al pasar el cursor */
 .modal-close:hover {
     color: var(--white);
 }

@@ -1,0 +1,17 @@
+<h2 class="form-title">LISTA DE USUARIOS</h2>
+
+<div class="form-user-list">
+    <div class="search-bar">
+        <button class="btn-add-user" title="Agregar usuario">
+            <svg width="22" height="22"><use href="#icon-add"/></svg>
+        </button>
+        <input type="text" class="search-input" placeholder="Busca un usuario">
+        <select id="user_status">
+            <option value="E" data-title="Usuarios Existentes"></option>
+            <option value="N" data-title="Usuarios Borrados"></option>
+        </select>
+    </div>
+    <div class="users-container"></div>
+</div>
+
+<script src="Scripts/dashboard/forms/user_list.js"></script>

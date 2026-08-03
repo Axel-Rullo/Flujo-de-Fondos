@@ -1,16 +1,3 @@
-function mostrarError(mensaje) {
-    const errorP = document.getElementById('login-error');
-    if (!errorP) return;
-
-    errorP.textContent = mensaje;
-    errorP.classList.add('visible');
-
-    clearTimeout(errorP._timeout);
-    errorP._timeout = setTimeout(() => {
-        errorP.classList.remove('visible');
-    }, 4000);
-}
-
 function iniciarLogin() {
 
     const loginForm = document.getElementById('login-form');
@@ -34,19 +21,23 @@ function iniciarLogin() {
 
         const usuario  = document.getElementById('username').value;
         const password = document.getElementById('password').value;
+        const block_login = document.querySelector('.tb-btn.bt-block-login');
 
         try {
             const data = await apiPost('/login', { usuario, password });
 
             if (data.ok) {
+                showAlert('Inicio de sesión exitoso', "success", 2000, 'top', false);
                 window.location.hash = 'dashboard';
+                block_login.classList.add('visible');
             } else {
-                mostrarError(data.mensaje);
+                showAlert(data.mensaje, "error", 3000, 'center', true);
+                loginForm.reset();
+                inputUser?.focus();
             }
 
         } catch (error) {
-            mostrarError('No se pudo conectar con el servidor.');
-            console.error(error);
+            showAlert('No se pudo conectar con el servidor', "error", 3000, 'center', true);
         }
     });
 }

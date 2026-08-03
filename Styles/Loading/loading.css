@@ -1,3 +1,4 @@
+/* Contenedor principal de la pantalla de carga */
 .loading {
     display: flex;
     flex-direction: column;
@@ -10,6 +11,7 @@
 
 /* ── SPINNER ──────────────────────────────────────── */
 
+/* Indicador circular que muestra que el sistema está cargando */
 .loading-spinner {
     width: 52px;
     height: 52px;
@@ -19,12 +21,16 @@
     animation: loading-spin 0.75s linear infinite;
 }
 
+/* Animación de rotación continua del spinner */
 @keyframes loading-spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* ── TEXTO DE ESTADO ──────────────────────────────── */
 
+/* Texto que informa el estado actual de la carga */
 .loading-text {
     margin: 0;
     font-size: 0.9rem;
@@ -34,18 +40,33 @@
     animation: loading-pulse 2s ease-in-out infinite;
 }
 
+/* Animación que hace variar la opacidad del texto */
 @keyframes loading-pulse {
-    0%, 100% { opacity: 0.4; }
-    50%      { opacity: 1; }
+    0%,
+
+    100% {opacity: 1;}
+
+    86% {opacity: 0.75;}
+
+    70% {opacity: 0.50;}
+
+    56% {opacity: 0.25;}
+
+    42% {opacity: 0.50;}
+
+    28% {opacity: 0.75;}
+
+    14% {opacity: 1;}
 }
 
 /* ── ERROR ────────────────────────────────────────── */
 
+/* Mensaje de error mostrado si ocurre un problema al iniciar el servidor */
 .loading-error {
     margin: 0;
     min-height: 1.2rem;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--error);
+    color: var(--red);
     text-align: center;
 }

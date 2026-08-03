@@ -1,0 +1,121 @@
+/* ── CONTENEDOR PRINCIPAL ─────────────────────────── */
+
+/* Contenedor principal de la alerta */
+.alert_container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 999;
+    background-color: var(--modal-box-bg);
+    color: var(--white);
+    padding: 12px 24px;
+    border: solid 2px var(--white);
+    border-radius: 8px;
+    box-shadow: 0 10px 40px var(--modal-shadow);
+}
+
+/* ── POSICIONES ───────────────────────────────────── */
+
+/* Posiciona la alerta en el centro de la pantalla */
+.alert_container.center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Posiciona la alerta en la parte superior de la pantalla */
+.alert_container.top {
+    top: 6%;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+/* ── CONTENIDO DE LA ALERTA ───────────────────────── */
+
+/* Contenedor que agrupa el ícono y el mensaje */
+.alert_content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Círculo donde se muestra el ícono de la alerta */
+.alert_icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+/* ── BOTONES DE ACCIÓN ────────────────────────────── */
+
+/* Contenedor de los botones de confirmación */
+.alert_actions {
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Muestra los botones cuando la alerta requiere una respuesta */
+.alert_actions.visible {
+    display: flex;
+}
+
+/* Estilo base de los botones de la alerta */
+.alert_btn {
+    flex: 1;
+    color: var(--white);
+    padding: 6px 16px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Efecto al pasar el cursor sobre el botón "Sí" */
+.alert_btn_yes:hover {
+    background: transparent;
+    border: 2px solid var(--green);
+}
+
+/* Efecto al pasar el cursor sobre el botón "No" */
+.alert_btn_no:hover {
+    background: transparent;
+    border: 2px solid var(--red);
+}
+
+/* ── VARIANTES DE LA ALERTA ───────────────────────── */
+
+/* Color del ícono para una alerta de éxito */
+.alert_icon.success {
+    background: var(--green);
+}
+
+/* Color del ícono para una alerta de error */
+.alert_icon.error {
+    background: var(--red);
+}
+
+/* Color del ícono para una alerta de advertencia */
+.alert_icon.warning {
+    background: var(--orange);
+}
+
+/* Color del ícono para una alerta informativa */
+.alert_icon.info {
+    background: var(--blue);
+}
+
+/* Color del botón de confirmación */
+.alert_btn_yes {
+    background: var(--green);
+}
+
+/* Color del botón de cancelación */
+.alert_btn_no {
+    background: var(--red);
+}

@@ -1,0 +1,66 @@
+<!-- ── HTML ──────────────────────────────────────────────────────── -->
+<h2 class="form-title">EDITAR USUARIO</h2>
+
+<form id="form_edit_user" class="form">
+    <div id="new_user" class="form-grid">
+
+        <div class="form-group">
+            <label for="name">Nombre</label>
+            <input type="text" id="name" name="name" placeholder="Nombre..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="lastname">Apellido</label>
+            <input type="text" id="lastname" name="lastname" placeholder="Apellido..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="username">Usuario</label>
+            <input type="text" id="username" name="username" placeholder="Usuario..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input type="text" id="password" name="password" placeholder="Contraseña...">
+        </div>
+
+        <div class="form-group">
+            <label for="dni">DNI</label>
+            <input type="text" id="dni" name="dni" placeholder="DNI..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="range">Rango</label>
+            <select id="range" name="range" required>
+                <option value="Miembro">Miembro</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Telefono</label>
+            <input type="text" id="phone_number" name="phone_number" placeholder="Telefono..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" placeholder="Email..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="branch">Sucursal</label>
+            <select id="branch" name="branch" placeholder="Sucursal..." required></select>
+        </div>
+
+        <div class="form-group form-group-full">
+            <input type="file" id="photo" accept="image/*" style="display:none">
+            <button type="button" id="btn-photo" class="btn btn-photo"><svg width="18" height="18"><use href="#icon-upload"/></svg> Añadir Foto de Perfil</button>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="reset" id="btn-cancel" class="btn btn-cancel" data-modal="Views/forms/users/users_list.html">Cancelar</button>
+        <button type="button" id="btn-delete" class="btn btn-delete">Borrar</button>
+        <button type="submit" id="btn-primary" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

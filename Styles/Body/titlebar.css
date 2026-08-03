@@ -1,5 +1,6 @@
-/* ── BARRA DE TÍTULO ──────────────────────────────────────────── */
+/* ── BARRA DE TÍTULO ──────────────────────────────── */
 
+/* Barra superior personalizada de la ventana */
 #titlebar {
     -webkit-app-region: drag;
     display: flex;
@@ -13,6 +14,7 @@
     user-select: none;
 }
 
+/* Contenedor de los botones de control de la ventana */
 #titlebar .tb-controls {
     -webkit-app-region: no-drag;
     display: flex;
@@ -20,6 +22,7 @@
     gap: 2px;
 }
 
+/* Estilo base de los botones de la barra de título */
 #titlebar .tb-btn {
     width: 32px;
     height: 32px;
@@ -34,16 +37,69 @@
     transition: background-color 0.15s, color 0.15s;
 }
 
-#titlebar .tb-btn svg { display: block; }
-
+/* Efecto al pasar el cursor sobre cualquier botón */
 #titlebar .tb-btn:hover {
     color: var(--titlebar-icon-hover);
     background-color: var(--titlebar-btn-hover);
 }
 
+/* Efecto al presionar cualquier botón */
 #titlebar .tb-btn:active {
     background-color: var(--titlebar-btn-active);
 }
 
-#titlebar .tb-btn.close:hover  { background-color: var(--titlebar-close-hover);  color: var(--white); }
-#titlebar .tb-btn.close:active { background-color: var(--titlebar-close-active); color: var(--white); }
+/* Oculta el botón de bloqueo de sesión por defecto */
+#titlebar .tb-btn.bt-block-login {
+    display: none;
+}
+
+/* Muestra el botón de bloqueo cuando corresponde */
+#titlebar .tb-btn.bt-block-login.visible {
+    display: flex;
+}
+
+/* Estilo de los botones generales */
+#titlebar .tb-btn.bt-block-login:hover,
+#titlebar .tb-btn.bt-user-list:hover {
+    background-color: var(--button-1);
+    color: var(--black);
+}
+
+#titlebar .tb-btn.bt-block-login:active,
+#titlebar .tb-btn.bt-user-list:active {
+    background-color: var(--block-login-active);
+    color: var(--black);
+}
+
+/* Estilo del botón de minimizar */
+#titlebar .tb-btn.minimize:hover {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+#titlebar .tb-btn.minimize:active {
+    background-color: var(--titlebar-minimize-active);
+    color: var(--white);
+}
+
+/* Estilo del botón de maximizar/restaurar */
+#titlebar .tb-btn.maximize:hover {
+    background-color: var(--yellow);
+    color: var(--black);
+}
+
+#titlebar .tb-btn.maximize:active {
+    background-color: var(--titlebar-maximize-active);
+    color: var(--black);
+}
+
+/* Estilo del botón para cerrar la aplicación */
+#titlebar .tb-btn.close:hover {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+#titlebar .tb-btn.close:active {
+    background-color: var(--titlebar-close-active);
+    color: var(--white);
+}

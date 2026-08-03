@@ -1,18 +1,15 @@
 /* ── MODAL ────────────────────────────────────────────────────── */
 
 const overlay = document.getElementById('modal-overlay');
-const modalBox = document.querySelector('.modal-box');
 const closeBtn = document.querySelector('.modal-close');
+const modalBody = document.getElementById('modal-body');
 
-/**
- * Abre un modal cargando un archivo HTML
- * @param {string} archivo - Ruta relativa del archivo a cargar
- */
 window.abrirModal = async function(archivo) {
     try {
         window.cerrarTodosLosMenus?.();
-        const modalBody = document.getElementById('modal-body');
         await cargarParcial(archivo, modalBody);
+        const formGrid = modalBody.querySelector('.form-grid');
+        if (formGrid) {ajustarColumnas(formGrid);}
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
         return modalBody;
@@ -21,17 +18,13 @@ window.abrirModal = async function(archivo) {
     }
 };
 
-/**
- * Cierra el modal y limpia su contenido
- */
 window.cerrarModal = function() {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
     
     // Limpiar el contenido del modal después de la animación
     setTimeout(() => {
-        const modalBody = document.getElementById('modal-body');
-        if (modalBody) modalBody.innerHTML = '';
+        modalBody.innerHTML = '';
     }, 200);
 };
 
@@ -68,4 +61,13 @@ document.addEventListener('click', (e) => {
     e.stopPropagation();
     
     window.abrirModal(archivo);
+});
+
+// Botones con data-close-modal — cierra el modal
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-close-modal]');
+    if (!btn) return;
+    
+    e.preventDefault();
+    window.cerrarModal();
 });

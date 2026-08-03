@@ -13,7 +13,8 @@ async function api(ruta, { method = "GET", body } = {}) {
         });
 
         if (!response.ok) throw new Error("HTTP " + response.status);
-        return response.json();
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
     } catch (err) {
         console.error("api " + ruta + ":", err);
         throw err;
@@ -22,3 +23,27 @@ async function api(ruta, { method = "GET", body } = {}) {
 
 const apiGet  = (ruta) => api(ruta);
 const apiPost = (ruta, body) => api(ruta, { method: "POST", body });
+
+//////////////////////////////////////////////
+// 🌐 APIPHOTO - Insert global de fotos
+//////////////////////////////////////////////
+async function apiPhoto(ruta, file, oldPhoto = '') {
+    try {
+        const formData = new FormData();
+        formData.append('photo', file);
+        if (oldPhoto) {
+            formData.append('oldPhoto', oldPhoto);
+        }
+
+        const response = await fetch(API_URL + ruta, {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return response.json();
+    } catch (err) {
+        console.error("api " + ruta + ":", err);
+        throw err;
+    }
+}

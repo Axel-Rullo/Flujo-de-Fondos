@@ -1,0 +1,60 @@
+<h2 class="form-title">Cheque de Terceros</h2>
+
+<form id="form-cheque">
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label for="tipo_cheque">Tipo</label>
+            <select id="tipo_cheque" name="tipo_cheque">
+                <option value="">Seleccionar...</option>
+                <option value="propio">A Pagar</option>
+                <option value="tercero">A Cobrar</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="importe">Importe</label>
+            <input type="number" id="importe" name="importe" placeholder="0.00" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label for="fecha_entrega">Fecha de Emisión</label>
+            <input type="date" id="fecha_entrega" name="fecha_entrega">
+        </div>
+
+        <div class="form-group">
+            <label for="fecha_cobro">Fecha de Vencimiento</label>
+            <input type="date" id="fecha_cobro" name="fecha_cobro">
+        </div>
+
+        <div class="form-group">
+            <label for="titular_origen">Titular de Origen</label>
+            <input type="text" id="titular_origen" name="titular_origen" placeholder="Titular de Origen...">
+        </div>
+
+        <div class="form-group">
+            <label for="titular_destino">Titular de Destino</label>
+            <input type="text" id="titular_destino" name="titular_destino" placeholder="Titular de Destino...">
+        </div>
+
+        <div class="form-group">
+            <label for="cuenta_entrada">Cuenta de Entrada</label>
+            <input type="text" id="cuenta_entrada" name="cuenta_entrada" placeholder="Cuenta de Entrada...">
+        </div>
+
+        <div class="form-group">
+            <label for="cuenta_salida">Cuenta de Salida</label>
+            <input type="text" id="cuenta_salida" name="cuenta_salida" placeholder="Cuenta de Salida...">
+        </div>
+
+        <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <input type="text" id="observaciones" name="observaciones" placeholder="Observaciones...">
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-cancel" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

@@ -1,87 +1,114 @@
-/* ──────────────────────────────────────────────
-    TARJETA DE USUARIO
-────────────────────────────────────────────── */
+/* ── PERFIL DE USUARIO ────────────────────────────── */
 
+/* Contenedor principal de la tarjeta de perfil */
 .form_user {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 2.3rem;
+    padding: 0.6rem 1.75rem 1.75rem;
+    color: var(--white);
+    width: 43.5rem;
+}
+
+/* ── SECCIÓN IZQUIERDA ────────────────────────────── */
+
+/* Contenedor de la foto de perfil y el rango */
+.left-section {
+    grid-column: 1;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    padding: 1.50rem;
-    color: var(--white);
-    width: 34rem;
-}
-
-/* ── HEADER ───────────────────────────────── */
-
-.header_user {
-    display: flex;
-    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    padding-right: 2.25rem;
+    justify-content: center;
+    gap: 1.15rem;
+    background-color: var(--button-1);
+    border-radius: 12px;
+    padding: 1.75rem;
 }
 
+/* Contenedor de la foto de perfil */
 .header_user_left {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    gap: 1rem;
+    justify-content: center;
 }
 
-.header_user img {
+/* Imagen de perfil del usuario */
+.header_user_left img {
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--button-1);
+    border: 2px solid var(--white);
 }
 
+/* Contenedor del avatar */
 .user_photo .avatar-list {
-    width: 96px;
-    height: 96px;
+    width: 193px;
+    height: 193px;
 }
 
+/* Avatar generado con iniciales cuando no hay foto */
 .user_photo .avatar-initials {
-    width: 96px;
-    height: 96px;
-    border: 2px solid var(--button-1);
-    font-size: 1.75rem;
+    width: 193px;
+    height: 193px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--white);
+    font-size: 3.1rem;
 }
 
+/* Etiqueta que muestra el rango del usuario */
 .range {
-    font-size: 0.75rem;
+    font-size: 0.86rem;
     font-weight: 700;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--button-1);
-    background-color: var(--user-range-bg);
-    border: 1px solid var(--user-range-border);
-    border-radius: 1.25rem;
-    padding: 0.25rem 0.75rem;
+    color: var(--white);
+    background-color: var(--range-overlay-bg);
+    border: 1px solid var(--range-overlay-border);
+    border-radius: 1.44rem;
+    padding: 0.29rem 1.03rem;
 }
 
-/* ── NOMBRE Y USUARIO ─────────────────────── */
+/* ── SECCIÓN DERECHA ──────────────────────────────── */
 
+/* Contenedor de la información del usuario */
+.right-section {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.44rem;
+}
+
+/* Encabezado con el Nombre Completo y Nombre de Usuario */
 .user_name {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    padding-bottom: 1.25rem;
+    align-items: center;
+    text-align: center;
+    gap: 0.29rem;
+    padding-bottom: 1.44rem;
     border-bottom: 1px solid var(--user-divider);
 }
 
+/* Nombre Completo */
 .name {
-    font-size: 1.75rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--white);
 }
 
+/* Nombre de Usuario */
 .user {
-    font-size: 1rem;
+    font-size: 1.15rem;
     font-weight: 500;
     color: var(--user-subtitle);
 }
 
-/* ── CAMPOS DE DATOS ──────────────────────── */
+/* ── DATOS DEL USUARIO ────────────────────────────── */
 
+/* Contenedores de cada dato mostrado */
 .user_dni,
 .user_contact,
 .phone,
@@ -89,41 +116,26 @@
 .user_branch {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.29rem;
 }
 
+/* Agrupa los datos de contacto */
 .user_contact {
-    gap: 1rem;
+    gap: 1.15rem;
 }
 
+/* Etiqueta descriptiva de cada dato */
 .label {
-    font-size: 0.75rem;
+    font-size: 0.86rem;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text-muted);
 }
 
+/* Valor correspondiente a cada dato */
 .value {
-    font-size: 1rem;
+    font-size: 1.15rem;
     font-weight: 500;
     color: var(--user-value);
-}
-
-/* ── BOTÓN CONTRASEÑA ─────────────────────── */
-
-.btn-pass {
-    width: 100%;
-    background-color: var(--button-1);
-    margin-top: 0.75rem;
-    padding: 0.70rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: 2px solid var(--button-1);
-}
-
-.btn-pass:hover {
-    background-color: var(--button-hover-1);
-    color: var(--white);
 }

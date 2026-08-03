@@ -1,0 +1,28 @@
+/* ── OVERLAY ──────────────────────────────────────── */
+
+/* Capa que cubre toda la pantalla al mostrar un modal o alerta */
+.overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--modal-overlay);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Muestra el overlay cuando está activo */
+.overlay.open {
+    display: flex;
+}
+
+/* Hace el overlay transparente sin bloquear la interacción del fondo */
+.overlay.no-bg {
+    background: transparent;
+    pointer-events: none;
+}
+
+/* Permite interactuar únicamente con el contenido del overlay */
+.overlay.no-bg > * {
+    pointer-events: auto;
+}

@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- SEGURITY -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost:8080; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' file:;">
+    <!-- POLÍTICA DE SEGURIDAD -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost:8080; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' file: http://localhost:8080;">
 
-    <!-- FONTS FAMILY (Dancing+Script y Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FONTS (Dancing Script e Inter, locales) -->
+    <link rel="stylesheet" href="./Styles/Fonts/inter/400.css">
+    <link rel="stylesheet" href="./Styles/Fonts/inter/600.css">
+    <link rel="stylesheet" href="./Styles/Fonts/inter/700.css">
+    <link rel="stylesheet" href="./Styles/Fonts/dancing-script/400.css">
+    <link rel="stylesheet" href="./Styles/Fonts/dancing-script/700.css">
+
+    <!-- TOM SELECT -->
+    <link rel="stylesheet" href="./Styles/Libs/tom-select.css">
+
+    <!-- TABULATOR -->
+    <link rel="stylesheet" href="./Styles/Libs/tabulator.min.css">
 
     <!-- THEME -->
     <link rel="stylesheet" href="./Theme/theme.css">
@@ -18,6 +26,8 @@
     <!-- STYLES -->
     <link rel="stylesheet" href="./Styles/Body/body.css">
     <link rel="stylesheet" href="./Styles/Body/titlebar.css">
+    <link rel="stylesheet" href="./Styles/Body/overlay.css">
+    <link rel="stylesheet" href="./Styles/Body/alerts.css">
     <link rel="stylesheet" href="./Styles/Dashboard/Header/header.css">
     <link rel="stylesheet" href="./Styles/Dashboard/Header/menus.css">
     <link rel="stylesheet" href="./Styles/Dashboard/Nav/nav.css">
@@ -29,18 +39,139 @@
     <link rel="stylesheet" href="./Styles/Dashboard/Modal/form_user.css">
     <link rel="stylesheet" href="./Styles/Dashboard/Modal/form_user_list.css">
 </head>
-
 <body>
+    <!-- ICONOS -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <symbol id="icon-reactive" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+        </symbol>
+
+        <symbol id="file-export" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" 
+            class="icon icon-tabler icons-tabler-outline icon-tabler-file-export">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+            <path d="M11.5 21h-4.5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v5m-5 6h7m-3 -3l3 3l-3 3" />
+        </symbol>
+
+        <symbol id="block-login" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-lock">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" />
+            <path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+            <path d="M8 11v-4a4 4 0 1 1 8 0v4" />
+        </symbol>
+
+        <symbol id="icon-upload" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+        </symbol>
+
+        <symbol id="icon-view" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+        </symbol>
+
+        <symbol id="icon-edit" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </symbol>
+
+        <symbol id="icon-add" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="8.5" cy="7" r="4"/>
+            <line x1="20" y1="8" x2="20" y2="14"/>
+            <line x1="23" y1="11" x2="17" y2="11"/>
+        </symbol>
+
+        <symbol id="icon-success" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+        </symbol>
+
+        <symbol id="icon-error" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+        </symbol>
+
+        <symbol id="icon-warning" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </symbol>
+
+        <symbol id="icon-info" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </symbol>
+
+        <symbol id="icon-users" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </symbol>
+
+        <symbol id="icon-user-x" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="8.5" cy="7" r="4"/>
+            <line x1="18" y1="8" x2="23" y2="13"/>
+            <line x1="23" y1="8" x2="18" y2="13"/>
+        </symbol>
+
+        <symbol id="icon-trash" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            <line x1="10" y1="11" x2="10" y2="17"/>
+            <line x1="14" y1="11" x2="14" y2="17"/>
+        </symbol>
+    </svg>
+
+    <!-- BARRA SUPERIOR -->
     <div id="titlebar">
         <div class="tb-controls">
-            <button class="tb-btn minimize" aria-label="Minimizar">
+            <button class="tb-btn bt-user-list" title="Lista de Usuarios" aria-label="Lista de Usuarios" data-modal="./Views/forms/users/users_list.html">
+                <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#icon-users"/></svg>
+            </button>
+            <button class="tb-btn bt-block-login" title="Bloquear sesión" aria-label="Bloquear sesión">
+                <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#block-login"/></svg>
+            </button>
+            <button class="tb-btn minimize" title="Minimizar" aria-label="Minimizar">
                 <svg width="12" height="12" viewBox="0 0 12 12"><line x1="1.5" y1="6" x2="10.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
             </button>
-            <button class="tb-btn maximize" aria-label="Maximizar">
+            <button class="tb-btn maximize" title="Maximizar" aria-label="Maximizar">
                 <svg class="icon-maximize" width="12" height="12" viewBox="0 0 12 12"><rect fill="none" stroke="currentColor" stroke-width="1.2" x="2" y="2" width="8" height="8" rx="0.5"/></svg>
                 <svg class="icon-restore" style="display:none;" width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M4 2h6v6M2 4h6v6H2z"/></svg>
             </button>
-            <button class="tb-btn close" aria-label="Cerrar">
+            <button class="tb-btn close" title="Cerrar" aria-label="Cerrar">
                 <svg width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" d="M2.5 2.5l7 7m-7 0l7-7"/></svg>
             </button>
         </div>
@@ -49,16 +180,48 @@
     <!-- APP -->
     <div id="app"></div>
 
-    <!-- Precarga de imágenes para evitar flash -->
-    <div style="display:none;">
-        <img src="./Icons/logo.png" alt="">
-        <img src="./Icons/ff.png" alt="">
-        <img src="./Icons/calendario.png" alt="">
-        <img src="./Icons/eyes.png" alt="">
-        <img src="./Icons/usuarios.png" alt="">
+    <!-- MODAL -->
+    <div id="modal-overlay" class="overlay">
+        <div class="modal-box">
+            <button class="modal-close">&times;</button>
+            <div id="modal-body"></div>
+        </div>
     </div>
 
+    <!-- CONTENEDOR DE ALERTAS -->
+    <div id="alert-overlay" class="overlay">
+        <div class="alert_container">
+            <div class="alert_content">
+                <div class="alert_icon"></div>
+                <div class="alert_message"></div>
+            </div>
+            <div class="alert_actions">
+                <button class="alert_btn alert_btn_yes">Sí</button>
+                <button class="alert_btn alert_btn_no">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRECARGA DE IMAGENES -->
+    <div style="display:none;">
+        <img src="./Backend/flujodefondos/uploads/icons/logo.png" alt="">
+        <img src="./Backend/flujodefondos/uploads/icons/ff.png" alt="">
+        <img src="./Backend/flujodefondos/uploads/icons/calendario.png" alt="">
+        <img src="./Backend/flujodefondos/uploads/icons/eyes.png" alt="">
+    </div>
+
+    <!-- SCRIPTS -->
+    <!-- #region -->
     <script src="router.js"></script>
+    <script src="Scripts/dashboard/forms/modal.js"></script>
+    <script src="./Scripts/alerts.js"></script>
     <script src="./Scripts/api.js"></script>
+    <!-- Tom Select -->
+    <script src="./Scripts/Libs/tom-select.complete.min.js"></script>
+    <!-- XLSX (para importaciones con Tabulator) -->
+    <script src="./Scripts/Libs/xlsx.full.min.js"></script>
+    <!-- Tabulator -->
+    <script src="./Scripts/Libs/tabulator.min.js"></script>
+    <!-- #endregion -->
 </body>
 </html>
