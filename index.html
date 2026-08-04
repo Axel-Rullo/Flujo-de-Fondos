@@ -8,36 +8,40 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost:8080; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' file: http://localhost:8080;">
 
     <!-- FONTS (Dancing Script e Inter, locales) -->
-    <link rel="stylesheet" href="./Styles/Fonts/inter/400.css">
-    <link rel="stylesheet" href="./Styles/Fonts/inter/600.css">
-    <link rel="stylesheet" href="./Styles/Fonts/inter/700.css">
-    <link rel="stylesheet" href="./Styles/Fonts/dancing-script/400.css">
-    <link rel="stylesheet" href="./Styles/Fonts/dancing-script/700.css">
+    <link rel="stylesheet" href="./Styles/fonts/inter/400.css">
+    <link rel="stylesheet" href="./Styles/fonts/inter/600.css">
+    <link rel="stylesheet" href="./Styles/fonts/inter/700.css">
+    <link rel="stylesheet" href="./Styles/fonts/dancing-script/400.css">
+    <link rel="stylesheet" href="./Styles/fonts/dancing-script/700.css">
 
     <!-- TOM SELECT -->
-    <link rel="stylesheet" href="./Styles/Libs/tom-select.css">
+    <link rel="stylesheet" href="./Styles/libs/tom_select/tom-select.css">
 
     <!-- TABULATOR -->
-    <link rel="stylesheet" href="./Styles/Libs/tabulator.min.css">
+    <link rel="stylesheet" href="./Styles/libs/tabulator/tabulator.min.css">
 
     <!-- THEME -->
     <link rel="stylesheet" href="./Theme/theme.css">
 
     <!-- STYLES -->
-    <link rel="stylesheet" href="./Styles/Body/body.css">
-    <link rel="stylesheet" href="./Styles/Body/titlebar.css">
-    <link rel="stylesheet" href="./Styles/Body/overlay.css">
-    <link rel="stylesheet" href="./Styles/Body/alerts.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Header/header.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Header/menus.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Nav/nav.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Tables/tables.css">
-    <link rel="stylesheet" href="./Styles/Login/login.css">
-    <link rel="stylesheet" href="./Styles/Loading/loading.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Modal/modal.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Modal/forms.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Modal/form_user.css">
-    <link rel="stylesheet" href="./Styles/Dashboard/Modal/form_user_list.css">
+    <!-- body -->
+    <link rel="stylesheet" href="./Styles/body/body.css">
+    <link rel="stylesheet" href="./Styles/body/titlebar.css">
+    <link rel="stylesheet" href="./Styles/body/overlay.css">
+    <link rel="stylesheet" href="./Styles/body/alerts.css">
+    <!-- loading -->
+    <link rel="stylesheet" href="./Styles/loading/loading.css">
+    <!-- login -->
+    <link rel="stylesheet" href="./Styles/login/login.css">
+    <!-- dashboard -->
+    <link rel="stylesheet" href="./Styles/dashboard/header/header.css">
+    <link rel="stylesheet" href="./Styles/dashboard/menus/menus.css">
+    <link rel="stylesheet" href="./Styles/dashboard/nav/nav.css">
+    <link rel="stylesheet" href="./Styles/dashboard/modal/modal.css">
+    <link rel="stylesheet" href="./Styles/dashboard/forms/forms.css">
+    <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user.css">
+    <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user_list.css">
+    <link rel="stylesheet" href="./Styles/dashboard/tables/tables.css">
 </head>
 <body>
     <!-- ICONOS -->
@@ -213,15 +217,16 @@
     <!-- SCRIPTS -->
     <!-- #region -->
     <script src="router.js"></script>
-    <script src="Scripts/dashboard/forms/modal.js"></script>
-    <script src="./Scripts/alerts.js"></script>
     <script src="./Scripts/api.js"></script>
+    <script src="./Scripts/modal.js"></script>
+    <script src="./Scripts/alerts.js"></script>
+    <script src="./Scripts/dashboard/forms/forms.js"></script>
     <!-- Tom Select -->
-    <script src="./Scripts/Libs/tom-select.complete.min.js"></script>
+    <script src="./Scripts/libs/tom-select/tom_select.complete.min.js"></script>
     <!-- XLSX (para importaciones con Tabulator) -->
-    <script src="./Scripts/Libs/xlsx.full.min.js"></script>
+    <script src="./Scripts/libs/xlsx/xlsx.full.min.js"></script>
     <!-- Tabulator -->
-    <script src="./Scripts/Libs/tabulator.min.js"></script>
+    <script src="./Scripts/libs/tabulator/tabulator.min.js"></script>
     <!-- #endregion -->
 </body>
 </html>
