@@ -19,6 +19,7 @@ window.abrirModal = async function(archivo) {
 };
 
 window.cerrarModal = function() {
+    document.activeElement?.blur();
     overlay.classList.remove('open');
     document.body.style.overflow = '';
     

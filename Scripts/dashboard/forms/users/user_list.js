@@ -308,7 +308,29 @@
         });
     }
 
+    //////////////////////////////////////////////
+    // 🙍 PERFIL PROPIO
+    //////////////////////////////////////////////
+
+    function renderProfileButton() {
+        const btn = document.querySelector('#btn-profile');
+        if (!btn || !window.currentUser) return;
+        if (!window.currentUser.photo) window.currentUser.color = getRandomColor();
+        btn.innerHTML = getAvatar(window.currentUser);
+    }
+
+    function initProfileButton() {
+        document.addEventListener('click', e => {
+            const btn = e.target.closest('#btn-profile');
+            if (!btn) return;
+            abrirModal('./Views/forms/users/user.html').then(modalContainer => {
+                showUser(window.currentUser, modalContainer);
+            });
+        });
+    }
+
     initUsersList();
+    renderProfileButton();
 
     // Los listeners de document son globales: si el script se re-ejecuta (partial recargado), se duplicarían
     if (!window.__userFormsInit) {
@@ -316,5 +338,6 @@
         initUserForms();
         initPhotoUpload();
         initDeleteUser();
+        initProfileButton();
     }
 })();

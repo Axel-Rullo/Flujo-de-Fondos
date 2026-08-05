@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -20,13 +21,13 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
 
-        boolean ok = loginService.login(
+        Optional<User> logueado = loginService.login(
             user.getUsuario(),
             user.getPassword()
         );
 
-        if (ok) {
-            return ResponseEntity.ok(Map.of("ok", true));
+        if (logueado.isPresent()) {
+            return ResponseEntity.ok(Map.of("ok", true, "usuario", logueado.get()));
         }
 
         return ResponseEntity.ok(Map.of("ok", false, "mensaje", "Usuario o contraseña incorrectos"));

@@ -21,13 +21,18 @@ function iniciarLogin() {
 
         const usuario  = document.getElementById('username').value;
         const password = document.getElementById('password').value;
+        const btns_admin = document.querySelectorAll('.admin-only');
         const block_login = document.querySelector('.tb-btn.bt-block-login');
 
         try {
             const data = await apiPost('/login', { usuario, password });
 
             if (data.ok) {
+                window.currentUser = data.usuario;
                 showAlert('Inicio de sesión exitoso', "success", 2000, 'top', false);
+                if (currentUser.rango === 'Admin') {
+                    btns_admin.forEach(btn => btn.classList.add("admin"));
+                }
                 window.location.hash = 'dashboard';
                 block_login.classList.add('visible');
             } else {

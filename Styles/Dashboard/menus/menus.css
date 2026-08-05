@@ -43,6 +43,12 @@
     background: var(--button-hover-1);
 }
 
+#btn-profile {
+    width: 4rem;
+    min-width: 4rem;
+    padding: 0.3rem 0.3rem;
+}
+
 /* Submenú desplegable del primer nivel */
 .submenu {
     position: absolute;

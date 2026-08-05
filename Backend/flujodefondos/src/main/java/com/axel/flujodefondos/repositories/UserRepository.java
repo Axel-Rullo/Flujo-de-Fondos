@@ -52,7 +52,16 @@ public class UserRepository {
         ).stream().findFirst();
     }
 
-    // ── LISTADOS ──────────────────────────────────────────────────────
+    // ── USUARIO ───────────────────────────────────────────────────────
+    public Optional<User> findById(String id) {
+        return jdbcTemplate.query(
+                "SELECT u.id_usuario, u.user, u.dni, u.nombre, u.email, u.telefono, u.rango, u.id_sucursal, u.photo, s.nombre AS sucursal_nombre FROM usuarios u JOIN sucursales s ON u.id_sucursal = s.id_sucursal WHERE u.id_usuario = ?",
+                userMapper,
+                id
+        ).stream().findFirst();
+    }
+
+    // ── LISTADO DE USUARIOS ───────────────────────────────────────────
 
     public List<User> findAllActive() {
     return jdbcTemplate.query(
