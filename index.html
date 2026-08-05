@@ -161,23 +161,69 @@
 
     <!-- BARRA SUPERIOR -->
     <div id="titlebar">
+        <!-- Logo y menú -->
+        <header class="header">
+            <div class="header-title">
+                <img class="dashboard-logo" src="./Backend/flujodefondos/uploads/icons/logo.png" alt="Logo" width="24" height="24">
+            </div>
+            <aside class="accordion">
+                <div class="menu-group">
+                    <button data-target="sub-movimientos">MOVIMIENTOS <span class="chevron">▶</span></button>
+                    <div id="sub-movimientos" class="submenu">
+                        <a data-modal="Views/forms/movimientos/nuevo_movimiento.html" href="#">NUEVO MOVIMIENTO</a>
+                    </div>
+                </div>
+
+                <div class="menu-group">
+                    <button data-target="sub-cheques">CHEQUES <span class="chevron">▶</span></button>
+                    <div id="sub-cheques" class="submenu">
+                        <div class="submenu-nivel2">
+                            <button data-target="sub-nuevo">NUEVO <span class="chevron">▶</span></button>
+                            <div id="sub-nuevo" class="submenu-nivel3-container">
+                                <a data-modal="Views/forms/cheques/cheque_propio.html" href="#">CHEQUE PROPIO</a>
+                                <a data-modal="Views/forms/cheques/cheque_terceros.html" href="#">CHEQUE DE TERCEROS</a>
+                            </div>
+                        </div>
+                        <div class="submenu-nivel2">
+                            <button data-target="sub-emitidos">EMITIDOS <span class="chevron">▶</span></button>
+                            <div id="sub-emitidos" class="submenu-nivel3-container">
+
+                            </div>
+                        </div>
+                        <div class="submenu-nivel2">
+                            <button data-target="sub-acobrar">A COBRAR <span class="chevron">▶</span></button>
+                            <div id="sub-acobrar" class="submenu-nivel3-container">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </header>
+
+        <!-- Controles de ventana -->
         <div class="tb-controls">
-            <button class="tb-btn bt-user-list admin-only" title="Lista de Usuarios" aria-label="Lista de Usuarios" data-modal="./Views/forms/users/users_list.html">
-                <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#icon-users"/></svg>
-            </button>
-            <button class="tb-btn bt-block-login" title="Bloquear sesión" aria-label="Bloquear sesión">
-                <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#block-login"/></svg>
-            </button>
-            <button class="tb-btn minimize" title="Minimizar" aria-label="Minimizar">
-                <svg width="12" height="12" viewBox="0 0 12 12"><line x1="1.5" y1="6" x2="10.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-            </button>
-            <button class="tb-btn maximize" title="Maximizar" aria-label="Maximizar">
-                <svg class="icon-maximize" width="12" height="12" viewBox="0 0 12 12"><rect fill="none" stroke="currentColor" stroke-width="1.2" x="2" y="2" width="8" height="8" rx="0.5"/></svg>
-                <svg class="icon-restore" style="display:none;" width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M4 2h6v6M2 4h6v6H2z"/></svg>
-            </button>
-            <button class="tb-btn close" title="Cerrar" aria-label="Cerrar">
-                <svg width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" d="M2.5 2.5l7 7m-7 0l7-7"/></svg>
-            </button>
+            <div class="tb-account-controls">
+                <button class="tb-btn bt-user-list admin-only" title="Lista de Usuarios" aria-label="Lista de Usuarios" data-modal="./Views/forms/users/users_list.html">
+                    <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#icon-users"/></svg>
+                </button>
+                <button class="tb-btn bt-block-login" title="Bloquear sesión" aria-label="Bloquear sesión">
+                    <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#block-login"/></svg>
+                </button>
+                <button id="btn-profile" class="tb-btn btn-profile" title="Mi perfil" aria-label="Mi perfil"></button>
+            </div>
+            <div class="tb-window-controls">
+                <button class="tb-btn minimize" title="Minimizar" aria-label="Minimizar">
+                    <svg width="12" height="12" viewBox="0 0 12 12"><line x1="1.5" y1="6" x2="10.5" y2="6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </button>
+                <button class="tb-btn maximize" title="Maximizar" aria-label="Maximizar">
+                    <svg class="icon-maximize" width="12" height="12" viewBox="0 0 12 12"><rect fill="none" stroke="currentColor" stroke-width="1.2" x="2" y="2" width="8" height="8" rx="0.5"/></svg>
+                    <svg class="icon-restore" style="display:none;" width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" d="M4 2h6v6M2 4h6v6H2z"/></svg>
+                </button>
+                <button class="tb-btn close" title="Cerrar" aria-label="Cerrar">
+                    <svg width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" d="M2.5 2.5l7 7m-7 0l7-7"/></svg>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -221,6 +267,7 @@
     <script src="./Scripts/modal.js"></script>
     <script src="./Scripts/alerts.js"></script>
     <script src="./Scripts/dashboard/forms/forms.js"></script>
+    <script src="./Scripts/dashboard/menus/menus.js"></script>
     <!-- Tom Select -->
     <script src="./Scripts/libs/tom_select/tom-select.complete.min.js"></script>
     <!-- XLSX (para importaciones con Tabulator) -->

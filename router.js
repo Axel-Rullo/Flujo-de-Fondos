@@ -75,13 +75,16 @@ function iniciarTitlebar() {
     const barra = document.getElementById('titlebar');
     if (!barra) return;
     const api = window.electronAPI;
+    const header = document.querySelector('header');
+    const block_login = document.querySelector('.tb-account-controls');
     const btns_admin = document.querySelectorAll('.admin-only');
     ['minimize', 'maximize', 'close'].forEach(a =>
         barra.querySelector('.' + a)?.addEventListener('click', () => api?.[a + 'Window']())
     );
     barra.querySelector('.bt-block-login')?.addEventListener('click', () => {
         location.hash = 'login';
-        barra.querySelector('.bt-block-login').classList.remove('visible');
+        header.classList.remove('active');
+        block_login.classList.remove('visible');
         btns_admin.forEach(btn => btn.classList.remove('admin'));
     });
     api?.isMaximized()?.then(iconoMaximizar);

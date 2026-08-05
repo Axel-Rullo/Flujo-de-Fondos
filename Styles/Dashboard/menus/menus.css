@@ -25,7 +25,7 @@
     min-width: 7.04rem;
     width: auto;
     height: 100%;
-    background: none;
+    background: var(--titlebar-bg);
     border: none;
     padding: 0.42rem 0.72rem;
     box-sizing: border-box;
@@ -43,12 +43,6 @@
     background: var(--button-hover-1);
 }
 
-#btn-profile {
-    width: 4rem;
-    min-width: 4rem;
-    padding: 0.3rem 0.3rem;
-}
-
 /* Submenú desplegable del primer nivel */
 .submenu {
     position: absolute;
@@ -59,7 +53,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    background-color: var(--background-1);
+    background-color: var(--titlebar-bg);
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -67,7 +61,8 @@
 
 /* Expande el submenú cuando está abierto */
 .submenu.open {
-    max-height: 12rem;
+    border: 2px solid var(--white);
+    max-height: 30rem;
 }
 
 /* Enlaces y botones del primer submenú */
@@ -100,6 +95,7 @@
 
 /* Contenedor de un submenú de segundo nivel */
 .submenu-nivel2 {
+    border-left: 2px solid var(--white);
     width: 100%;
     position: relative;
     box-sizing: border-box;

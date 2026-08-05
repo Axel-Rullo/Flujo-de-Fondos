@@ -22,7 +22,8 @@ function iniciarLogin() {
         const usuario  = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         const btns_admin = document.querySelectorAll('.admin-only');
-        const block_login = document.querySelector('.tb-btn.bt-block-login');
+        const header = document.querySelector('header');
+        const block_login = document.querySelector('.tb-account-controls');
 
         try {
             const data = await apiPost('/login', { usuario, password });
@@ -34,6 +35,7 @@ function iniciarLogin() {
                     btns_admin.forEach(btn => btn.classList.add("admin"));
                 }
                 window.location.hash = 'dashboard';
+                header.classList.add('active');
                 block_login.classList.add('visible');
             } else {
                 showAlert(data.mensaje, "error", 3000, 'center', true);

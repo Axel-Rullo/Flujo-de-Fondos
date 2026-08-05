@@ -19,7 +19,25 @@
     -webkit-app-region: no-drag;
     display: flex;
     align-items: center;
+    gap: 8px;
+}
+
+/* Contenedor de minimizar/maximizar/cerrar, sin separación extra entre ellos */
+#titlebar .tb-window-controls {
+    display: flex;
+    align-items: center;
     gap: 2px;
+}
+
+/* Agrupa accesos de cuenta: usuarios, bloqueo y perfil */
+#titlebar .tb-account-controls {
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+
+#titlebar .tb-account-controls.visible {
+    display: flex;
 }
 
 /* Estilo base de los botones de la barra de título */
@@ -48,14 +66,13 @@
     background-color: var(--titlebar-btn-active);
 }
 
-/* Oculta el botón de bloqueo de sesión por defecto */
-#titlebar .tb-btn.bt-block-login {
-    display: none;
-}
-
-/* Muestra el botón de bloqueo cuando corresponde */
-#titlebar .tb-btn.bt-block-login.visible {
-    display: flex;
+/* Botón de perfil (avatar), más chico que el resto de los tb-btn */
+#titlebar .tb-btn.btn-profile {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 /* Estilo de los botones generales */

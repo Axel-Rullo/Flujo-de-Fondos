@@ -1,47 +1,3 @@
-<header class="header">
-    <div class="header-title">
-        <img class="dashboard-logo" src="./Backend/flujodefondos/uploads/icons/logo.png" alt="Logo" width="40" height="40">
-        <h1>Flujo de Fondos</h1>
-    </div>
-    <aside class="accordion">
-        <div class="menu-group">
-            <button data-target="sub-movimientos">MOVIMIENTOS <span class="chevron">▶</span></button>
-            <div id="sub-movimientos" class="submenu">
-                <a data-modal="Views/forms/movimientos/nuevo_movimiento.html" href="#">NUEVO MOVIMIENTO</a>
-            </div>
-        </div>
-
-        <div class="menu-group">
-            <button data-target="sub-cheques">CHEQUES <span class="chevron">▶</span></button>
-            <div id="sub-cheques" class="submenu">
-                <div class="submenu-nivel2">
-                    <button data-target="sub-nuevo">NUEVO <span class="chevron">▶</span></button>
-                    <div id="sub-nuevo" class="submenu-nivel3-container">
-                        <a data-modal="Views/forms/cheques/cheque_propio.html" href="#">CHEQUE PROPIO</a>
-                        <a data-modal="Views/forms/cheques/cheque_terceros.html" href="#">CHEQUE DE TERCEROS</a>
-                    </div>
-                </div>
-                <div class="submenu-nivel2">
-                    <button data-target="sub-emitidos">EMITIDOS <span class="chevron">▶</span></button>
-                    <div id="sub-emitidos" class="submenu-nivel3-container">
-                        
-                    </div>
-                </div>
-                <div class="submenu-nivel2">
-                    <button data-target="sub-acobrar">A COBRAR <span class="chevron">▶</span></button>
-                    <div id="sub-acobrar" class="submenu-nivel3-container">
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="menu-group">
-            <button id="btn-profile" class="btn-profile"></button>
-        </div>
-    </aside>
-</header>
-
 <nav class="nav">
     <ul class="nav-list">
         <li class="nav-item icon">
@@ -75,6 +31,5 @@
 
 <main id="content" class="main"></main>
 
-<script src="Scripts/dashboard/menus/menus.js"></script>
 <script src="Scripts/dashboard/nav/nav.js"></script>
 <script src="Scripts/dashboard/forms/users/user_list.js"></script>
