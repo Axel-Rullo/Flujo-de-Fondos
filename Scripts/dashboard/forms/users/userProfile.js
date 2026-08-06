@@ -1,0 +1,31 @@
+(function() {
+    if (window.__userProfileInit) return;
+    window.__userProfileInit = true;
+
+    function renderProfileButton() {
+        const btn = document.querySelector('#btn-profile');
+        if (!btn || !window.currentUser) return;
+        
+        if (!window.currentUser.photo) {
+            window.currentUser.color = window.UserTemplates.getRandomColor();
+        }
+        
+        btn.innerHTML = window.UserTemplates.getAvatar(window.currentUser);
+    }
+
+    function initProfileButton() {
+        document.addEventListener('click', e => {
+            const btn = e.target.closest('#btn-profile');
+            if (!btn) return;
+            
+            abrirModal('./Views/forms/users/user.html').then(modalContainer => {
+                window.UserTemplates.fillUserModal(window.currentUser, modalContainer);
+            });
+        });
+    }
+
+    renderProfileButton();
+    initProfileButton();
+
+    window.renderProfileButton = renderProfileButton;
+})();

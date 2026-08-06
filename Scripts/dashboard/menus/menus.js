@@ -7,26 +7,23 @@ function grupoDe(boton) {
 }
 
 function iniciarMenus() {
-    document.querySelectorAll('[data-target]').forEach(boton => {
-        boton.addEventListener('click', e => {
-            e.stopPropagation();
-
-            const submenu = document.getElementById(boton.dataset.target);
-            if (!submenu) return;
-
-            const estabaAbierto = submenu.classList.contains('open');
-
-            cerrarHermanos(boton);
-            estabaAbierto ? cerrarMenu(boton, submenu) : abrirMenu(boton, submenu);
-        });
-    });
-
-    // Cerrar al hacer click fuera del grupo correspondiente
     document.addEventListener('click', e => {
-        document.querySelectorAll('[data-target].active').forEach(boton => {
-            const grupo = grupoDe(boton);
+        // Manejar clicks en botones para abrir/cerrar menús
+        const boton = e.target.closest('[data-target]');
+        if (boton) {
+            const submenu = document.getElementById(boton.dataset.target);
+            if (submenu) {
+                const estabaAbierto = submenu.classList.contains('open');
+                cerrarHermanos(boton);
+                estabaAbierto ? cerrarMenu(boton, submenu) : abrirMenu(boton, submenu);
+            }
+        }
+
+        // Cerrar al hacer click fuera del grupo correspondiente
+        document.querySelectorAll('[data-target].active').forEach(b => {
+            const grupo = grupoDe(b);
             if (grupo && !grupo.contains(e.target)) {
-                cerrarMenu(boton, document.getElementById(boton.dataset.target));
+                cerrarMenu(b, document.getElementById(b.dataset.target));
             }
         });
     });

@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: flex-end;
     height: 38px;
-    padding: 0 12px;
+    padding: 0 0.1rem;
     background-color: var(--titlebar-bg);
     border-bottom: 1px solid var(--titlebar-border);
     flex-shrink: 0;
