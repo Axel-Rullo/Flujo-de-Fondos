@@ -9,7 +9,15 @@ window.UserTemplates = {
     getRandomColor: function() {
         return this.avatarColors[Math.floor(Math.random() * this.avatarColors.length)];
     },
-    getAvatar: function(user) {
+    getAvatar: function(user, size = 40) {
+        if (user.photo) {
+            return `
+                <div class="avatar-list">
+                    <img src="http://localhost:8080${user.photo}" alt="" height="${size}" width="${size}">
+                </div>
+            `;
+        }
+
         const parts = user.nombre.trim().split(/\s+/);
         let iniciales = '';
         if (parts.length > 0 && parts[0].length > 0) {
@@ -68,9 +76,7 @@ window.UserTemplates = {
         container.querySelector('.user_email .value').textContent = user.email;
         container.querySelector('.user_branch .value').textContent = user.sucursalNombre || 'Sin sucursal';
 
-        container.querySelector('.user_photo').innerHTML = user.photo
-            ? `<img src="http://localhost:8080${user.photo}" alt="" height="193" width="193">`
-            : this.getAvatar(user);
+        container.querySelector('.user_photo').innerHTML = this.getAvatar(user, 193);
     },
 
     fillEditForm: function(user, container) {
