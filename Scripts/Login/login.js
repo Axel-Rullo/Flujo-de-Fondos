@@ -31,12 +31,13 @@ function iniciarLogin() {
             if (data.ok) {
                 window.currentUser = data.usuario;
                 showAlert('Inicio de sesión exitoso', "success", 2000, 'top', false);
-                if (currentUser.rango === 'Admin') {
+                if (data.usuario?.rango === 'Admin') {
                     btns_admin.forEach(btn => btn.classList.add("admin"));
                 }
                 window.location.hash = 'dashboard';
                 header.classList.add('active');
                 block_login.classList.add('visible');
+                window.renderProfileButton?.();
             } else {
                 showAlert(data.mensaje, "error", 3000, 'center', true);
                 loginForm.reset();

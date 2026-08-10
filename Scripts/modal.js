@@ -5,11 +5,12 @@ const closeBtn = document.querySelector('.modal-close');
 const modalBody = document.getElementById('modal-body');
 
 window.abrirModal = async function(archivo) {
+    if (!overlay) return;
     try {
         window.cerrarTodosLosMenus?.();
         await cargarParcial(archivo, modalBody);
-        const formGrid = modalBody.querySelector('.form-grid');
-        if (formGrid) {ajustarColumnas(formGrid);}
+        const formGrid = modalBody?.querySelector('.form-grid');
+        if (formGrid) ajustarColumnas(formGrid);
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
         return modalBody;
@@ -19,13 +20,13 @@ window.abrirModal = async function(archivo) {
 };
 
 window.cerrarModal = function() {
+    if (!overlay) return;
     document.activeElement?.blur();
     overlay.classList.remove('open');
     document.body.style.overflow = '';
     
-    // Limpiar el contenido del modal después de la animación
     setTimeout(() => {
-        modalBody.innerHTML = '';
+        if (modalBody) modalBody.innerHTML = '';
     }, 200);
 };
 

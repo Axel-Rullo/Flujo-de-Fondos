@@ -7,7 +7,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     readView: async (relativePath) => {
         const safePath = path.resolve(__dirname, relativePath);
-        if (!safePath.startsWith(__dirname)) throw new Error('Access denied');
+        const rel = path.relative(__dirname, safePath);
+        if (rel.startsWith('..') || path.isAbsolute(rel)) throw new Error('Access denied');
         return fs.promises.readFile(safePath, 'utf8');
     },
 

@@ -18,15 +18,17 @@ async function ejecutarScripts(contenedor, grupo) {
     for (const viejo of contenedor.querySelectorAll('script')) {
         const nuevo = document.createElement('script');
         nuevo.setAttribute(grupo, '');
-        let listo;
         if (viejo.src) {
-            listo = new Promise((ok, err) => { nuevo.onload = ok; nuevo.onerror = err; });
-            nuevo.src = viejo.src;
+            await new Promise(resolve => {
+                nuevo.onload = resolve;
+                nuevo.onerror = () => { console.error('Error al cargar:', viejo.src); resolve(); };
+                nuevo.src = viejo.src;
+                document.head.appendChild(nuevo);
+            });
         } else {
             nuevo.textContent = viejo.textContent;
+            document.head.appendChild(nuevo);
         }
-        document.head.appendChild(nuevo);
-        await listo;
         viejo.remove();
     }
 }
@@ -42,8 +44,9 @@ async function cargarParcial(ruta, destino = document.getElementById('content'))
 async function cargarRuta() {
     const hash = location.hash.slice(1);
     const app  = document.getElementById('app');
+    const vista = rutas[hash] ?? (hash === '' ? rutas[''] : rutas['login']);
     try {
-        app.innerHTML = await leerHtml(rutas[hash] ?? rutas['']);
+        app.innerHTML = await leerHtml(vista);
         app.classList.remove('vista-enter');
         void app.offsetWidth; // reflow → reinicia animación
         app.classList.add('vista-enter');

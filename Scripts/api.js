@@ -12,9 +12,18 @@ async function api(ruta, { method = "GET", body } = {}) {
             body: body ? JSON.stringify(body) : undefined
         });
 
-        if (!response.ok) throw new Error("HTTP " + response.status);
         const text = await response.text();
-        return text ? JSON.parse(text) : null;
+        let data = null;
+        if (text) {
+            try { data = JSON.parse(text); } catch (_) { data = text; }
+        }
+
+        if (!response.ok) {
+            const msg = (data && typeof data === 'object' && data.message) ? data.message : ("HTTP " + response.status);
+            throw new Error(msg);
+        }
+
+        return data;
     } catch (err) {
         console.error("api " + ruta + ":", err);
         throw err;

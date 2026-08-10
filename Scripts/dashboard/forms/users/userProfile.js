@@ -6,11 +6,13 @@
         const btn = document.querySelector('#btn-profile');
         if (!btn || !window.currentUser) return;
         
-        if (!window.currentUser.photo) {
+        if (!window.currentUser.photo && window.UserTemplates?.getRandomColor) {
             window.currentUser.color = window.UserTemplates.getRandomColor();
         }
         
-        btn.innerHTML = window.UserTemplates.getAvatar(window.currentUser);
+        if (window.UserTemplates?.getAvatar) {
+            btn.innerHTML = window.UserTemplates.getAvatar(window.currentUser);
+        }
     }
 
     function initProfileButton() {

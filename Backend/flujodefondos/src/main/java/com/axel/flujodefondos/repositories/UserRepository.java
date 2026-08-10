@@ -102,7 +102,7 @@ public class UserRepository {
 
     public boolean existsByDni(String dni) {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM usuarios WHERE dni = ? AND estado = 'E'",
+                "SELECT COUNT(*) FROM usuarios WHERE dni = ?",
                 Integer.class,
                 dni
         );

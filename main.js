@@ -20,33 +20,49 @@ let javaServer;
 
 function startJavaBackend() {
     if (app.isPackaged) {
-        // Producción: JAR precompilado (arranque rápido)
+        // Producción: JAR precompilado con JRE embebido
         const jarPath = path.join(process.resourcesPath, 'Backend', 'flujodefondos.jar');
-        javaServer = spawn('java', ['-jar', jarPath], {
-            cwd: path.dirname(jarPath)
+        const javaExe = path.join(process.resourcesPath, 'Backend', 'jre', 'bin', 'java.exe');
+
+        if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+        if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+        javaServer = spawn(javaExe, ['-jar', jarPath], {
+            cwd: userDataPath // Ejecutar Java desde AppData para evitar errores de permisos
         });
 
         javaServer.stdout.on('data',  (data) => console.log('JAVA: ' + data));
         javaServer.stderr.on('data',  (data) => console.error('JAVA ERROR: ' + data));
         javaServer.on('close', (code) => console.log('Servidor Java cerrado con codigo ' + code));
+        javaServer.on('error', (err) => console.error('Error al iniciar el proceso Java: ' + err.message));
     } else {
         // Desarrollo: Ejecutar el backend manualmente desde tu IDE/terminal
         console.log('Modo Desarrollo: Asegúrate de tener el backend de Spring Boot corriendo manualmente en el puerto 8080.');
     }
 }
 
-function waitForBackend(url = 'http://localhost:8080', timeout = 1000000) {
+function waitForBackend(url = 'http://localhost:8080', timeout = 90000) {
     return new Promise((resolve, reject) => {
         const start = Date.now();
+        let timer = null;
+
+        if (javaServer) {
+            javaServer.once('exit', (code) => reject(new Error('Servidor Java cerrado con código ' + code)));
+            javaServer.once('error', (err) => reject(new Error(err.message)));
+        }
 
         function check() {
-            const req = http.get(url, () => resolve());
+            const req = http.get(url, () => {
+                clearTimeout(timer);
+                resolve();
+            });
 
             req.on('error', () => {
-                if (Date.now() - start > timeout)
+                if (Date.now() - start > timeout) {
                     reject(new Error('Backend no respondió a tiempo'));
-                else
-                    setTimeout(check, 300);
+                } else {
+                    timer = setTimeout(check, 300);
+                }
             });
 
             req.setTimeout(2000, () => req.destroy());
@@ -82,7 +98,14 @@ function createWindow() {
 
     win.webContents.on('before-input-event', (event, input) => {
         if (input.key === 'F5' && input.type === 'keyDown') {
-            win.webContents.reload();
+            event.preventDefault();
+            win.webContents.executeJavaScript("window.location.hash = 'login';")
+                .then(() => {
+                    win.webContents.reload();
+                    win.webContents.once('did-finish-load', () => {
+                        win.webContents.send('backend-ready');
+                    });
+                });
         }
     });
 
@@ -109,7 +132,7 @@ ipcMain.on('window-close', () => win?.close());
 ipcMain.handle('window-is-maximized', () => win?.isMaximized() ?? false);
 
 //////////////////////////////////////////////
-// 🚀 AUTO UPDATE
+// 🚀 AUTO UPDATER
 //////////////////////////////////////////////
 
 function setupAutoUpdater() {
@@ -117,7 +140,7 @@ function setupAutoUpdater() {
 
     autoUpdater.on('update-available',  () => console.log('🔄 Actualización disponible'));
     autoUpdater.on('update-downloaded', () => console.log('✅ Actualización descargada'));
-    autoUpdater.on('error', (err)       => console.error('❌ Error en auto-update:', err));
+    autoUpdater.on('error', (err)       => console.error('❌ Error en la auto-update:', err));
 }
 
 //////////////////////////////////////////////
@@ -158,21 +181,6 @@ function killBackend() {
     if (backendKilled) return;
     backendKilled = true;
     console.log('Iniciando cierre de backend...');
-
-    // Opcional: Llamada al endpoint de shutdown del backend (comentada por ahora)
-    /*
-    const http = require('node:http');
-    const req = http.request({
-        hostname: 'localhost',
-        port:     8080,
-        path:     '/api/shutdown',
-        method:   'POST'
-    }, (res) => {
-        console.log('Petición de shutdown enviada al backend');
-    });
-    req.on('error', (e) => console.error('Error al enviar shutdown: ' + e.message));
-    req.end();
-    */
 
     // En desarrollo, no matamos el backend para dejarlo prendido independiente de Electron
     if (!app.isPackaged) {

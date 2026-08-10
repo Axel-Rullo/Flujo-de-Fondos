@@ -13,7 +13,7 @@ function showAlert(message, type, time = 2000, position = 'top', showShadow = fa
 
     icon.className = `alert_icon ${type}`;
     container.className = `alert_container ${type} ${position}`;
-    icon.innerHTML = icons[type];
+    icon.innerHTML = icons[type] || icons.info;
     messageBox.textContent = message;
 
     overlay.classList.toggle('no-bg', !showShadow);
@@ -35,7 +35,7 @@ function showConfirm(message, type = 'warning') {
 
     icon.className = `alert_icon ${type}`;
     container.className = `alert_container ${type}`;
-    icon.innerHTML = icons[type];
+    icon.innerHTML = icons[type] || icons.info;
     messageBox.textContent = message;
     overlay.classList.add('open');
     actions.classList.add('visible');

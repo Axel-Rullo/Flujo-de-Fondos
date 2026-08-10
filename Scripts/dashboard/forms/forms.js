@@ -8,27 +8,28 @@ function ajustarColumnas(container) {
 }
 
 async function loadSucursales(container) {
-        try {
-            const sucursales = await apiGet('/sucursal/list');
-            const select = container.querySelector('#branch');
-            new TomSelect(select, {
-                dropdownParent: 'body',
-                options: sucursales.map(s => ({ value: s.nombre, text: s.nombre, id_sucursal: s.id_sucursal })),
-                labelField: 'text',
-                searchField: 'text',
-                render: {
-                    option: function(data, escape) {
-                        return `<div class="option">
-                            <span>${escape(data.text)}</span>
-                            <button type="button" class="btn-delete-option" data-id="${data.id_sucursal}" title="Eliminar" onclick="event.stopPropagation();">
-                                <svg width="18" height="18"><use href="#icon-trash"/></svg>
-                            </button>
-                        </div>`;
-                    }
+    try {
+        const select = container.querySelector('#branch');
+        if (!select) return;
+        const sucursales = await apiGet('/sucursal/list');
+        new TomSelect(select, {
+            dropdownParent: 'body',
+            options: sucursales.map(s => ({ value: s.nombre, text: s.nombre, id_sucursal: s.id_sucursal })),
+            labelField: 'text',
+            searchField: 'text',
+            render: {
+                option: function(data, escape) {
+                    return `<div class="option">
+                        <span>${escape(data.text)}</span>
+                        <button type="button" class="btn-delete-option" data-id="${data.id_sucursal}" title="Eliminar" onclick="event.stopPropagation();">
+                            <svg width="18" height="18"><use href="#icon-trash"/></svg>
+                        </button>
+                    </div>`;
                 }
-            });
-        } catch (err) {
-            showAlert("Error al cargar las sucursales", "error", 3000, 'center', true)
-            console.error('Error loading sucursales:', err);
-        }
+            }
+        });
+    } catch (err) {
+        showAlert("Error al cargar las sucursales", "error", 3000, 'center', true);
+        console.error('Error loading sucursales:', err);
     }
+}
