@@ -40,11 +40,11 @@ window.UserTemplates = {
         const html = users.map(user => {
             const botonAction = estado == 'N' ?
             `<button class="btn-reactive-user" data-id="${user.id}" title="Activar">
-                <svg width="20" height="20"><use href="#icon-reactive"/></svg>
+                <svg width="20" height="20"><use href="#icon-reactive" xlink:href="#icon-reactive"/></svg>
             </button>`
             :
             `<button class="btn-edit-user" data-id="${user.id}" title="Editar">
-                <svg width="20" height="20"><use href="#icon-edit"/></svg>
+                <svg width="20" height="20"><use href="#icon-edit" xlink:href="#icon-edit"/></svg>
             </button>`
             ;
 
@@ -57,7 +57,7 @@ window.UserTemplates = {
                 </div>
                 <span class="range-list">${user.rango}</span>
                 <button class="btn-view-user" data-id="${user.id}" title="Ver">
-                    <svg width="20" height="20"><use href="#icon-view"/></svg>
+                    <svg width="20" height="20"><use href="#icon-view" xlink:href="#icon-view"/></svg>
                 </button>
                 ${botonAction}
             </div>

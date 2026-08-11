@@ -24,6 +24,12 @@ function startJavaBackend() {
         const jarPath = path.join(process.resourcesPath, 'Backend', 'flujodefondos.jar');
         const javaExe = path.join(process.resourcesPath, 'Backend', 'jre', 'bin', 'java.exe');
 
+        // Configurar la ruta de datos del usuario (AppData) para la base de datos y archivos
+        const fs = require('fs');
+        const userDataPath = app.getPath('userData');
+        const dbDir = path.join(userDataPath, 'database');
+        const uploadsDir = path.join(userDataPath, 'uploads');
+
         if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
         if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 

@@ -11,8 +11,8 @@
             dropdownClass: 'ts-dropdown status-dropdown',
             controlInput: null,
             render: {
-                option: (data) => `<div class="status-icon-${data.value}" title="${data.title}"><svg width="22" height="22"><use href="#${icons[data.value]}"/></svg></div>`,
-                item: (data) => `<div class="status-icon-${data.value}" title="${data.title}"><svg width="22" height="22"><use href="#${icons[data.value]}"/></svg></div>`
+                option: (data) => `<div class="status-icon-${data.value}" title="${data.title}"><svg width="22" height="22"><use href="#${icons[data.value]}" xlink:href="#${icons[data.value]}"/></svg></div>`,
+                item: (data) => `<div class="status-icon-${data.value}" title="${data.title}"><svg width="22" height="22"><use href="#${icons[data.value]}" xlink:href="#${icons[data.value]}"/></svg></div>`
             }
         });
         ts.setValue('E', true); 

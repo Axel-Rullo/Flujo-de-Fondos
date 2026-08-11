@@ -10,7 +10,7 @@ function ajustarColumnas(container) {
 async function loadSucursales(container) {
     try {
         const select = container.querySelector('#branch');
-        if (!select) return;
+        if (!select || select.tomselect) return;
         const sucursales = await apiGet('/sucursal/list');
         new TomSelect(select, {
             dropdownParent: 'body',
@@ -22,7 +22,7 @@ async function loadSucursales(container) {
                     return `<div class="option">
                         <span>${escape(data.text)}</span>
                         <button type="button" class="btn-delete-option" data-id="${data.id_sucursal}" title="Eliminar" onclick="event.stopPropagation();">
-                            <svg width="18" height="18"><use href="#icon-trash"/></svg>
+                            <svg width="18" height="18"><use href="#icon-trash" xlink:href="#icon-trash"/></svg>
                         </button>
                     </div>`;
                 }
@@ -33,3 +33,5 @@ async function loadSucursales(container) {
         console.error('Error loading sucursales:', err);
     }
 }
+
+window.formLoaders = [loadSucursales];

@@ -1,6 +1,7 @@
 function iniciarLogin() {
 
     const loginForm = document.getElementById('login-form');
+    const togglePassword = document.getElementById('toggle-password');
 
     if (!loginForm) return;
 
@@ -40,6 +41,7 @@ function iniciarLogin() {
                 window.renderProfileButton?.();
             } else {
                 showAlert(data.mensaje, "error", 3000, 'center', true);
+                togglePassword.style.display = 'none';
                 loginForm.reset();
                 inputUser?.focus();
             }

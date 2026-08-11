@@ -45,7 +45,7 @@
 </head>
 <body>
     <!-- ICONOS -->
-    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
         <symbol id="icon-reactive" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -205,10 +205,10 @@
         <div class="tb-controls">
             <div class="tb-account-controls">
                 <button class="tb-btn bt-user-list admin-only" title="Lista de Usuarios" aria-label="Lista de Usuarios" data-modal="./Views/forms/users/users_list.html">
-                    <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#icon-users"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24"><use href="#icon-users" xlink:href="#icon-users"/></svg>
                 </button>
                 <button class="tb-btn bt-block-login" title="Bloquear sesión" aria-label="Bloquear sesión">
-                    <svg width="16" height="16" viewBox="0 0 12 12" ><use href="#block-login"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24"><use href="#block-login" xlink:href="#block-login"/></svg>
                 </button>
                 <button id="btn-profile" class="tb-btn btn-profile" title="Mi perfil" aria-label="Mi perfil"></button>
             </div>

@@ -32,12 +32,31 @@
 }
 
 /* Etiquetas */
-.form-group label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--white);
+.form-group label,
+.form-group label small {
+    font-size: 0.85rem;
+}
+
+.form-group label,
+.form-group label small,
+.form-group label span {
+    font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+}
+
+.form-group label {
+    color: var(--white);
+}
+
+.form-group label span {
+    color: var(--red);
+    font-size: 1rem;
+}
+
+.form-group label small {
+    display: inline;
+    color: var(--button-1);
 }
 
 /* Estilo base de los campos de entrada y selección */

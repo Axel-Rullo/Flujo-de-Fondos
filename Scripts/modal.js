@@ -11,6 +11,7 @@ window.abrirModal = async function(archivo) {
         await cargarParcial(archivo, modalBody);
         const formGrid = modalBody?.querySelector('.form-grid');
         if (formGrid) ajustarColumnas(formGrid);
+        await Promise.all(window.formLoaders.map(fn => fn(modalBody)));
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
         return modalBody;

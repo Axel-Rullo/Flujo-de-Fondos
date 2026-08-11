@@ -1,8 +1,8 @@
 const icons = {
-    success: '<svg width="25" height="25"><use href="#icon-success"/></svg>',
-    error: '<svg width="25" height="25"><use href="#icon-error"/></svg>',
-    warning: '<svg width="25" height="25"><use href="#icon-warning"/></svg>',
-    info: '<svg width="25" height="25"><use href="#icon-info"/></svg>'
+    success: '<svg width="25" height="25"><use href="#icon-success" xlink:href="#icon-success"/></svg>',
+    error: '<svg width="25" height="25"><use href="#icon-error" xlink:href="#icon-error"/></svg>',
+    warning: '<svg width="25" height="25"><use href="#icon-warning" xlink:href="#icon-warning"/></svg>',
+    info: '<svg width="25" height="25"><use href="#icon-info" xlink:href="#icon-info"/></svg>'
 };
 
 function showAlert(message, type, time = 2000, position = 'top', showShadow = false) {
