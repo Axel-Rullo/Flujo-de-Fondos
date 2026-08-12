@@ -6,4 +6,6 @@ release/
 
 Apuntes/
 Backend/flujodefondos.jar
-database/
+Backend/jre
+
+graphify-out/

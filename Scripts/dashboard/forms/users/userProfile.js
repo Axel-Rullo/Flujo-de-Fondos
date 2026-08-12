@@ -1,7 +1,4 @@
 (function() {
-    if (window.__userProfileInit) return;
-    window.__userProfileInit = true;
-
     function renderProfileButton() {
         const btn = document.querySelector('#btn-profile');
         if (!btn || !window.currentUser) return;
@@ -26,8 +23,12 @@
         });
     }
 
+    if (!window.__userProfileInit) {
+        window.__userProfileInit = true;
+        initProfileButton();
+    }
+
     renderProfileButton();
-    initProfileButton();
 
     window.renderProfileButton = renderProfileButton;
 })();

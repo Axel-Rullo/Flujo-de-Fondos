@@ -38,7 +38,6 @@ function iniciarLogin() {
                 window.location.hash = 'dashboard';
                 header.classList.add('active');
                 block_login.classList.add('visible');
-                window.renderProfileButton?.();
             } else {
                 showAlert(data.mensaje, "error", 3000, 'center', true);
                 togglePassword.style.display = 'none';
