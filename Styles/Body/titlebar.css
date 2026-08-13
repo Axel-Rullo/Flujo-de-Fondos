@@ -75,6 +75,15 @@
     overflow: hidden;
 }
 
+#titlebar .tb-btn.btn-profile .avatar-list,
+#titlebar .tb-btn.btn-profile .avatar-list img,
+#titlebar .tb-btn.btn-profile .avatar-initials {
+    width: 26px;
+    height: 26px;
+    font-size: 0.7rem;
+    object-fit: cover;
+}
+
 /* Estilo de los botones generales */
 #titlebar .tb-btn.bt-block-login:hover,
 #titlebar .tb-btn.bt-user-list:hover {

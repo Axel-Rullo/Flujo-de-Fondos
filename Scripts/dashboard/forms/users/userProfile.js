@@ -8,7 +8,7 @@
         }
         
         if (window.UserTemplates?.getAvatar) {
-            btn.innerHTML = window.UserTemplates.getAvatar(window.currentUser);
+            btn.innerHTML = window.UserTemplates.getAvatar(window.currentUser, 26);
         }
     }
 

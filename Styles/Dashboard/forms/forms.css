@@ -39,7 +39,8 @@
 
 .form-group label,
 .form-group label small,
-.form-group label span {
+.form-group label span,
+.btn {
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.02em;

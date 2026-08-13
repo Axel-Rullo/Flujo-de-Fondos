@@ -44,10 +44,14 @@
                         abrirModal('./Views/forms/users/users_list.html');
                     }
                 } else {
-                    await window.UserService.editUser(user);
-                    showAlert('¡Usuario editado exitosamente!', 'success', 2000, 'top', false);
-                    form.reset();
-                    abrirModal('./Views/forms/users/users_list.html');
+                    const res = await window.UserService.editUser(user);
+                    if (!res.ok) {
+                        showAlert(res.mensaje, 'error', 3000, 'center', true);
+                    } else {
+                        showAlert('¡Usuario editado exitosamente!', 'success', 2000, 'top', false);
+                        form.reset();
+                        abrirModal('./Views/forms/users/users_list.html');
+                    }
                 }
             } catch (err) {
                 showAlert('Error al realizar la acción', 'error', 3000, 'center', true);

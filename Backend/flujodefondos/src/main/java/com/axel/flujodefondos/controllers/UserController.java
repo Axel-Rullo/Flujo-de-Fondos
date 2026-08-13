@@ -51,22 +51,25 @@ public class UserController {
     // ── REACTIVACION ─────────────────────────────────────────────────
 
     @PostMapping("/user/reactive")
-    public void reactiveUser(@RequestBody Map<String, Long> body) {
+    public ResponseEntity<Map<String, Object>> reactiveUser(@RequestBody Map<String, Long> body) {
         userService.reactiveUser(body.get("id"));
+        return ResponseEntity.ok(Map.of("ok", true));
     }
 
     // ── EDICIÓN ──────────────────────────────────────────────────────
 
     @PostMapping("/user/edit")
-    public void editUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> editUser(@RequestBody User user) {
         userService.updateUser(user);
+        return ResponseEntity.ok(Map.of("ok", true));
     }
 
     // ── BAJA ─────────────────────────────────────────────────────────
 
     @PostMapping("/user/delete")
-    public void deleteUser(@RequestBody Map<String, Long> body) {
+    public ResponseEntity<Map<String, Object>> deleteUser(@RequestBody Map<String, Long> body) {
         userService.deleteUser(body.get("id"));
+        return ResponseEntity.ok(Map.of("ok", true));
     }
 
     // ── FOTO ─────────────────────────────────────────────────────────

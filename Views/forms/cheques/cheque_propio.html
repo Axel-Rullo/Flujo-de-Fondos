@@ -1,45 +1,46 @@
-<h2 class="form-title">Cheque Propio</h2>
+<h2 class="form-title">CHEQUE PROPIO</h2>
 
-<form id="form-cheque">
+<form id="form_new_chequepropio">
     <div class="form-grid">
 
         <div class="form-group">
-            <label for="tipo_cheque">Tipo</label>
-            <select id="tipo_cheque" name="tipo_cheque">
-                <option value="">Seleccionar...</option>
-                <option value="propio">A Pagar</option>
-                <option value="tercero">A Cobrar</option>
-            </select>
+            <label for="numero">Número de Cheque <span>*</span></label>
+            <input type="text" id="numero" name="numero" placeholder="Número de Cheque..." required>
         </div>
 
         <div class="form-group">
-            <label for="importe">Importe</label>
-            <input type="number" id="importe" name="importe" placeholder="0.00" step="0.01">
+            <label for="importe">Importe <span>*</span></label>
+            <input type="number" id="importe" name="importe" placeholder="0.00" step="0.01" required>
         </div>
 
         <div class="form-group">
-            <label for="fecha_entrega">Fecha de Emisión</label>
-            <input type="date" id="fecha_entrega" name="fecha_entrega">
+            <label for="fecha_entrega">Fecha de Cobro <span>*</span></label>
+            <input type="date" id="fecha_entrega" name="fecha_entrega" required>
         </div>
 
         <div class="form-group">
-            <label for="fecha_cobro">Fecha de Vencimiento</label>
-            <input type="date" id="fecha_cobro" name="fecha_cobro">
+            <label for="fecha_cobro">Fecha de Entrega <span>*</span></label>
+            <input type="date" id="fecha_cobro" name="fecha_cobro" required>
         </div>
 
         <div class="form-group">
-            <label for="titular">Titular</label>
-            <input type="text" id="titular" name="titular" placeholder="Titular...">
+            <label for="titular">Titular <span>*</span></label>
+            <input type="text" id="titular" name="titular" placeholder="Titular..." required>
         </div>
 
         <div class="form-group">
-            <label for="cuenta_salida">Cuenta de Salida</label>
-            <input type="text" id="cuenta_salida" name="cuenta_salida" placeholder="Cuenta de Salida...">
+            <label for="cuenta_salida">Cuenta de Salida <span>*</span></label>
+            <input type="text" id="cuenta_salida" name="cuenta_salida" placeholder="Cuenta de Salida..." required>
         </div>
 
         <div class="form-group">
-            <label for="observaciones">Observaciones</label>
-            <input type="text" id="observaciones" name="observaciones" placeholder="Observaciones...">
+            <label for="uso">Uso <span>*</span></label>
+            <input type="text" id="uso" name="uso" placeholder="Uso..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="observaciones">Observaciones <span>*</span></label>
+            <input type="text" id="observaciones" name="observaciones" placeholder="Observaciones..." required>
         </div>
     </div>
 

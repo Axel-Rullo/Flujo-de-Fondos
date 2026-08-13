@@ -11,6 +11,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Cheque {
-    Long id;
+public class ChequePropio {
+    Long id_chequepro;
+    String numero;
+    String importe;
+    String fechacob;
+    String fechaent;
+    String estado;
+    String observacion;
+    String uso;
+    String id_titular;
+    String id_cuentasal;
 }
