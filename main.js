@@ -85,8 +85,8 @@ function waitForBackend(url = 'http://localhost:8080', timeout = 90000) {
 function createWindow() {
     win = new BrowserWindow({
         frame:           false,
-        minWidth:        800,
-        minHeight:       500,
+        minWidth:        950,
+        minHeight:       650,
         icon:            path.join(__dirname, 'Backend/flujodefondos/uploads/icons/logo.ico'),
         backgroundColor: '#111C2E',
 

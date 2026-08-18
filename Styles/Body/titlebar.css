@@ -68,25 +68,27 @@
 
 /* Botón de perfil (avatar), más chico que el resto de los tb-btn */
 #titlebar .tb-btn.btn-profile {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
     padding: 0;
-    border-radius: 50%;
     overflow: hidden;
 }
 
 #titlebar .tb-btn.btn-profile .avatar-list,
 #titlebar .tb-btn.btn-profile .avatar-list img,
 #titlebar .tb-btn.btn-profile .avatar-initials {
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
     font-size: 0.7rem;
     object-fit: cover;
 }
 
 /* Estilo de los botones generales */
 #titlebar .tb-btn.bt-block-login:hover,
-#titlebar .tb-btn.bt-user-list:hover {
+#titlebar .tb-btn.bt-user-list:hover,
+#titlebar .tb-btn.btn-profile:hover {
     background-color: var(--button-1);
     color: var(--black);
 }
