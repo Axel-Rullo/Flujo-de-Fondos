@@ -29,7 +29,7 @@ window.UserTemplates = {
 
         return `
             <div class="avatar-list">
-                <div class="avatar-initials" style="background-color: ${user.color};">
+                <div class="avatar-initials" style="background-color: ${user.color}; width: ${size}px; height: ${size}px;">
                     ${iniciales}
                 </div>
             </div>

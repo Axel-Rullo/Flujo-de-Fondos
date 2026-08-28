@@ -28,8 +28,19 @@ window.CliproTemplates = {
         `;
     },
 
-        renderCliprosList: function(clipros, container) {
-        const html = clipros.map(clipro => `
+    renderCliprosList: function(clipros, container, estado) {
+        const html = clipros.map(clipro => {
+            const botonAction = estado == 'N' ?
+            `<button class="btn-reactive-entity" data-id="${clipro.id}" title="Activar">
+                <svg width="20" height="20"><use href="#icon-reactive" xlink:href="#icon-reactive"/></svg>
+            </button>`
+            :
+            `<button class="btn-edit-entity" data-id="${clipro.id}" title="Editar">
+                <svg width="20" height="20"><use href="#icon-edit" xlink:href="#icon-edit"/></svg>
+            </button>`
+            ;
+
+            return `
             <div class="entity-row">
                 ${this.getAvatar(clipro)}
                 <div class="entity-info">
@@ -39,16 +50,15 @@ window.CliproTemplates = {
                 <button class="btn-view-entity" data-id="${clipro.id}" title="Ver">
                     <svg width="20" height="20"><use href="#icon-view" xlink:href="#icon-view"/></svg>
                 </button>
-                <button class="btn-edit-entity" data-id="${clipro.id}" title="Editar">
-                    <svg width="20" height="20"><use href="#icon-edit" xlink:href="#icon-edit"/></svg>
-                </button>
+                ${botonAction}
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         container.innerHTML = html;
     },
 
-    fillUserModal: function(clipro, container) {
+    fillCliproModal: function(clipro, container) {
         container.querySelector('.name').textContent = clipro.nombre;
         container.querySelector('.range').textContent = clipro.tipo;
         container.querySelector('.clipro_dni .value').textContent = clipro.dni_cuit;
