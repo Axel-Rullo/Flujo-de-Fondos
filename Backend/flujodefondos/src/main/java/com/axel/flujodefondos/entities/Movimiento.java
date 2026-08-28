@@ -13,4 +13,6 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Movimiento {
     Long id;
+    String nombre;
+    String id_banco;
 }

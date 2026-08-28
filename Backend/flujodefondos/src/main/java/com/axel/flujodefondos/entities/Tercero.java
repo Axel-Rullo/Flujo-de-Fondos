@@ -13,4 +13,10 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Tercero {
     Long id;
+    String nombre;
+    String dni_cuit;
+    String telefono;
+    String email;
+    String localidad;
+    String tipo;
 }

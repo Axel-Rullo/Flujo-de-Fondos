@@ -1,7 +1,7 @@
-/* ── PERFIL DE USUARIO ────────────────────────────── */
+/* ── PERFIL DE ENTIDAD ────────────────────────────── */
 
 /* Contenedor principal de la tarjeta de perfil */
-.form_user {
+.form-entity-profile {
     display: grid;
     grid-template-columns: auto 1fr;
     column-gap: 2.3rem;
@@ -41,13 +41,15 @@
 }
 
 /* Contenedor del avatar */
-.user_photo .avatar-list {
+.user_photo .avatar-list,
+.clipro_photo .avatar-list {
     width: 193px;
     height: 193px;
 }
 
 /* Avatar generado con iniciales cuando no hay foto */
-.user_photo .avatar-initials {
+.user_photo .avatar-initials,
+.clipro_photo .avatar-initials {
     width: 193px;
     height: 193px;
     display: flex;
@@ -113,14 +115,19 @@
 .user_contact,
 .phone,
 .user_email,
-.user_branch {
+.user_branch,
+.clipro_contact,
+.clipro_dni,
+.clipro_email,
+.clipro_localidad {
     display: flex;
     flex-direction: column;
     gap: 0.29rem;
 }
 
 /* Agrupa los datos de contacto */
-.user_contact {
+.user_contact,
+.clipro_contact {
     gap: 1.15rem;
 }
 

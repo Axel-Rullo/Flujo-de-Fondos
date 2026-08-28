@@ -86,6 +86,7 @@
 }
 
 /* Estilo de los botones generales */
+#titlebar .tb-btn.bt-clipro-list:hover,
 #titlebar .tb-btn.bt-block-login:hover,
 #titlebar .tb-btn.bt-user-list:hover,
 #titlebar .tb-btn.btn-profile:hover {
@@ -94,7 +95,7 @@
 }
 
 #titlebar .tb-btn.bt-block-login:active,
-#titlebar .tb-btn.bt-user-list:active {
+#titlebar .tb-btn.bt-user-list:active, {
     background-color: var(--block-login-active);
     color: var(--black);
 }

@@ -1,0 +1,17 @@
+<h2 class="form-title">LISTA DE CLIENTES/PROVEEDORES</h2>
+
+<div class="form-entity-list">
+    <div class="search-bar">
+        <button class="btn-add-entity" title="Agregar Cliente/Proveedor">
+            <svg width="22" height="22"><use href="#icon-add" xlink:href="#icon-add"/></svg>
+        </button>
+        <input type="text" class="search-input" placeholder="Busca un cliente/proveedor">
+        <select id="clipro_status">
+            <option value="E" data-title="Clientes/Proveedores Existentes"></option>
+            <option value="N" data-title="Clientes/Proveedores Borrados"></option>
+        </select>
+    </div>
+    <div class="entity-container"></div>
+</div>
+
+<script src="Scripts/dashboard/forms/clientprov/cliproList.js"></script>

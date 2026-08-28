@@ -1,11 +1,13 @@
 -- Volcando estructura para tabla clientes_proveedores
 CREATE TABLE IF NOT EXISTS clientes_proveedores (
-  id_cliente_proveedor INTEGER PRIMARY KEY AUTOINCREMENT,
+  id_clipro INTEGER PRIMARY KEY AUTOINCREMENT,
   nombre TEXT NOT NULL,
   dni_cuit TEXT,
   telefono TEXT,
   email TEXT,
-  tipo TEXT
+  localidad TEXT,
+  tipo TEXT,
+  estado TEXT DEFAULT 'E'
 );
 
 -- Volcando estructura para tabla cuentas
@@ -90,7 +92,7 @@ CREATE TABLE IF NOT EXISTS cheques_propios (
   id_titular INTEGER,
   id_cuenta_salida INTEGER,
   FOREIGN KEY (id_cuenta_salida) REFERENCES cuentas (id_cuenta),
-  FOREIGN KEY (id_titular) REFERENCES clientes_proveedores (id_cliente_proveedor)
+  FOREIGN KEY (id_titular) REFERENCES clientes_proveedores (id_clipro)
 );
 
 -- Volcando estructura para tabla cheques_terceros
@@ -108,8 +110,8 @@ CREATE TABLE IF NOT EXISTS cheques_terceros (
   id_cuenta_salida INTEGER,
   FOREIGN KEY (id_cuenta_entrada) REFERENCES cuentas (id_cuenta),
   FOREIGN KEY (id_cuenta_salida) REFERENCES cuentas (id_cuenta),
-  FOREIGN KEY (id_titular) REFERENCES clientes_proveedores (id_cliente_proveedor),
-  FOREIGN KEY (id_titular_destino) REFERENCES clientes_proveedores (id_cliente_proveedor)
+  FOREIGN KEY (id_titular) REFERENCES clientes_proveedores (id_clipro),
+  FOREIGN KEY (id_titular_destino) REFERENCES clientes_proveedores (id_clipro)
 );
 
 -- Volcando estructura para tabla movimientos

@@ -39,24 +39,24 @@ window.UserTemplates = {
     renderUsersList: function(users, container, estado) {
         const html = users.map(user => {
             const botonAction = estado == 'N' ?
-            `<button class="btn-reactive-user" data-id="${user.id}" title="Activar">
+            `<button class="btn-reactive-entity" data-id="${user.id}" title="Activar">
                 <svg width="20" height="20"><use href="#icon-reactive" xlink:href="#icon-reactive"/></svg>
             </button>`
             :
-            `<button class="btn-edit-user" data-id="${user.id}" title="Editar">
+            `<button class="btn-edit-entity" data-id="${user.id}" title="Editar">
                 <svg width="20" height="20"><use href="#icon-edit" xlink:href="#icon-edit"/></svg>
             </button>`
             ;
 
             return `
-            <div class="user-list">
+            <div class="entity-row">
                 ${this.getAvatar(user)}
-                <div class="user-info">
+                <div class="entity-info">
                     <span class="name-list">${user.nombre}</span>
                     <span class="username-list">@${user.usuario}</span>
                 </div>
                 <span class="range-list">${user.rango}</span>
-                <button class="btn-view-user" data-id="${user.id}" title="Ver">
+                <button class="btn-view-entity" data-id="${user.id}" title="Ver">
                     <svg width="20" height="20"><use href="#icon-view" xlink:href="#icon-view"/></svg>
                 </button>
                 ${botonAction}

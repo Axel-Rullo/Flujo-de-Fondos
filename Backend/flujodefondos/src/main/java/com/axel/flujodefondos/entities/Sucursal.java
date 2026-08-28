@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Sucursal {
-    private Long id_sucursal;
+    private Long id;
     private String nombre;
 }

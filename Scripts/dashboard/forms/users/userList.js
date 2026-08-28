@@ -1,5 +1,5 @@
 (function() {
-    const icons = { E: 'icon-users', N: 'icon-user-x' };
+    const icons = { E: 'icon-entitys', N: 'icon-entity-x' };
     let currentUsers = [];
     let currentEstado = 'E';
 
@@ -21,7 +21,7 @@
     }
 
     async function renderUserList(estado = 'E') {
-        const container = document.querySelector('.users-container');
+        const container = document.querySelector('.entity-container');
         if (!container) return;
 
         try {
@@ -53,7 +53,7 @@
 
     function initActions(container) {
         container.addEventListener('click', e => {
-            const btnView = e.target.closest('.btn-view-user');
+            const btnView = e.target.closest('.btn-view-entity');
             if (btnView) {
                 const user = currentUsers.find(u => u.id == btnView.dataset.id);
                 abrirModal('./Views/forms/users/user.html').then(modalContainer => {
@@ -61,7 +61,7 @@
                 });
             }
 
-            const btnEdit = e.target.closest('.btn-edit-user');
+            const btnEdit = e.target.closest('.btn-edit-entity');
             if (btnEdit) {
                 const user = currentUsers.find(u => u.id == btnEdit.dataset.id);
                 abrirModal('./Views/forms/users/edit_user.html').then(async modalContainer => {
@@ -70,7 +70,7 @@
                 });
             }
 
-            const btnReactive = e.target.closest('.btn-reactive-user');
+            const btnReactive = e.target.closest('.btn-reactive-entity');
             if (btnReactive) {
                 const id = btnReactive.dataset.id;
                 window.UserService.reactivateUser(id).then(() => {
@@ -83,10 +83,10 @@
             }
         });
 
-        const formUserList = document.querySelector('.form-user-list');
+        const formUserList = document.querySelector('.form-entity-list');
         if (formUserList) {
             formUserList.addEventListener('click', e => {
-                const btnAdd = e.target.closest('.btn-add-user');
+                const btnAdd = e.target.closest('.btn-add-entity');
                 if (btnAdd) {
                     abrirModal('./Views/forms/users/new_user.html').then(async modalContainer => {
                         await loadSucursales(modalContainer);
@@ -97,7 +97,7 @@
     }
 
     function initUsersList() {
-        const container = document.querySelector('.users-container');
+        const container = document.querySelector('.entity-container');
         if (!container) return;
 
         renderUserList('E');

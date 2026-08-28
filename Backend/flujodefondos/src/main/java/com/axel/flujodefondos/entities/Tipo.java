@@ -11,9 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Concepto {
+public class Tipo {
     Long id;
-    String codigo;
-    String concepto;
-    String id_tipo;
+    String nombre;
 }

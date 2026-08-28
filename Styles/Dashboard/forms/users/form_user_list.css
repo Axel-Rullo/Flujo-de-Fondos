@@ -1,7 +1,7 @@
-/* ── LISTA DE USUARIOS ────────────────────────────── */
+/* ── LISTA DE ENTIDADES ───────────────────────────── */
 
-/* Contenedor principal de la lista de usuarios */
-.form-user-list {
+/* Contenedor principal de la lista de entidades */
+.form-entity-list {
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -27,8 +27,8 @@
 /* ── BOTÓN AGREGAR Y SELECTOR DE ESTADO ───────────── */
 
 /* Estilo compartido entre el botón de agregar y el selector de estado */
-.btn-add-user,
-.form-user-list .ts-wrapper .ts-control {
+.btn-add-entity,
+.form-entity-list .ts-wrapper .ts-control {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -38,32 +38,32 @@
     cursor: pointer;
 }
 
-/* Botón para abrir el formulario de nuevo usuario */
-.btn-add-user {
+/* Botón para abrir el formulario de nueva entidad */
+.btn-add-entity {
     border: none;
     background: transparent;
     color: var(--green);
 }
 
 /* Efecto al pasar el cursor sobre el botón de agregar */
-.btn-add-user:hover {
+.btn-add-entity:hover {
     border: 2px solid var(--white);
 }
 
-/* Color del ícono para usuarios activos */
+/* Color del ícono para entidades activas */
 .status-icon-E {
     color: var(--green);
 }
 
-/* Color del ícono para usuarios eliminados */
+/* Color del ícono para entidades eliminadas */
 .status-icon-N {
     color: var(--red);
 }
 
 /* ── BUSCADOR Y LISTADO ───────────────────────────── */
 
-/* Contenedor desplazable donde se muestran los usuarios */
-.users-container {
+/* Contenedor desplazable donde se muestran las entidades */
+.entity-container {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -74,7 +74,7 @@
     mask-image: linear-gradient(to bottom, transparent 0, var(--black) 24px, var(--black) calc(100% - 24px), transparent 100%);
 }
 
-/* Campo de búsqueda de usuarios */
+/* Campo de búsqueda de entidades */
 .search-input {
     flex: 1;
     padding: 0.5rem 0.80rem;
@@ -92,10 +92,10 @@
     outline: none;
 }
 
-/* ── TARJETA DE USUARIO ───────────────────────────── */
+/* ── TARJETA DE ENTIDAD ──────────────────────────── */
 
-/* Fila que representa un usuario en la lista */
-.user-list {
+/* Fila que representa una entidad en la lista */
+.entity-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -106,7 +106,7 @@
 
 /* ── AVATAR ───────────────────────────────────────── */
 
-/* Contenedor del avatar del usuario */
+/* Contenedor del avatar de la entidad */
 .avatar-list {
     display: flex;
     align-items: center;
@@ -114,7 +114,7 @@
     flex-shrink: 0;
 }
 
-/* Imagen de perfil del usuario */
+/* Imagen de perfil de la entidad */
 .avatar-list img {
     border-radius: 50%;
     object-fit: cover;
@@ -134,17 +134,17 @@
     font-size: 0.85rem;
 }
 
-/* ── INFORMACIÓN DEL USUARIO ──────────────────────── */
+/* ── INFORMACIÓN DE LA ENTIDAD ────────────────────── */
 
-/* Contenedor de los datos principales del usuario */
-.user-info {
+/* Contenedor de los datos principales de la entidad */
+.entity-info {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-width: 0;
 }
 
-/* Nombre completo del usuario */
+/* Nombre completo de la entidad */
 .name-list {
     font-weight: 600;
     font-size: 0.95rem;
@@ -159,7 +159,7 @@
     color: var(--username-color);
 }
 
-/* Etiqueta que muestra el rango del usuario */
+/* Etiqueta que muestra el rango de la entidad */
 .range-list {
     font-size: 0.8rem;
     padding: 0.2rem 0.6rem;
@@ -171,10 +171,10 @@
 
 /* ── BOTONES DE ACCIÓN ────────────────────────────── */
 
-/* Estilo base de los botones de acción sobre un usuario */
-.btn-view-user,
-.btn-edit-user,
-.btn-reactive-user {
+/* Estilo base de los botones de acción sobre una entidad */
+.btn-view-entity,
+.btn-edit-entity,
+.btn-reactive-entity {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -188,27 +188,27 @@
 }
 
 /* Colores de los botones según la acción */
-.btn-view-user     { background: transparent; color: var(--view-1); }
-.btn-edit-user     { background: transparent; color: var(--edit-1); }
-.btn-reactive-user { background: transparent; color: var(--green); }
+.btn-view-entity     { background: transparent; color: var(--view-1); }
+.btn-edit-entity     { background: transparent; color: var(--edit-1); }
+.btn-reactive-entity { background: transparent; color: var(--green); }
 
 /* Efecto al pasar el cursor sobre los botones */
-.btn-view-user:hover,
-.btn-edit-user:hover,
-.btn-reactive-user:hover {
+.btn-view-entity:hover,
+.btn-edit-entity:hover,
+.btn-reactive-entity:hover {
     border: 2px solid var(--white);
 }
 
 /* ── TOM SELECT (FILTRO DE ESTADO) ────────────────── */
 
 /* Contenedor del selector de estado */
-.form-user-list .ts-wrapper {
+.form-entity-list .ts-wrapper {
     width: 2.75rem;
     flex-shrink: 0;
 }
 
 /* Control principal del selector */
-.form-user-list .ts-wrapper .ts-control {
+.form-entity-list .ts-wrapper .ts-control {
     padding: 0 !important;
     background: transparent;
     border: 2px solid transparent;
@@ -219,19 +219,19 @@
 }
 
 /* Evita que el campo interno muestre contorno */
-.form-user-list .ts-wrapper .ts-control input {
+.form-entity-list .ts-wrapper .ts-control input {
     outline: none;
 }
 
 /* Resalta el selector cuando recibe el foco */
-.form-user-list .ts-wrapper.focus .ts-control {
+.form-entity-list .ts-wrapper.focus .ts-control {
     border-color: var(--white);
     border-radius: 0;
     background: transparent;
 }
 
 /* Resalta el selector al pasar el cursor */
-.form-user-list .ts-wrapper .ts-control:hover {
+.form-entity-list .ts-wrapper .ts-control:hover {
     border-color: var(--white);
 }
 
@@ -241,13 +241,13 @@
 }
 
 /* Oculta la flecha y el campo de texto del selector */
-.form-user-list .ts-wrapper .ts-control::after,
-.form-user-list .ts-wrapper .ts-control input {
+.form-entity-list .ts-wrapper .ts-control::after,
+.form-entity-list .ts-wrapper .ts-control input {
     display: none !important;
 }
 
 /* Centra el ícono dentro del selector */
-.form-user-list .ts-wrapper .ts-control .item {
+.form-entity-list .ts-wrapper .ts-control .item {
     padding: 0 !important;
     margin: 0 !important;
     width: 100%;
@@ -272,7 +272,7 @@
 
 /* Hereda el color del ícono SVG */
 .status-dropdown .option svg,
-.form-user-list .ts-wrapper .ts-control svg {
+.form-entity-list .ts-wrapper .ts-control svg {
     stroke: currentColor;
     fill: none;
 }

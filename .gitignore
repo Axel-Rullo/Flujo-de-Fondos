@@ -1,12 +1,12 @@
+Apuntes/
+
 node_modules/
 dist/
 release/
 
 *.log
 
-Apuntes/
 Backend/flujodefondos.jar
 Backend/jre
-Backend/flujodefondos/database/
 
 graphify-out/

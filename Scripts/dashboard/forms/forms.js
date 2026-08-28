@@ -35,3 +35,6 @@ async function loadSucursales(container) {
 }
 
 window.formLoaders = [loadSucursales];
+//window.formLoaders = [loadTipos];
+//window.formLoaders = [loadMovimientos];
+//window.formLoaders = [loadConceptos];

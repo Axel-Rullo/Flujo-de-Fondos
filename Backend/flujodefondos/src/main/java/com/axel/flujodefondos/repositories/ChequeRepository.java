@@ -3,8 +3,10 @@ package com.axel.flujodefondos.repositories;
 import com.axel.flujodefondos.entities.ChequePropio;
 import com.axel.flujodefondos.entities.ChequeTercero;
 import org.springframework.jdbc.core.JdbcTemplate;
-//import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 //@SuppressWarnings("null")
 @Repository
@@ -17,7 +19,7 @@ public class ChequeRepository {
     }
 
     // ── MAPPERS ──────────────────────────────────────────────────────
-/*
+
     private final RowMapper<ChequePropio> chequePropioMapper = (rs, rowNum) -> new ChequePropio(
         rs.getLong("id_chequepro"),
         rs.getString("numero"),
@@ -43,7 +45,7 @@ public class ChequeRepository {
         rs.getString("id_titulardes"),
         rs.getString("id_cuentaent"),
         rs.getString("id_cuentasal")
-    );*/
+    );
 
     // ── ALTA ─────────────────────────────────────────────────────────
 
@@ -62,5 +64,21 @@ public class ChequeRepository {
             chequeTercero.getId_titular(), chequeTercero.getId_titulardes(),
             chequeTercero.getId_cuentaent(), chequeTercero.getId_cuentasal()
         );
+    }
+
+    // ── LISTADO ───────────────────────────────────────────────────────
+
+    public List<ChequePropio> findAllPropios() {
+    return jdbcTemplate.query(
+            "SELECT * FROM cheques_propios",
+            chequePropioMapper
+    );
+    }
+
+    public List<ChequeTercero> findAllTerceros() {
+    return jdbcTemplate.query(
+            "SELECT * FROM cheques_terceros",
+            chequeTerceroMapper
+    );
     }
 }

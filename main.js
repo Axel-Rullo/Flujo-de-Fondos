@@ -141,13 +141,13 @@ ipcMain.handle('window-is-maximized', () => win?.isMaximized() ?? false);
 // 🚀 AUTO UPDATER
 //////////////////////////////////////////////
 
-function setupAutoUpdater() {
+/*function setupAutoUpdater() {
     autoUpdater.checkForUpdatesAndNotify();
 
     autoUpdater.on('update-available',  () => console.log('🔄 Actualización disponible'));
     autoUpdater.on('update-downloaded', () => console.log('✅ Actualización descargada'));
     autoUpdater.on('error', (err)       => console.error('❌ Error en la auto-update:', err));
-}
+}*/
 
 //////////////////////////////////////////////
 // ▶️ INICIO
@@ -156,7 +156,7 @@ function setupAutoUpdater() {
 app.whenReady().then(async () => {
     startJavaBackend();
     createWindow();
-    setupAutoUpdater();
+    /*setupAutoUpdater();*/
 
     async function sendToRenderer(channel) {
         if (win.webContents.isLoading())
