@@ -1,0 +1,31 @@
+<div class="form-title">IMPUTAR CHEQUE DE TERCEROS</div>
+<form id="form-aplicar-cheque" class="form-grid">
+    <div class="form-group">
+        <label for="uso">Uso <span>*</span></label>
+        <select id="uso" name="uso" required>
+            <option value="" disabled selected>Seleccionar...</option>
+            <option value="Deposito">Depósito</option>
+            <option value="Endoso">Endoso</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="fecha_destino">Fecha <span>*</span></label>
+        <input type="date" id="fecha_destino" name="fecha_destino" required>
+    </div>
+
+    <div class="form-group">
+        <label for="cuenta_entrada">Cuenta <small>(depósito)</small></label>
+        <select id="cuenta_entrada" name="id_cuenta_entrada"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="titular_destino">Proveedor <small>(endoso)</small></label>
+        <select id="titular_destino" name="id_titular_destino"></select>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-cancel" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

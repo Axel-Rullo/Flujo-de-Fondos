@@ -1,0 +1,50 @@
+<h2 class="form-title">CHEQUE DE TERCEROS</h2>
+
+<form id="form_new_chequetercero">
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label for="numero">Número de Cheque <span>*</span></label>
+            <input type="text" id="numero" name="numero" placeholder="Número de Cheque..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="importe">Importe <span>*</span></label>
+            <input type="number" id="importe" name="importe" placeholder="0.00" step="0.01" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label for="tipo_ch">Tipo <span>*</span></label>
+            <select id="tipo_ch" name="tipo_ch" required>
+                <option value="" disabled selected>Seleccionar...</option>
+                <option value="Comun">Común</option>
+                <option value="Diferido">Diferido</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="fecha_cobro">Fecha de Vencimiento <span>*</span></label>
+            <input type="date" id="fecha_cobro" name="fecha_cobro" required>
+        </div>
+
+        <div class="form-group">
+            <label for="banco">Banco <span>*</span></label>
+            <select id="banco" name="id_banco" required></select>
+        </div>
+
+        <div class="form-group">
+            <label for="titular">Titular <span>*</span></label>
+            <select id="titular" name="id_titular" required></select>
+        </div>
+
+        <div class="form-group">
+            <label for="observaciones">Observaciones <small>(opcional)</small></label>
+            <input type="text" id="observaciones" name="observaciones" placeholder="Observaciones...">
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-cancel" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

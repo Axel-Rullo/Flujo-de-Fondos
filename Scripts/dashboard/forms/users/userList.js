@@ -58,6 +58,8 @@
                 const user = currentUsers.find(u => u.id == btnView.dataset.id);
                 abrirModal('./Views/forms/users/user.html').then(modalContainer => {
                     window.UserTemplates.fillUserModal(user, modalContainer);
+                    back = document.getElementById('btn-back');
+                    back.style.display='flex';
                 });
             }
 

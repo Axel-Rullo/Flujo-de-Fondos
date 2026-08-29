@@ -70,7 +70,7 @@
 
     function initDeleteUser() {
         document.addEventListener('click', async e => {
-            const btnDelete = e.target.closest('#btn-delete');
+            const btnDelete = e.target.closest('#btn-delete-user');
             if (!btnDelete) return;
 
             const form = btnDelete.closest('form');

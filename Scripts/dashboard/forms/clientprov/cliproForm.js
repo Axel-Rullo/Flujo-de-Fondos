@@ -51,7 +51,7 @@
 
     function initDeleteClipro() {
         document.addEventListener('click', async e => {
-            const btnDelete = e.target.closest('#btn-delete');
+            const btnDelete = e.target.closest('#btn-delete-clipro');
             if (!btnDelete) return;
 
             const form = btnDelete.closest('form');

@@ -37,3 +37,26 @@
 .modal-close:hover {
     color: var(--white);
 }
+
+/* Botón para volver atras */
+.btn-back {
+    position: absolute;
+    top: 17px;
+    right: 50px;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--modal-close);
+    line-height: 1;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+}
+
+/* Cambia el color del botón al pasar el cursor */
+.btn-back:hover {
+    color: var(--white);
+}

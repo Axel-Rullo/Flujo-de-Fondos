@@ -19,6 +19,8 @@
             
             abrirModal('./Views/forms/users/user.html').then(modalContainer => {
                 window.UserTemplates.fillUserModal(window.currentUser, modalContainer);
+                back = document.getElementById('btn-back');
+                back.style.display='none';
             });
         });
     }

@@ -46,6 +46,14 @@
 <body>
     <!-- ICONOS -->
     <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <symbol id="back" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                <path d="m8 5l-5 5l5 5" />
+                <path d="M3 10h8c5.523 0 10 4.477 10 10v1" />
+            </g>
+        </symbol>
+
         <symbol id="icon-reactive" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -186,8 +194,10 @@
                 <div class="menu-group">
                     <button data-target="sub-cheques">CHEQUES <span class="chevron">▶</span></button>
                     <div id="sub-cheques" class="submenu">
-                        <a data-modal="Views/forms/cheques/cheque_propio.html" href="#">NUEVO CHEQUE PROPIO</a>
-                        <a data-modal="Views/forms/cheques/cheque_terceros.html" href="#"> NUEVO CHEQUE DE TERCEROS</a>
+                        <a data-modal="Views/forms/cheques/nuevo/nuevo_cheque_propio.html" href="#">NUEVO CHEQUE PROPIO</a>
+                        <a data-modal="Views/forms/cheques/nuevo/nuevo_cheque_terceros.html" href="#">NUEVO CHEQUE DE TERCEROS</a>
+                        <a data-modal="Views/forms/cheques/imputar/imputar_cheque_propio.html" href="#">IMPUTAR CHEQUE PROPIO</a>
+                        <a data-modal="Views/forms/cheques/imputar/imputar_cheque_terceros.html" href="#">IMPUTAR CHEQUE DE TERCEROS</a>
                     </div>
                 </div>
             </aside>
@@ -196,7 +206,7 @@
         <!-- Controles de ventana -->
         <div class="tb-controls">
             <div class="tb-account-controls">
-                <button class="tb-btn bt-clipro-list" data-modal="Views/forms/clientprov/clipro_list.html" title="Clientes/Proveedores" aria-label="Clientes/Proveedores">
+                <button class="tb-btn bt-clipro-list admin-only" data-modal="Views/forms/clientprov/clipro_list.html" title="Clientes/Proveedores" aria-label="Clientes/Proveedores">
                     <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-clientes" xlink:href="#icon-clientes"/></svg>
                 </button>
                 <button class="tb-btn bt-user-list admin-only" title="Lista de Usuarios" aria-label="Lista de Usuarios" data-modal="./Views/forms/users/users_list.html">
@@ -227,7 +237,7 @@
 
     <!-- MODAL -->
     <div id="modal-overlay" class="overlay">
-        <div class="modal-box">
+        <div class="modal-box" title="Cerrar">
             <button class="modal-close">&times;</button>
             <div id="modal-body"></div>
         </div>

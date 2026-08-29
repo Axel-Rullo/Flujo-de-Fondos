@@ -46,7 +46,9 @@ window.CliproTemplates = {
                 <div class="entity-info">
                     <span class="name-list">${clipro.nombre}</span>
                 </div>
-                <span class="range-list">${clipro.tipo}</span>
+                <span class="range-list">
+                    ${clipro.tipo === "C" ? "Cliente" : "Proveedor"}
+                </span>
                 <button class="btn-view-entity" data-id="${clipro.id}" title="Ver">
                     <svg width="20" height="20"><use href="#icon-view" xlink:href="#icon-view"/></svg>
                 </button>
