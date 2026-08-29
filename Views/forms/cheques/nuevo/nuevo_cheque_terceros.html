@@ -16,15 +16,15 @@
         <div class="form-group">
             <label for="tipo_ch">Tipo <span>*</span></label>
             <select id="tipo_ch" name="tipo_ch" required>
-                <option value="" disabled selected>Seleccionar...</option>
+                <option value="" disabled selected hidden>Elije una opción...</option>
                 <option value="Comun">Común</option>
                 <option value="Diferido">Diferido</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="fecha_cobro">Fecha de Vencimiento <span>*</span></label>
-            <input type="date" id="fecha_cobro" name="fecha_cobro" required>
+            <label for="fecha_cobro">Fecha de Cobro <span>*</span><small> (ch diferido)</small></label>
+            <input type="date" id="fecha_cobro" name="fecha_cobro" required disabled>
         </div>
 
         <div class="form-group">

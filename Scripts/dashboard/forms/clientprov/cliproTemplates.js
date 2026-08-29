@@ -62,7 +62,7 @@ window.CliproTemplates = {
 
     fillCliproModal: function(clipro, container) {
         container.querySelector('.name').textContent = clipro.nombre;
-        container.querySelector('.range').textContent = clipro.tipo;
+        container.querySelector('.range').textContent = clipro.tipo === "C" ? "Cliente" : "Proveedor";
         container.querySelector('.clipro_dni .value').textContent = clipro.dni_cuit;
         container.querySelector('.phone .value').textContent = clipro.telefono;
         container.querySelector('.clipro_email .value').textContent = clipro.email;
