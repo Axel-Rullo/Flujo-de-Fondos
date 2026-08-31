@@ -1,76 +1,78 @@
+/* ── CONTENEDOR ───────────────────────────────────── */
+
 .tabla-contenedor {
     overflow-x: auto;
 }
 
-.tabla-flujo {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: separate;
-    border-spacing: 0;
-}
+/* ── TABULATOR (BASE) ─────────────────────────────── */
 
-/* ENCABEZADO */
-.tabla-flujo thead tr {
-    background: var(--black);
-    color: var(--white);
-    text-align: center;
-}
-
-.tabla-flujo th {
-    padding: 0.5rem 0.4rem;
-    font-size: 0.85rem;
-    font-weight: bold;
-}
-
-.tabla-flujo thead th:not(:last-child) {
-    border-right: 1px solid var(--border-button-color-1);
-}
-
-/* CUERPO */
-.tabla-flujo tbody tr {
+.tabulator {
     background-color: var(--white);
-    color: var(--black);
-    font-size: 0.70rem;
-    font-weight: bold;
+    border: 1px solid var(--black);
 }
 
-.tabla-flujo td {
-    font-size: 0.70rem;
-    padding: 0.35rem 0.4rem;
+/* Evita franjas vacías por redondeo de sub-píxeles en columnas por porcentaje */
+.tabulator .tabulator-tableHolder .tabulator-table,
+.tabulator .tabulator-header .tabulator-header-contents {
+    min-width: 100%;
 }
 
-.tabla-flujo tbody td,
-.tabla-flujo tfoot td {
-    border-right: 1px solid var(--black);
+.tabulator, .tabulator * {
+    box-sizing: border-box;
+}
+
+/* ── ENCABEZADO ───────────────────────────────────── */
+
+.tabulator .tabulator-header {
+    background-color: var(--black);
+    color: var(--white);
     border-bottom: 1px solid var(--black);
 }
 
-.tabla-flujo tbody td:last-child,
-.tabla-flujo tfoot td:last-child {
+.tabulator .tabulator-header .tabulator-col {
+    background: var(--black);
     border-right: none;
 }
 
-.tabla-flujo tbody tr:last-child td {
-    border-bottom: none;
+/* Divisor entre columnas: se lo pone cada columna que tiene una hermana antes, así nunca depende de cuál es la última */
+.tabulator .tabulator-header .tabulator-col ~ .tabulator-col {
+    border-left: 1px solid var(--white);
 }
 
-/* PIE DE TABLA */
-.tabla-flujo tfoot tr {
-    background: var(--black);
+.tabulator .tabulator-header .tabulator-col:hover {
+    background-color: var(--tabulator-hover) !important;
+}
+
+.tabulator .tabulator-header .tabulator-col .tabulator-col-content {
+    padding: 0.5rem 0.5rem;
+}
+
+.tabulator .tabulator-col-title {
     color: var(--white);
+    font-size: 0.875rem;
     font-weight: bold;
+    text-align: center;
 }
 
-.tabla-flujo tfoot td {
-    padding: 0.55rem 0.4rem;
-    font-size: 0.70rem;
-    border-bottom: none;
+/* ── CUERPO ───────────────────────────────────────── */
+
+.tabulator .tabulator-row {
+    background-color: var(--white);
+    color: var(--black);
+    font-size: 0.75rem;
+    font-weight: bold;
+    min-width: 100%;
 }
 
-.tabla-flujo tfoot td:not(:last-child) {
-    border-right: 1px solid var(--border-button-color-1);
+.tabulator .tabulator-cell {
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.25rem;
+    text-align: left;
+    border-right: none;
+    border-bottom: 1px solid var(--black);
 }
 
-.letra {
-    font-size: 0.80rem!important;
+.tabulator .tabulator-cell ~ .tabulator-cell {
+    border-left: 1px solid var(--black);
 }
