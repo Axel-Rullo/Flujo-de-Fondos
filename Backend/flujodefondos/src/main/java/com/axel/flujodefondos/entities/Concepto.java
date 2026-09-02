@@ -14,6 +14,6 @@ import lombok.Setter;
 public class Concepto {
     Long id;
     String codigo;
-    String concepto;
-    String id_tipo;
+    String nombre;
+    String clasificacion;
 }

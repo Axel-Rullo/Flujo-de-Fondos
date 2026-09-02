@@ -13,11 +13,17 @@ public class ConceptoService {
 
     private final ConceptoRepository conceptoRepository;
 
-    public List<Concepto> listAll() {
+    public List<Concepto> findAll() {
         return conceptoRepository.findAll();
     }
 
-    public Long createConcepto(Concepto concepto) {
-        return conceptoRepository.insert(concepto);
+    public void insert(Concepto concepto) {
+    Integer count = conceptoRepository.countByClasificacion(concepto.getClasificacion());
+    concepto.setCodigo(concepto.getClasificacion() + "." + (count + 1));
+    conceptoRepository.insert(concepto);
+    }
+
+    public void update(Concepto concepto) {
+        conceptoRepository.update(concepto);
     }
 }

@@ -41,11 +41,18 @@
     <link rel="stylesheet" href="./Styles/dashboard/forms/forms.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user_list.css">
+    <link rel="stylesheet" href="./Styles/dashboard/forms/cheques/view_cheque.css">
     <link rel="stylesheet" href="./Styles/dashboard/tables/tables.css">
 </head>
 <body>
     <!-- ICONOS -->
     <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <symbol id="icon-cheque" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="none" stroke="currentColor" stroke-linecap="round" 
+            stroke-linejoin="round" stroke-width="2" d="M3 5h18v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm4 9h3m-3-4h10" />
+        </symbol>
+
         <symbol id="back" viewBox="0 0 24 24">
             <path d="M0 0h24v24H0z" fill="none" />
             <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -198,6 +205,13 @@
                         <a data-modal="Views/forms/cheques/nuevo/nuevo_cheque_terceros.html" href="#">NUEVO CHEQUE DE TERCEROS</a>
                         <a data-modal="Views/forms/cheques/imputar/imputar_cheque_terceros.html" href="#">IMPUTAR CHEQUE DE TERCEROS</a>
                         <a data-modal="Views/forms/cheques/view_cheque.html" href="#">Perfil</a>
+                    </div>
+                </div>
+
+                <div class="menu-group">
+                    <button data-target="sub-conceptos">CONCEPTOS <span class="chevron">▶</span></button>
+                    <div id="sub-conceptos" class="submenu">
+                        <a data-modal="Views/forms/conceptos/new_concepto.html" href="#">NUEVO CONCEPTO</a>
                     </div>
                 </div>
             </aside>

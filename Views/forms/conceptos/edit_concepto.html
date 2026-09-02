@@ -1,0 +1,27 @@
+<h2 class="form-title">EDITAR CONCEPTO</h2>
+
+<form id="form_edit_concepto" class="form">
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label for="name">Concepto <span>*</span></label>
+            <input type="text" id="name" name="name" placeholder="Concepto..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="clasificacion">Clasificación <span>*</span></label>
+            <select id="clasificacion" name="clasificacion" required>
+                <option value="" disabled selected hidden>Elije una opción...</option>
+                <option value="1">Operativo</option>
+                <option value="2">Financiación</option>
+                <option value="3">Inversión</option>
+            </select>
+        </div>
+        
+    </div>
+
+    <div class="form-actions">
+        <button type="reset" id="btn-cancel" class="btn btn-cancel" data-close-modal>Cancelar</button>
+        <button type="submit" id="btn-primary" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

@@ -19,13 +19,19 @@ public class ConceptoController {
     private final ConceptoService conceptoService;
 
     @GetMapping("/concepto/list")
-    public List<Concepto> listAll() {
-        return conceptoService.listAll();
+    public List<Concepto> findAll() {
+        return conceptoService.findAll();
     }
 
     @PostMapping("/concepto/new")
     public ResponseEntity<Map<String, Object>> newConcepto(@RequestBody Concepto concepto) {
-        conceptoService.createConcepto(concepto);
+        conceptoService.insert(concepto);
+        return ResponseEntity.ok(Map.of("ok", true));
+    }
+
+    @PostMapping("/concepto/edit")
+    public ResponseEntity<Map<String, Object>> editConcepto(@RequestBody Concepto concepto) {
+        conceptoService.update(concepto);
         return ResponseEntity.ok(Map.of("ok", true));
     }
 }

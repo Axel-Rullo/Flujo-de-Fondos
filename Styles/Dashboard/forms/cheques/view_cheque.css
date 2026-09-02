@@ -1,0 +1,139 @@
+/* ── TÍTULO (ÍCONO + NÚMERO) ───────────────────────────────────── */
+
+.icon-cheque {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-right: 12px;
+    border-radius: 12px;
+    background: var(--button-1);
+    color: var(--black);
+    flex-shrink: 0;
+}
+
+.icon-cheque svg {
+    width: 35px;
+    height: 35px;
+}
+
+.number-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    gap: 2px;
+}
+
+.number-type .number{
+    font-size: 1.125rem;
+    font-weight: bold;
+    letter-spacing: 0.02em;
+    color: var(--view-1);
+}
+
+.number-type .type {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--button-1);
+}
+
+/* ── CONTENEDOR PRINCIPAL ──────────────────────────────────────── */
+
+.form-variant-cheque {
+    width: 45rem;
+}
+
+/* ── MONTO Y ESTADO ────────────────────────────────────────────── */
+
+.cheque-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--user-divider);
+}
+
+.cash {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--button-1);
+}
+
+.status {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    background: var(--green);
+    border-radius: 15px;
+    border: solid 1px var(--white);
+}
+
+/* Variantes según estado del cheque */
+
+.status.pendiente { background: var(--orange); }
+.status.cobrado   { background: var(--green); }
+.status.cancelado { background: var(--red); }
+
+/* ── SECCIONES ─────────────────────────────────────────────────── */
+
+.section-cheque {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--user-divider);
+}
+
+.section-cheque:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.section-label {
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--view-1);
+}
+
+/* ── CAMPOS ────────────────────────────────────────────────────── */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    align-items: start;
+    gap: 0.75rem 1rem;
+    width: 100%;
+}
+
+.row {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 4px;
+}
+
+.row .label {
+    font-size: 0.875rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--button-1);
+}
+
+.row .value {
+    font-size: 1rem;
+}

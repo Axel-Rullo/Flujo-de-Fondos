@@ -1,76 +1,91 @@
-<h2 class="form-title">Cheque</h2>
-<div class="form-variant-cheque">
-    <div class="cheque-details">
-        <span class="cash">1.000.000</span>
-        <span class="status">Cobrado</span>
+<div class="view_cheque">
+    <div class="form-title">
+        <div class="icon-cheque">
+            <svg width="22" height="22" viewBox="0 0 24 24"><use href="#icon-cheque" xlink:href="#icon-cheque"/></svg>
+        </div>
+        <div class="number-type">
+        <span class="number value"></span>
+            <span class="type value"></span>
+        </div>
     </div>
-    <div class="section-cheque">
-        <div class="section-label">Fechas</div>
-        <div class="grid">
-            <div class="row">
-                <span class="label">Fecha de Entrega</span>
-                <span class="value"></span>
+
+    <div class="form-variant-cheque">
+        <div class="cheque-details">
+            <span class="cash"></span>
+            <span class="status"></span>
+        </div>
+        <div class="section-cheque">
+            <div class="section-label">Fechas</div>
+            <div class="grid">
+                <div class="row">
+                    <span class="label">Fecha de Entrega</span>
+                    <span class="fecha_entrega value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Fecha de Cobro</span>
+                    <span class="fecha_cobro value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Fecha de Destino</span>
+                    <span class="fecha_destino value"></span>
+                </div>
             </div>
-            <div class="row">
-                <span class="label">Fecha de Cobro</span>
-                <span class="value"></span>
+        </div>
+        <div class="section-cheque">
+            <div class="section-label">Titulares y Cuentas</div>
+            <div class="grid">
+                <div class="row">
+                    <span class="label">Titular original</span>
+                    <span class="titular_original value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Otorgado por</span>
+                    <span class="otorgado_por value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Cuenta de entrada</span>
+                    <span class="cuenta_entrada value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Cuenta de salida</span>
+                    <span class="cuenta_salida value"></span>
+                </div>
             </div>
-            <div class="row">
-                <span class="label">Fecha de Destino</span>
-                <span class="value"></span>
+        </div>
+        <div class="section-cheque endoso-section">
+            <div class="section-label destino"></div>
+            <div class="grid">
+                <div class="row">
+                    <span class="label">Cliente / Proveedor</span>
+                    <span class="titular_destino value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Fecha de Destino</span>
+                    <span class="fecha_destino_endoso value"></span>
+                </div>
+            </div>
+        </div>
+        <div class="section-cheque">
+            <div class="section-label">Uso y Observaciones</div>
+            <div class="grid">
+                <div class="row">
+                    <span class="label">Uso</span>
+                    <span class="uso value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Concepto</span>
+                    <span class="concepto value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Observación</span>
+                    <span class="observacion value"></span>
+                </div>
             </div>
         </div>
     </div>
-    <div class="section-cheque">
-        <div class="section-label">Titulares y Cuentas</div>
-        <div class="grid">
-            <div class="row">
-                <span class="label">Titular original</span>
-                <span class="value"></span>
-            </div>
-            <div class="row">
-                <span class="label">Otorgado por</span>
-                <span class="value"></span>
-            </div>
-            <div class="row">
-                <span class="label">Cuenta de entrada</span>
-                <span class="value"></span>
-            </div>
-            <div class="row">
-                <span class="label">Cuenta de salida</span>
-                <span class="value"></span>
-            </div>
-        </div>
+    <div class="form-actions">
+        <button type="button" class="btn btn-cancel" data-close-modal>Cancelar</button>
+        <button type="button" id="btn-delete" class="btn btn-delete" data-close-modal>Cancelar CH</button>
+        <button type="submit" id="btn-primary" class="btn btn-primary">Imputar CH</button>
     </div>
-    <div class="section-cheque">
-        <div class="section-label destino"></div>
-        <div class="grid">
-            <div class="row">
-                <span class="label"></span>
-                <span class="value"></span>
-            </div>
-            <div class="row">
-                <span class="label"></span>
-                <span class="value"></span>
-            </div>
-        </div>
-    </div>
-    <div class="section-cheque">
-        <div class="section-label">Uso y Observaciones</div>
-        <div class="grid">
-            <div class="row">
-                <span class="label">Uso</span>
-                <span class="value"></span>
-            </div>
-            <div class="row">
-                <span class="label">Observación</span>
-                <span class="value"></span>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="form-actions">
-    <button type="button" class="btn btn-cancel" data-close-modal>Cancelar</button>
-    <button type="button" id="btn-delete" class="btn btn-delete" data-close-modal>Cancelar CH</button>
-    <button type="submit" id="btn-primary" class="btn btn-primary">Imputar CH</button>
 </div>

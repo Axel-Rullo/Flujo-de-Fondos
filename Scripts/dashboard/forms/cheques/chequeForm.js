@@ -52,7 +52,7 @@
                     } else {
                         showAlert('¡Cheque ingresado exitosamente!', 'success', 2000, 'top', false);
                         form.reset();
-                        form.closest('.modal')?.querySelector('.close')?.click();
+                        window.cerrarModal();
                     }
                 } else if (form.id === 'form_edit_chequepropio') {
                     const res = await window.ChequeService.editChequePropio(cheque);
@@ -61,7 +61,7 @@
                     } else {
                         showAlert('¡Cheque editado exitosamente!', 'success', 2000, 'top', false);
                         form.reset();
-                        form.closest('.modal')?.querySelector('.close')?.click();
+                        window.cerrarModal();
                     }
                 } else if (form.id === 'form_new_chequetercero') {
                     const res = await window.ChequeService.newChequeTercero(cheque);
@@ -70,7 +70,7 @@
                     } else {
                         showAlert('¡Cheque ingresado exitosamente!', 'success', 2000, 'top', false);
                         form.reset();
-                        form.closest('.modal')?.querySelector('.close')?.click();
+                        window.cerrarModal();
                     }
                 } else if (form.id === 'form_edit_chequetercero') {
                     const res = await window.ChequeService.editChequeTercero(cheque);
@@ -79,7 +79,7 @@
                     } else {
                         showAlert('¡Cheque editado exitosamente!', 'success', 2000, 'top', false);
                         form.reset();
-                        form.closest('.modal')?.querySelector('.close')?.click();
+                        window.cerrarModal();
                     }
                 }
             } catch (err) {
