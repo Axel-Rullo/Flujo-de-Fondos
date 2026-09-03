@@ -1,0 +1,157 @@
+/* ── PANELES ──────────────────────────────────────── */
+
+.general-data,
+.cheques-general-data {
+    background-color: var(--modal-box-bg);
+    margin: 0;
+    padding-top: 10px;
+}
+
+.cheques-general-data {
+    padding: 20px 0;
+}
+
+/* ── TÍTULOS ──────────────────────────────────────── */
+
+.general-data span,
+.title-general-data {
+    color: var(--white);
+    font-size: 1.5rem;
+}
+
+.title-general-data {
+    margin-bottom: 20px;
+    text-align: center;
+    justify-content: center;
+}
+
+.subtitle-panel-general {
+    color: var(--white);
+    font-size: 1.25rem;
+    font-weight: bold;
+    flex: 1;
+    text-align: center;
+}
+
+/* ── LAYOUT ───────────────────────────────────────── */
+
+.divisor-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.divisor-row span {
+    gap: 5px;
+    padding: 5px;
+}
+
+.divisor-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.divisor-column.general-data,
+.divisor-column.cheques-general-data {
+    background-color: var(--titlebar-btn-hover);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    height: 500px;
+}
+
+.flujo-panel {
+    justify-content: flex-start;
+}
+
+.flujo-panel .subtitle-panel-general {
+    flex: 0 0 auto;
+}
+
+.flujo-rows {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    width: 100%;
+}
+
+/* ── TARJETAS DE VALORES ──────────────────────────── */
+
+.group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 220px;
+    padding: 10px;
+    margin: 20px;
+    gap: 5px;
+    border-radius: 10px;
+    background-color: var(--titlebar-btn-active);
+}
+
+.group .label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.group .value {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.group .label,
+.group .value {
+    text-shadow:
+        -1px -1px 0 var(--black),
+        1px -1px 0 var(--black),
+        -1px  1px 0 var(--black),
+        1px  1px 0 var(--black);
+}
+
+.group.ingresos { border-left: 4px solid var(--green); }
+.group.ingresos .label { color: var(--green); }
+
+.group.egresos { border-left: 4px solid var(--red); }
+.group.egresos .label { color: var(--red); }
+
+.group.flujo-neto { border-left: 4px solid var(--blue); }
+.group.flujo-neto .label { color: var(--blue); }
+
+.group.saldo-total { border-left: 4px solid var(--yellow); }
+.group.saldo-total .label { color: var(--yellow); }
+
+.group.total {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    background: transparent;
+}
+.group.total .label { color: var(--yellow); }
+
+/* ── GRÁFICOS ─────────────────────────────────────── */
+
+.grafico-cuentas {
+    align-items: center;
+    position: relative;
+    width: 420px;
+    height: 380px;
+}
+
+.grafico-cheques {
+    align-items: center;
+    position: relative;
+    width: 50%;
+    height: 380px;
+}

@@ -47,8 +47,8 @@ public class ConceptoRepository {
 
     public void update(Concepto concepto) {
         jdbcTemplate.update(
-                "UPDATE conceptos SET concepto = ?, clasificacion = ? WHERE id_concepto = ?",
-                concepto.getNombre(), concepto.getClasificacion(), concepto.getId()
+                "UPDATE conceptos SET concepto = ? WHERE id_concepto = ?",
+                concepto.getNombre(), concepto.getId()
         );
     }
 }

@@ -87,7 +87,7 @@ function createWindow() {
         frame:           false,
         minWidth:        950,
         minHeight:       650,
-        icon:            path.join(__dirname, 'Backend/flujodefondos/uploads/icons/logo.ico'),
+        icon:            path.join(__dirname, 'Icons/logo.ico'),
         backgroundColor: '#111C2E',
 
         webPreferences: {

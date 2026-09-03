@@ -154,3 +154,11 @@
 .nav-submenu li a:active {
     transform: translateY(1px) scale(0.98);
 }
+
+/* ── SCROLL DEL CONTENIDO ────────────────────────── */
+
+#content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+}

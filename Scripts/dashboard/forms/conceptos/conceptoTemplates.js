@@ -4,8 +4,7 @@ window.ConceptoTemplates = {
         const form = container.querySelector('#form_edit_concepto');
         form.dataset.id = concepto.id;
 
-        form.querySelector('#name').value = concepto.nombre || '';
-        form.querySelector('#clasificacion').value = concepto.clasificacion;
+        form.querySelector('#name').value = concepto.nombre;
     },
 
     crearTablaConceptos: async function(data) {

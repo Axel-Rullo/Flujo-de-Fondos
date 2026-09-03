@@ -43,7 +43,7 @@ window.ChequeTemplates = {
                 { title: "Fecha Cobro",     field: "fecha_cobro",   widthGrow: 12, hozAlign: "center" },
                 { title: "Banco",           field: "banco",         widthGrow: 22 },
                 { title: "Número",          field: "numero",        widthGrow: 18 },
-                { title: "Importe",         field: "importe",       widthGrow: 18 },
+                { title: "Importe",         field: "importe",       widthGrow: 18, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
                 { title: "Destino",         field: "id_titular",    widthGrow: 25 },
             ]
         });
@@ -78,7 +78,7 @@ window.ChequeTemplates = {
                 { title: "Cliente",         field: "id_titular",     widthGrow: 14},
                 { title: "Banco",           field: "banco",          widthGrow: 16},
                 { title: "Número",          field: "numero",         widthGrow: 16},
-                { title: "Importe",         field: "importe",        widthGrow: 14},
+                { title: "Importe",         field: "importe",        widthGrow: 14, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
                 { title: "Fecha Destino",   field: "fecha_destino",  widthGrow: 12, hozAlign: "center"},
                 { title: "Destino",         field: "id_titular",     widthGrow: 14},
             ]

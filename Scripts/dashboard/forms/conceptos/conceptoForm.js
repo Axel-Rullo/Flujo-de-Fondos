@@ -2,23 +2,18 @@
     if (window.__conceptoFormsInit) return;
     window.__conceptoFormsInit = true;
 
-    function buildConcepto(form) {
-        return {
-            nombre: form.querySelector('#name').value,
-            clasificacion: form.querySelector('#clasificacion').value
-        };
-    }
-
     function initConceptoForms() {
         document.addEventListener('submit', async e => {
             const form = e.target;
             if (form.id !== 'form_new_concepto' && form.id !== 'form_edit_concepto') return;
 
             e.preventDefault();
-            const concepto = buildConcepto(form);
+            const concepto = {};
+            concepto.nombre = form.querySelector('#name').value;
             
                 try {
                     if (form.id === 'form_new_concepto') {
+                        concepto.clasificacion = form.querySelector('#clasificacion').value
                         const res = await window.ConceptoService.newConcepto(concepto);
                         if (!res.ok) {
                             showAlert(res.mensaje, 'error', 3000, 'center', true);

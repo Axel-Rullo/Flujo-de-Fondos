@@ -1,0 +1,54 @@
+<!-- datos.html -->
+<div class="general-data">
+    <div class="general-panel">
+        <h1 class="title-general-data">DATOS GENERALES</h1>
+        <div class="divisor-row">
+            <div class="divisor-column general-data flujo-panel">
+                <h2 class="subtitle-panel-general">FLUJO</h2>
+                <div class="flujo-rows">
+                    <div class="divisor-row">
+                        <div class="group ingresos">
+                            <span class="label">Ingresos</span>
+                            <span class="value">1.000.000</span>
+                        </div>
+                        <div class="group egresos">
+                            <span class="label">Egresos</span>
+                            <span class="value">200.000</span>
+                        </div>
+                    </div>
+                    <div class="divisor-row">
+                        <div class="group flujo-neto">
+                            <span class="label">Flujo Neto</span>
+                            <span class="value">800.000</span>
+                        </div>
+                        <div class="group saldo-total">
+                            <span class="label">Saldo Total</span>
+                            <span class="value">5.000.000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="divisor-column general-data">
+                <h2 class="subtitle-panel-general">SALDO POR CUENTA</h2>
+                <div class="grafico-cuentas">
+                    <canvas id="chart-ingresos-egresos"></canvas>
+                </div>
+                <div class="group total">
+                    <span class="label">Total</span>
+                    <span class="value">15.000.000</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cheques-general-data">
+    <h1 class="title-general-data">CHEQUES</h1>
+    <div class="divisor-column cheques-general-data">
+        <h2 class="subtitle-panel-general">TOTALES</h2>
+        <div class="grafico-cheques">
+            <canvas id="chart-cheques"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="Scripts/dashboard/queries/graficos.js"></script>
