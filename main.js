@@ -2,7 +2,7 @@
 // 📦 IMPORTS
 //////////////////////////////////////////////
 
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, powerMonitor } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 const http = require('node:http');
@@ -11,6 +11,7 @@ const { spawn } = require('child_process');
 Menu.setApplicationMenu(null);
 
 let win;
+let yaAvisado = false;
 
 //////////////////////////////////////////////
 // ☕ BACKEND JAVA
@@ -157,6 +158,16 @@ app.whenReady().then(async () => {
     startJavaBackend();
     createWindow();
     /*setupAutoUpdater();*/
+
+    setInterval(() => {
+        const idleSeconds = powerMonitor.getSystemIdleTime();
+        if (idleSeconds >= 120 && !yaAvisado) {
+            yaAvisado = true;
+            win.webContents.send('sesion-inactiva');
+        } else if (idleSeconds < 120 && yaAvisado) {
+            yaAvisado = false;
+        }
+    }, 1000);
 
     async function sendToRenderer(channel) {
         if (win.webContents.isLoading())

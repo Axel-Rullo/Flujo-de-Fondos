@@ -6,17 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ChequeTercero {
+public class Cheque {
     Long id_cheque;
+    String clase;
+    String clasificacion;
     String numero;
-    String importe;
-    String tipo;
     String banco;
+    BigDecimal importe;
+    String tipo;
     String fecha_entrega;
     String fecha_cobro;
     String fecha_destino;
@@ -28,4 +32,10 @@ public class ChequeTercero {
     String id_cuenta_entrada;
     String id_cuenta_salida;
     String id_usuario;
+    String titular;
+    String titular_destino;
+    String cuenta_entrada;
+    String cuenta_salida;
+    String usuario;
+    
 }

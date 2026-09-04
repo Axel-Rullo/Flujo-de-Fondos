@@ -57,6 +57,17 @@ async function cargarRuta() {
     }
 }
 
+window.electronAPI.onSesionInactiva(() => {
+    window.cerrarModal();
+    if (window.location.hash === '#dashboard'){
+    window.location.hash = 'login';
+    document.querySelector('header').classList.remove('active');
+    document.querySelector('.tb-account-controls').classList.remove('visible');
+    document.querySelectorAll('.admin-only').forEach(btn => btn.classList.remove('admin'));
+    showAlert('Han pasado 2 minutos sin actividad.\nEl login se bloqueo por seguridad.', "info", 5000, 'center', true);
+    }
+});
+
 // 🖱️ DELEGACIÓN — data-view
 document.addEventListener('click', e => {
     const boton = e.target.closest('[data-view]');

@@ -5,6 +5,8 @@ const path = require('path');
 contextBridge.exposeInMainWorld('electronAPI', {
     version: process.versions.electron,
 
+    onSesionInactiva: (callback) => ipcRenderer.on('sesion-inactiva', callback),
+
     readView: async (relativePath) => {
         const safePath = path.resolve(__dirname, relativePath);
         const rel = path.relative(__dirname, safePath);

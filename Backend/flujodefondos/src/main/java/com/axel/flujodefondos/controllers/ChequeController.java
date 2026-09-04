@@ -1,7 +1,6 @@
 package com.axel.flujodefondos.controllers;
 
-import com.axel.flujodefondos.entities.ChequePropio;
-import com.axel.flujodefondos.entities.ChequeTercero;
+import com.axel.flujodefondos.entities.Cheque;
 import com.axel.flujodefondos.services.ChequeService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,26 +21,40 @@ public class ChequeController {
     // ── ALTA ─────────────────────────────────────────────────────────
 
     @PostMapping("/cheques/propios/new")
-    public ResponseEntity<Map<String, Object>> newChequePropio(@RequestBody ChequePropio chequePropio) {
-        chequeService.createChequePropio(chequePropio);
+    public ResponseEntity<Map<String, Object>> newChequePropio(@RequestBody Cheque cheque) {
+        chequeService.createChequePropio(cheque);
         return ResponseEntity.ok(Map.of("ok", true));
     }
 
     @PostMapping("/cheques/terceros/new")
-    public ResponseEntity<Map<String, Object>> newChequeTercero(@RequestBody ChequeTercero chequeTercero) {
-        chequeService.createChequeTercero(chequeTercero);
+    public ResponseEntity<Map<String, Object>> newChequeTercero(@RequestBody Cheque cheque) {
+        chequeService.createChequeTercero(cheque);
         return ResponseEntity.ok(Map.of("ok", true));
     }
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
     @GetMapping("/cheques/propios/list")
-    public List<ChequePropio> listAllPropios() {
+    public List<Cheque> listAllPropios() {
         return chequeService.listAllPropios();
     }
-    
+
     @GetMapping("/cheques/terceros/list")
-    public List<ChequeTercero> listAllTerceros() {
+    public List<Cheque> listAllTerceros() {
         return chequeService.listAllTerceros();
+    }
+
+    // ── IMPUTACIÓN ───────────────────────────────────────────────────
+
+    @PostMapping("/cheques/propios/imputar")
+    public ResponseEntity<Map<String, Object>> imputarChequePropio(@RequestBody Cheque cheque) {
+        chequeService.imputarChequePropio(cheque);
+        return ResponseEntity.ok(Map.of("ok", true));
+    }
+
+    @PostMapping("/cheques/terceros/imputar")
+    public ResponseEntity<Map<String, Object>> imputarChequeTercero(@RequestBody Cheque cheque) {
+        chequeService.imputarChequeTercero(cheque);
+        return ResponseEntity.ok(Map.of("ok", true));
     }
 }

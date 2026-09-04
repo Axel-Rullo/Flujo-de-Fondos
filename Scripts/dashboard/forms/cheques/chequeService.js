@@ -13,5 +13,13 @@ window.ChequeService = {
     
     listChequesTerceros: async () => {
         return await apiGet('/cheques/terceros/list');
+    },
+
+    imputarChequePropio: async (cheque) => {
+        return await apiPost('/cheques/propios/imputar', cheque);
+    },
+
+    imputarChequeTerceros: async (cheque) => {
+        return await apiPost('/cheques/terceros/imputar', cheque);
     }
 }

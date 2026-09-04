@@ -51,6 +51,11 @@
     border-radius: 50%;
 }
 
+/* El mensaje respeta los saltos de linea (\n) */
+.alert_message {
+    white-space: pre-line;
+}
+
 /* ── BOTONES DE ACCIÓN ────────────────────────────── */
 
 /* Contenedor de los botones de confirmación */
