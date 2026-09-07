@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- POLÍTICA DE SEGURIDAD -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost:8080; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' file: http://localhost:8080;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://127.0.0.1:8080; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' file: http://127.0.0.1:8080;">
 
     <!-- FONTS (Dancing Script e Inter, locales) -->
     <link rel="stylesheet" href="./Styles/fonts/inter/400.css">
@@ -42,7 +42,8 @@
     <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user_list.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/cheques/view_cheque.css">
-    <link rel="stylesheet" href="./Styles/dashboard/queries/general-data.css">
+    <link rel="stylesheet" href="./Styles/dashboard/queries/general-data/general-data.css">
+    <link rel="stylesheet" href="./Styles/dashboard/queries/cuentas-bancos/cuentas_bancos.css">
     <link rel="stylesheet" href="./Styles/dashboard/tables/tables.css">
 </head>
 <body>
@@ -193,9 +194,16 @@
             </div>
             <aside class="accordion">
                 <div class="menu-group">
-                    <button data-target="sub-movimientos">MOVIMIENTOS <span class="chevron">▶</span></button>
-                    <div id="sub-movimientos" class="submenu">
-                        <a data-modal="Views/forms/movimientos/nuevo_movimiento.html" href="#">NUEVO MOVIMIENTO</a>
+                    <button data-target="sub-cuentas">CUENTAS / BANCOS <span class="chevron">▶</span></button>
+                    <div id="sub-cuentas" class="submenu">
+                        <a data-modal="Views/forms/cuentas-bancos/new_cuentabanco.html" href="#">NUEVA CUENTA / BANCO</a>
+                    </div>
+                </div>
+
+                <div class="menu-group">
+                    <button data-target="sub-conceptos">CONCEPTOS <span class="chevron">▶</span></button>
+                    <div id="sub-conceptos" class="submenu">
+                        <a data-modal="Views/forms/conceptos/new_concepto.html" href="#">NUEVO CONCEPTO</a>
                     </div>
                 </div>
 
@@ -210,9 +218,9 @@
                 </div>
 
                 <div class="menu-group">
-                    <button data-target="sub-conceptos">CONCEPTOS <span class="chevron">▶</span></button>
-                    <div id="sub-conceptos" class="submenu">
-                        <a data-modal="Views/forms/conceptos/new_concepto.html" href="#">NUEVO CONCEPTO</a>
+                    <button data-target="sub-movimientos">MOVIMIENTOS <span class="chevron">▶</span></button>
+                    <div id="sub-movimientos" class="submenu">
+                        <a data-modal="Views/forms/movimientos/nuevo_movimiento.html" href="#">NUEVO MOVIMIENTO</a>
                     </div>
                 </div>
             </aside>

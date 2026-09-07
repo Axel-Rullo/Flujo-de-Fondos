@@ -7,6 +7,34 @@ function ajustarColumnas(container) {
     container.classList.toggle('multiple-columns', grupos.length > 6);
 }
 
+//////////////////////////////////////////////
+// 📐 CHEQUES
+//////////////////////////////////////////////
+
+document.addEventListener('change', e => {
+    if (e.target.id !== 'tipo_ch' && e.target.id !== 'uso') return;
+    const form = e.target.closest('form');
+    if (e.target.id === 'tipo_ch') {
+        form.querySelector('#fecha_cobro').disabled = e.target.value !== 'D';
+    } else {
+        toggleTomSelect(form.querySelector('#cuenta_entrada'), e.target.value === 'D');
+        toggleTomSelect(form.querySelector('#titular'), e.target.value === 'E');
+        toggleTomSelect(form.querySelector('#cuenta_salida'), e.target.value === 'E');
+    }
+});
+
+function toggleTomSelect(select, enable) {
+    if (select.tomselect) {
+        enable ? select.tomselect.enable() : select.tomselect.disable();
+    } else {
+        select.disabled = !enable;
+    }
+}
+
+//////////////////////////////////////////////
+// 📐 TOM SELECT
+//////////////////////////////////////////////
+
 async function loadSucursales(container) {
     try {
         const select = container.querySelector('#branch');
@@ -17,6 +45,10 @@ async function loadSucursales(container) {
             options: sucursales.map(s => ({ value: s.nombre, text: s.nombre, id_sucursal: s.id_sucursal })),
             labelField: 'text',
             searchField: 'text',
+            sortField : {
+                field: "text",
+                direction: "asc"
+            },
             render: {
                 option: function(data, escape) {
                     return `<div class="option">
@@ -34,7 +66,62 @@ async function loadSucursales(container) {
     }
 }
 
-window.formLoaders = [loadSucursales];
-//window.formLoaders = [loadTipos];
-//window.formLoaders = [loadMovimientos];
-//window.formLoaders = [loadConceptos];
+async function loadConceptos(container) {
+    try {
+        const select = container.querySelector('#concepto');
+        if (!select || select.tomselect) return;
+        const conceptos = await apiGet('/concepto/list');
+        new TomSelect(select, {
+            create: false,
+            dropdownParent: 'body',
+            options: conceptos.map(c => ({ value: c.id, text: c.nombre  + ' (' + (c.clasificacion === '1' ? 'O' : c.clasificacion === '2' ? 'F' : 'I') + ')', id: c.id })),
+            labelField: 'text',
+            searchField: 'text',
+            sortField : {
+                field: "text",
+                direction: "asc"
+            },
+            render: {
+                option: function(data, escape) {
+                    return `<div class="option">
+                        <span>${escape(data.text)}</span>
+                    </div>`;
+                }
+            }
+        });
+    } catch (err) {
+        showAlert("Error al cargar las conceptos", "error", 3000, 'center', true);
+        console.error('Error loading conceptos:', err);
+    }
+}
+
+async function loadTerceros(container) {
+    try {
+        const select = container.querySelector('#titular');
+        if (!select || select.tomselect) return;
+        const terceros = await apiGet('/tercero/list/active');
+        new TomSelect(select, {
+            create: false,
+            dropdownParent: 'body',
+            options: terceros.map(t => ({ value: t.id, text: t.nombre + ' (' + t.tipo + ')', id: t.id })),
+            labelField: 'text',
+            searchField: 'text',
+            sortField : {
+                field: "text",
+                direction: "asc"
+            },
+            render: {
+                option: function(data, escape) {
+                    return `<div class="option">
+                        <span>${escape(data.text)}</span>
+                    </div>`;
+                }
+            }
+        });
+    } catch (err) {
+        showAlert("Error al cargar las terceros", "error", 3000, 'center', true);
+        console.error('Error loading terceros:', err);
+    }
+}
+
+window.formLoaders = [loadSucursales, loadConceptos, loadTerceros];

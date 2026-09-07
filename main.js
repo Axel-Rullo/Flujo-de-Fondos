@@ -48,7 +48,7 @@ function startJavaBackend() {
     }
 }
 
-function waitForBackend(url = 'http://localhost:8080', timeout = 90000) {
+function waitForBackend(url = 'http://127.0.0.1:8080', timeout = 90000) {
     return new Promise((resolve, reject) => {
         const start = Date.now();
         let timer = null;

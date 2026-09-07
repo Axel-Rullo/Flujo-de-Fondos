@@ -1,0 +1,20 @@
+.cuentas-bancos {
+    background-color: var(--black);
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.cuentas {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-right: 2px;
+}
+
+.bancos {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin-left: 2px;
+}

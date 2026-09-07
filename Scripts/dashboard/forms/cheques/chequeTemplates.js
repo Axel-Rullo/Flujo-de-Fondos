@@ -5,9 +5,9 @@ window.ChequeTemplates = {
 
     fillChequeModal: function(cheque, container) {
         container.querySelector('.number').textContent = 'N° ' + (cheque.numero || '--');
-        container.querySelector('.type').textContent = cheque.clase === 'propio' ? 'Cheque Propio' : 'Cheque de Terceros';
+        container.querySelector('.type').textContent = cheque.clase === 'P' ? 'Cheque Propio' : 'Cheque de Terceros';
         container.querySelector('.cash').textContent = 'IMPORTE: $ ' + (cheque.importe || '--');
-        container.querySelector('.status').textContent = cheque.estado || '--';
+        container.querySelector('.status').textContent = cheque.estado === 'P' ? 'Pendiente' : cheque.estado === 'C' ? 'Cobrado' : 'Rechazado' || '--';
 
         container.querySelector('.fecha_entrega').textContent = cheque.fecha_entrega || '--';
         container.querySelector('.fecha_cobro').textContent = cheque.fecha_cobro || '--';
@@ -18,15 +18,15 @@ window.ChequeTemplates = {
         container.querySelector('.cuenta_entrada').textContent = cheque.cuenta_entrada || '--';
         container.querySelector('.cuenta_salida').textContent = cheque.cuenta_salida || '--';
 
-        if (cheque.clase === 'tercero') {
-            container.querySelector('.section-label.destino').textContent = cheque.uso === 'Deposito' ? 'Depositado en' : 'Endosado a';
+        if (cheque.clase === 'T') {
+            container.querySelector('.section-label.destino').textContent = cheque.uso === 'D' ? 'Depositado en' : 'Endosado a';
             container.querySelector('.titular_destino').textContent = cheque.titular_destino || '--';
         } else {
             section = container.querySelector('.section-cheque.destino-section');
             section.style.display = 'none';
         }
 
-        container.querySelector('.uso').textContent = cheque.uso || '--';
+        container.querySelector('.uso').textContent = cheque.uso === 'E' ? 'Endoso' : 'Deposito' || '--';
         container.querySelector('.observacion').textContent = cheque.observacion || '--';
     },
 

@@ -17,8 +17,8 @@
             <label for="tipo_ch">Tipo <span>*</span></label>
             <select id="tipo_ch" name="tipo_ch" required>
                 <option value="" disabled selected hidden>Elije una opción...</option>
-                <option value="Comun">Común</option>
-                <option value="Diferido">Diferido</option>
+                <option value="C">Corriente</option>
+                <option value="D">Diferido</option>
             </select>
         </div>
 
@@ -29,12 +29,17 @@
 
         <div class="form-group">
             <label for="banco">Banco <span>*</span></label>
-            <select id="banco" name="id_banco" required></select>
+            <select id="banco" name="id_banco" placeholder="Elije una opción..." required></select>
         </div>
 
         <div class="form-group">
-            <label for="titular">Titular <span>*</span></label>
-            <select id="titular" name="id_titular" required></select>
+            <label for="titular">Emisor <span>*</span></label>
+            <select id="titular" name="id_titular" placeholder="Elije una opción..." required></select>
+        </div>
+
+        <div class="form-group">
+            <label for="concepto">Cuenta de Entrada <span>*</span></label>
+            <select id="concepto" name="id_concepto" placeholder="Elije una opción..." required></select>
         </div>
 
         <div class="form-group">

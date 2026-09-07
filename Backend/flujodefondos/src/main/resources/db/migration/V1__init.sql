@@ -143,7 +143,6 @@ CREATE TABLE IF NOT EXISTS cheques (
   clase TEXT NOT NULL,              -- 'Propio' | 'Tercero'
   clasificacion TEXT NOT NULL,      -- 'Emitido' | 'A Cobrar'
   numero TEXT NOT NULL,
-  banco TEXT NOT NULL,
   importe DECIMAL(15,2) NOT NULL,
   tipo TEXT NOT NULL,               -- 'Comun' | 'Diferido'
   fecha_entrega DATE,
@@ -152,21 +151,47 @@ CREATE TABLE IF NOT EXISTS cheques (
   estado TEXT,
   observacion TEXT,
   uso TEXT,                         -- 'Deposito' | 'Endoso', solo aplica a terceros
-  id_titular INTEGER,
-  id_titular_destino INTEGER,
-  id_cuenta_entrada INTEGER,
-  id_cuenta_salida INTEGER,
-  id_usuario INTEGER,
+  id_titular INTEGER,               -- alta: emisor (terceros) o destino (propios)
+  id_titular_destino INTEGER,       -- imputación: a quién se endosa/deposita (terceros)
+  id_cuenta_banco INTEGER,          -- alta propios: cuenta bancaria propia
+  id_banco INTEGER,                 -- alta terceros: banco ajeno
+  id_concepto_entrada INTEGER,      -- alta terceros: Cuenta Entrada
+  id_concepto_salida INTEGER,       -- alta propios: Cuenta Salida
+  id_cuenta_entrada INTEGER,        -- imputación (real)
+  id_cuenta_salida INTEGER,         -- imputación (real)
+  id_usuario INTEGER,               -- usuario que carga el cheque
   FOREIGN KEY (id_titular) REFERENCES clientes_proveedores (id_clipro),
   FOREIGN KEY (id_titular_destino) REFERENCES clientes_proveedores (id_clipro),
+  FOREIGN KEY (id_cuenta_banco) REFERENCES cuentas (id_cuenta),
+  FOREIGN KEY (id_banco) REFERENCES bancos (id_banco),
+  FOREIGN KEY (id_concepto_entrada) REFERENCES conceptos (id_concepto),
+  FOREIGN KEY (id_concepto_salida) REFERENCES conceptos (id_concepto),
   FOREIGN KEY (id_cuenta_entrada) REFERENCES cuentas (id_cuenta),
   FOREIGN KEY (id_cuenta_salida) REFERENCES cuentas (id_cuenta),
   FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
 );
 
-INSERT INTO cheques (clase, clasificacion, numero, banco, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
-	('Propio', 'Emitido', 'CH-P-0001', 'Banco de la Nación Argentina', 150000.50, 'Diferido', '2026-09-01', '2026-10-15', NULL, 'PENDIENTE', 'Pago a proveedor de insumos', 'Endoso', 3, NULL, NULL, 6, 1),
-	('Tercero', 'A Cobrar', 'CH-T-0001', 'Banco Galicia', 85000.00, 'Comun', '2026-09-03', '2026-10-03', '2026-10-01', 'COBRADO', 'Cobro por servicios de transporte', 'Deposito', 8, NULL, 8, NULL, 1);
+INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+('P', 'E', 'CH-P-0001', 150000.50, 'D', '2026-09-01', '2026-10-15', NULL, 'P', 'Pago a proveedor de insumos', NULL, 3, NULL, 6, NULL, NULL, 6, NULL, 6, 1),
+('P', 'E', 'CH-P-0002', 235000.00, 'D', '2026-09-02', '2026-10-20', NULL, 'P', 'Pago de mercadería', NULL, 5, NULL, 6, NULL, NULL, 8, NULL, 8, 1),
+('P', 'E', 'CH-P-0003', 98500.75, 'C', '2026-09-03', '2026-09-30', NULL, 'P', 'Pago de servicios', NULL, 3, NULL, 8, NULL, NULL, 4, NULL, 4, 1),
+('P', 'E', 'CH-P-0004', 310000.00, 'D', '2026-09-04', '2026-10-25', NULL, 'P', 'Pago a proveedor mayorista', NULL, 7, NULL, 8, NULL, NULL, 6, NULL, 6, 1),
+('P', 'E', 'CH-P-0005', 75000.00, 'C', '2026-09-05', '2026-10-05', '2026-10-05', 'C', 'Pago de alquiler', NULL, 5, NULL, 6, NULL, NULL, 10, NULL, 10, 1),
+('P', 'E', 'CH-P-0006', 425000.00, 'D', '2026-09-06', '2026-11-01', NULL, 'P', 'Compra de equipamiento', NULL, 8, NULL, 8, NULL, NULL, 8, NULL, 8, 1),
+('P', 'E', 'CH-P-0007', 120000.25, 'C', '2026-09-07', '2026-10-12', NULL, 'P', 'Pago de mantenimiento', NULL, 3, NULL, 6, NULL, NULL, 4, NULL, 4, 1),
+('P', 'E', 'CH-P-0008', 185500.00, 'D', '2026-09-08', '2026-10-30', '2026-10-30', 'C', 'Pago de materia prima', NULL, 7, NULL, 8, NULL, NULL, 6, NULL, 6, 1),
+('P', 'E', 'CH-P-0009', 67000.00, 'C', '2026-09-09', '2026-10-10', NULL, 'P', 'Pago de transporte', NULL, 5, NULL, 6, NULL, NULL, 12, NULL, 12, 1),
+('P', 'E', 'CH-P-0010', 290000.00, 'D', '2026-09-10', '2026-11-05', NULL, 'P', 'Pago a proveedor de equipos', NULL, 8, NULL, 8, NULL, NULL, 8, NULL, 8, 1),
+('T', 'A', 'CH-T-0001', 85000.00, 'C', '2026-09-03', '2026-10-03', NULL, 'P', 'Cobro por servicios de transporte', NULL, 8, NULL, NULL, NULL, 8, NULL, 8, NULL, 1),
+('T', 'A', 'CH-T-0002', 125000.00, 'D', '2026-09-04', '2026-10-15', NULL, 'P', 'Cobro por venta de mercadería', NULL, 5, NULL, NULL, NULL, 8, NULL, 8, NULL, 1),
+('T', 'A', 'CH-T-0003', 67500.50, 'C', '2026-09-05', '2026-10-05', '2026-10-05', 'C', 'Cobro por prestación de servicios', NULL, 3, NULL, NULL, NULL, 4, NULL, 4, NULL, 1),
+('T', 'A', 'CH-T-0004', 210000.00, 'D', '2026-09-06', '2026-10-20', NULL, 'P', 'Cobro por venta de productos', NULL, 7, NULL, NULL, NULL, 8, NULL, 8, NULL, 1),
+('T', 'A', 'CH-T-0005', 95000.00, 'C', '2026-09-07', '2026-10-12', NULL, 'P', 'Cobro pendiente de cliente', NULL, 5, NULL, NULL, NULL, 6, NULL, 6, NULL, 1),
+('T', 'A', 'CH-T-0006', 350000.75, 'D', '2026-09-08', '2026-10-30', NULL, 'P', 'Cobro por operación comercial', NULL, 8, NULL, NULL, NULL, 8, NULL, 8, NULL, 1),
+('T', 'A', 'CH-T-0007', 43000.00, 'C', '2026-09-09', '2026-10-10', NULL, 'P', 'Cobro por servicio realizado', NULL, 3, NULL, NULL, NULL, 4, NULL, 4, NULL, 1),
+('T', 'A', 'CH-T-0008', 175000.00, 'D', '2026-09-10', '2026-11-01', '2026-10-25', 'C', 'Cobro de factura comercial', NULL, 7, NULL, NULL, NULL, 8, NULL, 8, NULL, 1),
+('T', 'A', 'CH-T-0009', 112500.00, 'C', '2026-09-11', '2026-10-25', '2026-10-25', 'C', 'Cobro de cliente', NULL, 5, NULL, NULL, NULL, 6, NULL, 6, NULL, 1),
+('T', 'A', 'CH-T-0010', 275000.00, 'D', '2026-09-12', '2026-11-05', NULL, 'P', 'Cobro por operación de venta', NULL, 8, NULL, NULL, NULL, 8, NULL, 8, NULL, 1);
 
 -- Volcando estructura para tabla movimientos
 CREATE TABLE IF NOT EXISTS movimientos (

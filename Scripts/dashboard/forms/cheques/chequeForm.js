@@ -4,34 +4,35 @@
 
     function buildChequePropio(form) {
         return {
-            clase: 'propio',
-            clasificacion: 'emitido',
+            clase: 'P',
+            clasificacion: 'E',
             tipo: form.querySelector('#tipo_ch').value,
             numero: form.querySelector('#numero').value,
             importe: form.querySelector('#importe').value,
-            fecha_cobro: form.querySelector('#tipo_ch').value === 'Diferido' ? form.querySelector('#fecha_cobro').value : getFechaLocal(30),
+            fecha_cobro: form.querySelector('#tipo_ch').value === 'D' ? form.querySelector('#fecha_cobro').value : getFechaLocal(),
             fecha_entrega: getFechaLocal(),
             observacion: form.querySelector('#observaciones').value,
-            banco: form.querySelector('#bank').value,
+            id_cuenta_banco: form.querySelector('#bank').value,
             id_titular: form.querySelector('#titular').value,
-            id_cuenta_salida: form.querySelector('#cuenta_salida').value,
-            id_usuario: window.currentUser?.id || null
+            id_concepto_salida: form.querySelector('#concepto').value,
+            id_usuario: window.currentUser.id
         };
     }
 
     function buildChequeTercero(form) {
         return {
-            clase: 'terceros',
-            clasificacion: 'a cobrar',
+            clase: 'T',
+            clasificacion: 'A',
             tipo: form.querySelector('#tipo_ch').value,
             numero: form.querySelector('#numero').value,
             importe: form.querySelector('#importe').value,
-            fecha_cobro: form.querySelector('#tipo_ch').value === 'Diferido' ? form.querySelector('#fecha_cobro').value : getFechaLocal(30),
+            fecha_cobro: form.querySelector('#tipo_ch').value === 'D' ? form.querySelector('#fecha_cobro').value : getFechaLocal(),
             fecha_entrega: getFechaLocal(),
             observacion: form.querySelector('#observaciones').value,
-            banco: form.querySelector('#bank').value,
-            id_titular: form.querySelector('#titular_origen').value,
-            id_usuario: window.currentUser?.id || null
+            id_banco: form.querySelector('#banco').value,
+            id_titular: form.querySelector('#titular').value,
+            id_concepto_entrada: form.querySelector('#concepto').value,
+            id_usuario: window.currentUser.id
         };
     }
 
@@ -44,6 +45,7 @@
     function buildImputarChequeTerceros(form) {
         return {
             uso: form.querySelector('#uso').value,
+            clasificacion: form.querySelector('#uso').value === 'E' ? 'E' : 'A',
             fecha_destino: getFechaLocal(),
             cuenta_salida: form.querySelector('#cuenta_salida').value || null,
             cuenta_entrada: form.querySelector('#cuenta_entrada').value || null,

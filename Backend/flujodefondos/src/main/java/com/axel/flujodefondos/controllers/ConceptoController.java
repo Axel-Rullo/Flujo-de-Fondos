@@ -25,8 +25,12 @@ public class ConceptoController {
 
     @PostMapping("/concepto/new")
     public ResponseEntity<Map<String, Object>> newConcepto(@RequestBody Concepto concepto) {
-        conceptoService.insert(concepto);
-        return ResponseEntity.ok(Map.of("ok", true));
+        try {
+            conceptoService.insert(concepto);
+            return ResponseEntity.ok(Map.of("ok", true));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(Map.of("ok", false, "mensaje", e.getMessage()));
+        }
     }
 
     @PostMapping("/concepto/edit")

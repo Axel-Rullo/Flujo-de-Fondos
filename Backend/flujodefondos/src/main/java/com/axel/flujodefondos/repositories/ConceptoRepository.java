@@ -17,12 +17,16 @@ public class ConceptoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // ── MAPPERS ──────────────────────────────────────────────────────
+
     private final RowMapper<Concepto> conceptoMapper = (rs, rowNum) -> new Concepto(
         rs.getLong("id_concepto"),
         rs.getString("cod_concepto"),
         rs.getString("concepto"),
         rs.getString("clasificacion")
     );
+
+    // ── LISTADO ──────────────────────────────────────────────────────
 
     public List<Concepto> findAll() {
         return jdbcTemplate.query("SELECT id_concepto, cod_concepto, concepto, clasificacion FROM conceptos ORDER BY clasificacion, cod_concepto",
@@ -35,8 +39,20 @@ public class ConceptoRepository {
         "SELECT COUNT(*) FROM conceptos WHERE clasificacion = ?",
         Integer.class,
         clasificacion
-    );
-}
+        );
+    }
+
+    // ── BÚSQUEDA ─────────────────────────────────────────────────────
+
+    public Long findConceptoByNombre(String nombre) {
+        return jdbcTemplate.query(
+            "SELECT id_concepto FROM conceptos WHERE concepto = ?",
+            (rs, rowNum) -> rs.getLong("id_concepto"),
+            nombre
+        ).stream().findFirst().orElse(null);
+    }
+
+    // ── ALTA ─────────────────────────────────────────────────────────
 
     public void insert(Concepto concepto) {
         jdbcTemplate.update(
@@ -44,6 +60,8 @@ public class ConceptoRepository {
                 concepto.getCodigo(), concepto.getNombre(), concepto.getClasificacion()
         );
     }
+
+    // ── MODIFICACIÓN ─────────────────────────────────────────────────
 
     public void update(Concepto concepto) {
         jdbcTemplate.update(

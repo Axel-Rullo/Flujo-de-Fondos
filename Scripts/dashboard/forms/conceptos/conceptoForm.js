@@ -21,7 +21,7 @@
                             showAlert('¡Concepto ingresado exitosamente!', 'success', 2000, 'top', false);
                             form.reset();
                             window.cerrarModal();
-                            cargarParcial('Views/queries/cuentas.html')
+                            cargarParcial('Views/queries/conceptos.html')
                         }
                     } else {
                         concepto.id = Number(form.dataset.id);
@@ -32,12 +32,12 @@
                             showAlert('¡Concepto editado exitosamente!', 'success', 2000, 'top', false);
                             form.reset();
                             window.cerrarModal();
-                            cargarParcial('Views/queries/cuentas.html');
+                            cargarParcial('Views/queries/conceptos.html');
                         }
                     }
                 } catch (err) {
                     showAlert('Error al ingresar concepto', 'error', 3000, 'center', true);
-                    console.error('Error al realizar la acción:', err);
+                    console.error('Error al ingresar concepto:', err);
                 }
         });
     }

@@ -31,11 +31,14 @@ public class Cheque {
     String id_titular_destino;
     String id_cuenta_entrada;
     String id_cuenta_salida;
+    String id_concepto_entrada;
+    String id_concepto_salida;
     String id_usuario;
     String titular;
     String titular_destino;
     String cuenta_entrada;
     String cuenta_salida;
+    String concepto_entrada;
+    String concepto_salida;
     String usuario;
-    
 }
