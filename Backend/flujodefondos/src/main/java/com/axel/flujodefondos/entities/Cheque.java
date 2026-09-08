@@ -29,6 +29,8 @@ public class Cheque {
     String uso;
     String id_titular;
     String id_titular_destino;
+    String id_banco;
+    String id_cuenta_banco;
     String id_cuenta_entrada;
     String id_cuenta_salida;
     String id_concepto_entrada;
@@ -41,4 +43,5 @@ public class Cheque {
     String concepto_entrada;
     String concepto_salida;
     String usuario;
+    String cuenta_banco;
 }

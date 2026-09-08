@@ -18,9 +18,9 @@ window.ConceptoTemplates = {
                 columnDefaults: {headerSort:false},
                 layout: "fitColumns",
                 columns: [
-                    { title: "Código", field: "codigo", widthGrow: 20},
-                    { title: "Concepto", field: "nombre", widthGrow: 40},
-                    { title: "Clasificación", field: "clasificacion", widthGrow: 40,
+                    { title: "CÓDIGO", field: "codigo", widthGrow: 20},
+                    { title: "CONCEPTO", field: "nombre", widthGrow: 40},
+                    { title: "CLASIFICACIÓN", field: "clasificacion", widthGrow: 40,
                         formatter: function(cell){
                         const value = cell.getValue();
                         switch (value) {

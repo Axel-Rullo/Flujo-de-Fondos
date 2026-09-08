@@ -40,13 +40,16 @@ public class ChequeRepository {
         null,
         null,
         null,
+        null,
+        null,
         rs.getString("titular"),
         rs.getString("titular_destino"),
         rs.getString("cuenta_entrada"),
         rs.getString("cuenta_salida"),
         rs.getString("concepto_entrada"),
         rs.getString("concepto_salida"),
-        rs.getString("usuario")
+        rs.getString("usuario"),
+        rs.getString("cuenta_banco")
     );
 
     // ── LISTADO ───────────────────────────────────────────────────────
@@ -57,7 +60,8 @@ public List<Cheque> findAllPropios() {
         "ch.fecha_entrega, ch.fecha_cobro, ch.fecha_destino, ch.estado, ch.observacion, ch.uso, " +
         "cp.nombre AS titular, cpd.nombre AS titular_destino, " +
         "ce.nombre AS cuenta_entrada, cs.nombre AS cuenta_salida, " +
-        "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario " +
+        "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario, " +
+        "cb.nombre AS cuenta_banco " +
         "FROM cheques ch " +
 
             // Titular
@@ -71,6 +75,9 @@ public List<Cheque> findAllPropios() {
 
             // Cuenta de salida
             "LEFT JOIN cuentas cs ON ch.id_cuenta_salida = cs.id_cuenta " +
+
+            // Cuenta bancaria propia
+            "LEFT JOIN cuentas cb ON ch.id_cuenta_banco = cb.id_cuenta " +
 
             // Concepto de entrada
             "LEFT JOIN conceptos cce ON ch.id_concepto_entrada = cce.id_concepto " +
@@ -96,7 +103,8 @@ public List<Cheque> findAllPropios() {
             "ch.fecha_entrega, ch.fecha_cobro, ch.fecha_destino, ch.estado, ch.observacion, ch.uso, " +
             "cp.nombre AS titular, cpd.nombre AS titular_destino, " +
             "ce.nombre AS cuenta_entrada, cs.nombre AS cuenta_salida, " +
-            "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario " +
+            "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario, " +
+            "cb.nombre AS cuenta_banco " +
             "FROM cheques ch " +
 
             // Titular del cheque
@@ -110,6 +118,9 @@ public List<Cheque> findAllPropios() {
 
             // Cuenta de salida
             "LEFT JOIN cuentas cs ON ch.id_cuenta_salida = cs.id_cuenta " +
+
+            // Cuenta bancaria propia
+            "LEFT JOIN cuentas cb ON ch.id_cuenta_banco = cb.id_cuenta " +
 
             // Concepto de entrada
             "LEFT JOIN conceptos cce ON ch.id_concepto_entrada = cce.id_concepto " +
@@ -132,17 +143,17 @@ public List<Cheque> findAllPropios() {
 
     public void insertChequePropio(Cheque cheque) {
         jdbcTemplate.update(
-            "INSERT INTO cheques (clase, clasificacion, numero, banco, importe, tipo, fecha_entrega, fecha_cobro, estado, observacion, id_titular, id_cuenta_salida, id_concepto_salida, id_usuario) VALUES ('Propio', 'Emitido', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            cheque.getNumero(), cheque.getBanco(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_entrega(),
+            "INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, estado, observacion, id_titular, id_cuenta_banco, id_concepto_salida, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            cheque.getClase(), cheque.getClasificacion(), cheque.getNumero(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_entrega(),
             cheque.getFecha_cobro(), cheque.getEstado(), cheque.getObservacion(),
-            cheque.getId_titular(), cheque.getId_cuenta_salida(), cheque.getId_concepto_salida(), cheque.getId_usuario()
+            cheque.getId_titular(), cheque.getId_cuenta_banco(), cheque.getId_concepto_salida(), cheque.getId_usuario()
         );
     }
 
     public void insertChequeTercero(Cheque cheque) {
         jdbcTemplate.update(
-            "INSERT INTO cheques (clase, clasificacion, numero, banco, importe, tipo, fecha_entrega, fecha_cobro, estado, observacion, id_titular, id_concepto_entrada, id_usuario) VALUES ('Tercero', 'A Cobrar', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            cheque.getNumero(), cheque.getBanco(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_entrega(),
+            "INSERT INTO cheques (clase, clasificacion, numero, id_banco, importe, tipo, fecha_entrega, fecha_cobro, estado, observacion, id_titular, id_concepto_entrada, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            cheque.getClase(), cheque.getClasificacion(), cheque.getNumero(), cheque.getId_banco(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_entrega(),
             cheque.getFecha_cobro(), cheque.getEstado(), cheque.getObservacion(),
             cheque.getId_titular(), cheque.getId_concepto_entrada(), cheque.getId_usuario()
         );

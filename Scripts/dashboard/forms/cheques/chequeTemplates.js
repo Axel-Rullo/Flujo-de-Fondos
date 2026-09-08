@@ -4,10 +4,22 @@ window.ChequeTemplates = {
     //////////////////////////////////////////////
 
     fillChequeModal: function(cheque, container) {
+        const view = container.id === 'view_cheque' ? container : container.querySelector('#view_cheque');
+        view.dataset.id = cheque.id;
+        view.dataset.clase = cheque.clase;
+
         container.querySelector('.number').textContent = 'N° ' + (cheque.numero || '--');
         container.querySelector('.type').textContent = cheque.clase === 'P' ? 'Cheque Propio' : 'Cheque de Terceros';
         container.querySelector('.cash').textContent = 'IMPORTE: $ ' + (cheque.importe || '--');
-        container.querySelector('.status').textContent = cheque.estado === 'P' ? 'Pendiente' : cheque.estado === 'C' ? 'Cobrado' : 'Rechazado' || '--';
+        container.querySelector('.status').textContent = cheque.estado === 'P' ? 'Pendiente' : cheque.estado === 'C' ? 'Cobrado' : cheque.estado === 'R' ? 'Rechazado' : '--';
+
+        estadoSection = container.querySelector('.status');
+        const dias = cheque.fecha_cobro ? diasHastaVencimiento(cheque.fecha_cobro) : null;
+        if (cheque.estado === 'C') { estadoSection.style.backgroundColor = 'var(--green)'; estadoSection.style.color = 'var(--white)'; }
+        else if (cheque.estado === 'R') { estadoSection.style.backgroundColor = 'var(--red)'; estadoSection.style.color = 'var(--white)'; }
+        else if (cheque.estado === 'P' && dias !== null && dias < 0) { estadoSection.style.backgroundColor = 'var(--red)'; estadoSection.style.color = 'var(--white)'; estadoSection.textContent = 'Vencido'; }
+        else if (cheque.estado === 'P' && dias !== null && dias <= 5) { estadoSection.style.backgroundColor = 'var(--yellow)'; estadoSection.style.color = 'var(--black)'; estadoSection.textContent = 'Por vencer'; }
+        else if (cheque.estado === 'P') { estadoSection.style.backgroundColor = 'var(--white)'; estadoSection.style.color = 'var(--black)'; }
 
         container.querySelector('.fecha_entrega').textContent = cheque.fecha_entrega || '--';
         container.querySelector('.fecha_cobro').textContent = cheque.fecha_cobro || '--';
@@ -19,14 +31,16 @@ window.ChequeTemplates = {
         container.querySelector('.cuenta_salida').textContent = cheque.cuenta_salida || '--';
 
         if (cheque.clase === 'T') {
-            container.querySelector('.section-label.destino').textContent = cheque.uso === 'D' ? 'Depositado en' : 'Endosado a';
+            container.querySelector('.section-label.destino').textContent = cheque.uso === 'D' ? 'Depositado en' : cheque.uso === 'E' ? 'Endosado a' : 'Sin definir';
             container.querySelector('.titular_destino').textContent = cheque.titular_destino || '--';
+            container.querySelector('.uso').textContent = cheque.uso === 'E' ? 'Endoso' : cheque.uso === 'D' ? 'Deposito' : '--';
         } else {
-            section = container.querySelector('.section-cheque.destino-section');
-            section.style.display = 'none';
+            usoSection = container.querySelector('#uso')
+            destinoSection = container.querySelector('.section-cheque.destino-section');
+            usoSection.style.display = 'none';
+            destinoSection.style.display = 'none';
         }
 
-        container.querySelector('.uso').textContent = cheque.uso === 'E' ? 'Endoso' : 'Deposito' || '--';
         container.querySelector('.observacion').textContent = cheque.observacion || '--';
     },
 
@@ -42,12 +56,12 @@ window.ChequeTemplates = {
             layout: "fitColumns",
             columns: [
                 { title: "",                field: "tipo",          widthGrow: 1, hozAlign: "center"},
-                { title: "Año",             field: "fecha_cobro",   widthGrow: 4, hozAlign: "center", formatter: this.formatearAnio},
-                { title: "Fecha Cobro",     field: "fecha_cobro",   widthGrow: 12, hozAlign: "center" },
-                { title: "Banco",           field: "cuenta_salida",         widthGrow: 22 },
-                { title: "Número",          field: "numero",        widthGrow: 18 },
-                { title: "Importe",         field: "importe",       widthGrow: 18, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
-                { title: "Destino",         field: "titular",    widthGrow: 25 },
+                { title: "AÑO",             field: "fecha_cobro",   widthGrow: 5, hozAlign: "center", formatter: this.formatearAnio},
+                { title: "FECHA COBRO",     field: "fecha_cobro",   widthGrow: 11, hozAlign: "center" },
+                { title: "BANCO",           field: "cuenta_banco",  widthGrow: 22 },
+                { title: "NÚMERO",          field: "numero",        widthGrow: 18 },
+                { title: "IMPORTE",         field: "importe",       widthGrow: 18, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
+                { title: "DESTINO",         field: "titular",    widthGrow: 25 },
             ]
         });
 
@@ -63,7 +77,6 @@ window.ChequeTemplates = {
         return this.tablaPropios;
     },
 
-
     crearTablaChequesTerceros: async function(data) {
         if (this.tablaTerceros) {
             try { await this.tablaTerceros.destroy(); } catch (e) {}
@@ -76,14 +89,14 @@ window.ChequeTemplates = {
             layout: "fitColumns",
             columns: [
                 { title: "",                field: "tipo",           widthGrow: 1, hozAlign: "center"},
-                { title: "Año",             field: "fecha_cobro",    widthGrow: 4, hozAlign: "center", formatter: this.formatearAnio},
-                { title: "Fecha Cobro",     field: "fecha_cobro",    widthGrow: 12, hozAlign: "center"},
-                { title: "Cliente",         field: "titular",     widthGrow: 14},
-                { title: "Banco",           field: "banco",          widthGrow: 16},
-                { title: "Número",          field: "numero",         widthGrow: 16},
-                { title: "Importe",         field: "importe",        widthGrow: 14, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
-                { title: "Fecha Destino",   field: "fecha_destino",  widthGrow: 12, hozAlign: "center"},
-                { title: "Destino",         field: "titular",     widthGrow: 14},
+                { title: "AÑO",             field: "fecha_cobro",    widthGrow: 5, hozAlign: "center", formatter: this.formatearAnio},
+                { title: "FECHA COBRO",     field: "fecha_cobro",    widthGrow: 11, hozAlign: "center"},
+                { title: "CLIENTE",         field: "titular",     widthGrow: 14},
+                { title: "BANCO",           field: "banco",          widthGrow: 16},
+                { title: "NÚMERO",          field: "numero",         widthGrow: 16},
+                { title: "IMPORTE",         field: "importe",        widthGrow: 14, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
+                { title: "FECHA DESTINO",   field: "fecha_destino",  widthGrow: 12, hozAlign: "center"},
+                { title: "DESTINO",         field: "titular",     widthGrow: 14},
             ]
         });
 

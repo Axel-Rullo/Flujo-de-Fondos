@@ -11,7 +11,7 @@ window.CuentaBancoTemplates = {
                 columnDefaults: {headerSort:false},
                 layout: "fitColumns",
                 columns: [
-                    { title: "Cuentas Propias", field: "nombre", widthGrow: 100}
+                    { title: "CUENTAS PROPIAS", field: "nombre", widthGrow: 100}
                 ]
             });
 
@@ -29,7 +29,7 @@ window.CuentaBancoTemplates = {
                 columnDefaults: {headerSort:false},
                 layout: "fitColumns",
                 columns: [
-                    { title: "Cuentas de Terceros", field: "nombre", widthGrow: 100}
+                    { title: "CUENTAS DE TERCEROS", field: "nombre", widthGrow: 100}
                 ]
             });
 

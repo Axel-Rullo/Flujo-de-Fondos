@@ -17,9 +17,9 @@ document.addEventListener('change', e => {
     if (e.target.id === 'tipo_ch') {
         form.querySelector('#fecha_cobro').disabled = e.target.value !== 'D';
     } else {
-        toggleTomSelect(form.querySelector('#cuenta_entrada'), e.target.value === 'D');
+        toggleTomSelect(form.querySelector('#cuenta'), e.target.value === 'D');
         toggleTomSelect(form.querySelector('#titular'), e.target.value === 'E');
-        toggleTomSelect(form.querySelector('#cuenta_salida'), e.target.value === 'E');
+        toggleTomSelect(form.querySelector('#banco'), e.target.value === 'E');
     }
 });
 
@@ -124,4 +124,62 @@ async function loadTerceros(container) {
     }
 }
 
-window.formLoaders = [loadSucursales, loadConceptos, loadTerceros];
+async function loadCuentas(container) {
+    try {
+        const select = container.querySelector('#cuenta');
+        if (!select || select.tomselect) return;
+        const cuentas = await apiGet('/cuentas/list');
+        new TomSelect(select, {
+            create: false,
+            dropdownParent: 'body',
+            options: cuentas.map(c => ({ value: c.id, text: c.nombre, id: c.id })),
+            labelField: 'text',
+            searchField: 'text',
+            sortField : {
+                field: "text",
+                direction: "asc"
+            },
+            render: {
+                option: function(data, escape) {
+                    return `<div class="option">
+                        <span>${escape(data.text)}</span>
+                    </div>`;
+                }
+            }
+        });
+    } catch (err) {
+        showAlert("Error al cargar las cuentas propias", "error", 3000, 'center', true);
+        console.error('Error al cargar las cuentas propias:', err);
+    }
+}
+
+async function loadBancos(container) {
+    try {
+        const select = container.querySelector('#banco');
+        if (!select || select.tomselect) return;
+        const bancos = await apiGet('/bancos/list');
+        new TomSelect(select, {
+            create: false,
+            dropdownParent: 'body',
+            options: bancos.map(b => ({ value: b.id, text: b.nombre, id: b.id })),
+            labelField: 'text',
+            searchField: 'text',
+            sortField : {
+                field: "text",
+                direction: "asc"
+            },
+            render: {
+                option: function(data, escape) {
+                    return `<div class="option">
+                        <span>${escape(data.text)}</span>
+                    </div>`;
+                }
+            }
+        });
+    } catch (err) {
+        showAlert("Error al cargar las cuentas de terceros", "error", 3000, 'center', true);
+        console.error('Error al cargar las cuentas de terceros:', err);
+    }
+}
+
+window.formLoaders = [loadSucursales, loadConceptos, loadTerceros, loadCuentas, loadBancos];
