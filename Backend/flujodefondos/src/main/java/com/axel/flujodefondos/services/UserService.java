@@ -80,6 +80,6 @@ public class UserService {
     // ── FOTO ─────────────────────────────────────────────────────────
 
     public String savePhoto(MultipartFile photo, String oldPhotoUrl) {
-        return fileStorageService.store(photo, "profiles", oldPhotoUrl);
+        return fileStorageService.store(photo, "Profiles", oldPhotoUrl);
     }
 }

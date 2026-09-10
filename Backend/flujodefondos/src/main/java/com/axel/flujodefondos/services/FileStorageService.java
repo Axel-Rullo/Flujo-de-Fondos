@@ -1,5 +1,6 @@
 package com.axel.flujodefondos.services;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,15 @@ import java.nio.file.Paths;
 @Service
 public class FileStorageService {
 
-    private final Path root = Paths.get("uploads");
+    private final Path basePath;
+
+    public FileStorageService(@Value("${app.storage.base-path:./}") String basePath) {
+        this.basePath = Paths.get(basePath).toAbsolutePath().normalize();
+    }
 
     public String store(MultipartFile file, String subDir, String oldUrl) {
         try {
-            Path dir = Files.createDirectories(root.resolve(subDir));
+            Path dir = Files.createDirectories(basePath.resolve(subDir));
 
             if (oldUrl != null && !oldUrl.isBlank()) {
                 Files.deleteIfExists(dir.resolve(oldUrl.substring(oldUrl.lastIndexOf('/') + 1)));
@@ -38,7 +43,7 @@ public class FileStorageService {
             } while (Files.exists(path));
 
             Files.write(path, file.getBytes());
-            return "/api/uploads/" + subDir + "/" + path.getFileName();
+            return "/" + subDir + "/" + path.getFileName();
         } catch (IOException e) {
             throw new RuntimeException("Error al guardar archivo", e);
         }
@@ -47,7 +52,7 @@ public class FileStorageService {
     @SuppressWarnings("null")
     public Resource loadAsResource(String subDir, String filename) {
         try {
-            Resource resource = new UrlResource(root.resolve(subDir).resolve(filename).toAbsolutePath().toUri());
+            Resource resource = new UrlResource(basePath.resolve(subDir).resolve(filename).toUri());
             return resource.exists() ? resource : null;
         } catch (Exception e) {
             return null;
@@ -56,7 +61,7 @@ public class FileStorageService {
 
     public String getContentType(String subDir, String filename) {
         try {
-            String type = Files.probeContentType(root.resolve(subDir).resolve(filename));
+            String type = Files.probeContentType(basePath.resolve(subDir).resolve(filename));
             return type != null ? type : "application/octet-stream";
         } catch (IOException e) {
             return "application/octet-stream";

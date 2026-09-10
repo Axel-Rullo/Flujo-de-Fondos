@@ -21,5 +21,9 @@ window.ChequeService = {
 
     imputarChequeTerceros: async (cheque) => {
         return await apiPost('/cheques/terceros/imputar', cheque);
+    },
+
+    rechazarCheque: async (id) => {
+        return await apiPost('/cheques/rechazar', id);
     }
 }

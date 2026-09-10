@@ -42,4 +42,10 @@ public class ChequeService {
     public void imputarChequeTercero(Cheque cheque) {
         chequeRepository.imputarChequeTercero(cheque);
     }
+
+    // ── RECHAZO ──────────────────────────────────────────────────────
+
+    public void rechazarCheque(Long id) {
+        chequeRepository.rechazarCheque(id);
+    }
 }

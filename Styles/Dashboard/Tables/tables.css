@@ -71,8 +71,40 @@
     text-align: left;
     border-right: none;
     border-bottom: 1px solid var(--black);
+    white-space: normal;
 }
 
 .tabulator .tabulator-cell ~ .tabulator-cell {
     border-left: 1px solid var(--black);
+}
+
+/* ── FILAS POR ESTADO ─────────────────────────────── */
+
+.tabulator-row.estado-cobrado {
+    background-color: var(--green);
+    color: var(--white);
+}
+
+.tabulator-row.estado-rechazado,
+.tabulator-row.estado-vencido {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+.tabulator-row.estado-por-vencer {
+    background-color: var(--yellow);
+    color: var(--black);
+}
+
+.tabulator-row.estado-pendiente {
+    background-color: var(--white);
+    color: var(--black);
+}
+
+.tabulator-row.estado-cobrado:hover,
+.tabulator-row.estado-rechazado:hover,
+.tabulator-row.estado-vencido:hover,
+.tabulator-row.estado-por-vencer:hover,
+.tabulator-row.estado-pendiente:hover {
+    filter: brightness(0.92);
 }

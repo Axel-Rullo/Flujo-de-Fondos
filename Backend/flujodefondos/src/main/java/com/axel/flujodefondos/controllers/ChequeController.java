@@ -57,4 +57,12 @@ public class ChequeController {
         chequeService.imputarChequeTercero(cheque);
         return ResponseEntity.ok(Map.of("ok", true));
     }
+
+    // ── RECHAZO ──────────────────────────────────────────────────────
+
+    @PostMapping("/cheques/rechazar")
+    public ResponseEntity<Map<String, Object>> rechazarCheque(@RequestBody Long id) {
+        chequeService.rechazarCheque(id);
+        return ResponseEntity.ok(Map.of("ok", true));
+    }
 }

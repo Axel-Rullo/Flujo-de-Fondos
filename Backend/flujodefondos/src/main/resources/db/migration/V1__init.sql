@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 INSERT INTO usuarios (id_usuario, user, pass, dni, nombre, email, telefono, rango, id_sucursal, photo, estado) VALUES
 
-    (1, 'axel_rullo', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 46996007, 'Axel Rullo', 'axelrullo17@gmail.com', '3417236528', 'Admin', 2, '/api/uploads/profiles/axel.jpg', 'E'),
+    (1, 'axel_rullo', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 46996007, 'Axel Rullo', 'axelrullo17@gmail.com', '3417236528', 'Admin', 2, '/Profiles/axel.jpg', 'E'),
 
     (2, 'mario_saluzzo', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 23425252, 'Mario Saluzzo', 'mario@mail.com', '3415789473', 'Admin', 3, NULL, 'E'),
 
@@ -117,9 +117,9 @@ INSERT INTO usuarios (id_usuario, user, pass, dni, nombre, email, telefono, rang
 
     (4, 'facundo_sangiacomo', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 45123891, 'Facundo Sangiacomo', 'facundo@gmail.com', '3415123456', 'Miembro', 4, NULL, 'E'),
 
-    (5, 'lucas_albarracin', '$argon2id$v=19$m=20000,t=2,p=1$V7UBBmVUGb/n37EOLDxSTg$NXQNgsSTbMxr1hajs66GKr8fJhlr3VhNNYyFdKI2Hgk', 46234782, 'Lucas Albarracin', 'lucas@gmail.com', '348295824', 'Miembro', 3, '/api/uploads/profiles/Loli.jpg', 'E'),
+    (5, 'lucas_albarracin', '$argon2id$v=19$m=20000,t=2,p=1$V7UBBmVUGb/n37EOLDxSTg$NXQNgsSTbMxr1hajs66GKr8fJhlr3VhNNYyFdKI2Hgk', 46234782, 'Lucas Albarracin', 'lucas@gmail.com', '348295824', 'Miembro', 3, '/Profiles/Loli.jpg', 'E'),
 
-    (6, 'juan_bernal', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 47345673, 'Juan Cruz Bernal', 'juan@gmail.com', '3417345678', 'Miembro', 3, '/api/uploads/profiles/Screenshot_20260813-185751-206.png', 'E'),
+    (6, 'juan_bernal', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 47345673, 'Juan Cruz Bernal', 'juan@gmail.com', '3417345678', 'Miembro', 3, '/Profiles/Screenshot_20260813-185751-206.png', 'E'),
 
     (7, 'martin_menna', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 48456764, 'Martín Menna Castells', 'martin@gmail.com', '3418456789', 'Miembro', 3, NULL, 'E'),
 
@@ -137,6 +137,16 @@ CREATE TABLE IF NOT EXISTS conceptos (
   concepto TEXT NOT NULL,
   clasificacion INTEGER
 );
+
+INSERT INTO conceptos (id_concepto, cod_concepto, concepto, clasificacion) VALUES
+(1, '1.1', 'Cobranzas', 1),
+(2, '1.2', 'Pagos a Proveedores', 1),
+(3, '1.3', 'Sueldos y Cargas Sociales', 1),
+(4, '1.4', 'Gastos Generales', 1),
+(5, '2.1', 'Préstamos Recibidos', 2),
+(6, '2.2', 'Pago de Préstamos', 2),
+(7, '3.1', 'Venta de Bienes de Uso', 3),
+(8, '3.2', 'Compra de Bienes de Uso', 3);
 
 CREATE TABLE IF NOT EXISTS cheques (
   id_cheque INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -172,20 +182,59 @@ CREATE TABLE IF NOT EXISTS cheques (
 );
 
 INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
-('P', 'E', 'CH-P-0011', 145000.00, 'D', '2026-08-01', '2026-08-20', '2026-08-20', 'C', 'Pago de cobrado ejemplo', NULL, 3, NULL, 9, NULL, NULL, 9, NULL, 9, 1),
-('P', 'E', 'CH-P-0012', 52000.00, 'C', '2026-08-15', '2026-09-01', NULL, 'R', 'Cheque rechazado por fondos insuficientes', NULL, 5, NULL, 7, NULL, NULL, 7, NULL, 7, 1),
-('P', 'E', 'CH-P-0013', 210000.00, 'D', '2026-09-05', '2026-12-01', NULL, 'P', 'Pago a proveedor, vencimiento lejano', NULL, 7, NULL, 10, NULL, NULL, 10, NULL, 10, 1),
-('P', 'E', 'CH-P-0014', 88000.00, 'C', '2026-07-25', '2026-08-10', NULL, 'P', 'Pago por vencer', NULL, 8, NULL, 4, NULL, NULL, 4, NULL, 4, 1),
-('P', 'E', 'CH-P-0015', 300000.00, 'D', '2026-05-20', '2026-06-01', NULL, 'P', 'Pago vencido', NULL, 3, NULL, 6, NULL, NULL, 6, NULL, 6, 1);
+('P', 'E', 'CH-P-0025', 78000.00, 'C', '2026-07-10', '2026-08-10', NULL, 'P', 'Pago vencido, sin gestión', NULL, 14, NULL, 5, NULL, NULL, 4, NULL, NULL, 8),
+('P', 'E', 'CH-P-0026', 210000.00, 'D', '2026-07-20', '2026-08-11', NULL, 'P', 'Pago próximo a vencer', NULL, 16, NULL, 7, NULL, NULL, 6, NULL, NULL, 9),
+('P', 'E', 'CH-P-0027', 67000.00, 'C', '2026-07-25', '2026-08-13', NULL, 'P', 'Pago por vencer', NULL, 24, NULL, 1, NULL, NULL, 2, NULL, NULL, 3),
+('P', 'E', 'CH-P-0028', 185000.00, 'D', '2026-07-28', '2026-08-15', NULL, 'P', 'Pago por vencer en breve', NULL, 26, NULL, 2, NULL, NULL, 4, NULL, NULL, 4),
+('P', 'E', 'CH-P-0029', 42000.00, 'C', '2026-09-05', '2026-09-21', NULL, 'P', 'Pago pendiente', NULL, 28, NULL, 8, NULL, NULL, 2, NULL, NULL, 5),
+('P', 'E', 'CH-P-0030', 260000.00, 'D', '2026-09-08', '2026-09-29', NULL, 'P', 'Pago pendiente', NULL, 1, NULL, 9, NULL, NULL, 6, NULL, NULL, 6),
+('P', 'E', 'CH-P-0031', 99000.00, 'C', '2026-09-10', '2026-10-06', NULL, 'P', 'Pago pendiente', NULL, 5, NULL, 3, NULL, NULL, 3, NULL, NULL, 7),
+('P', 'E', 'CH-P-0032', 130000.00, 'D', '2026-09-12', '2026-10-13', NULL, 'P', 'Pago pendiente, vencimiento en octubre', NULL, 9, NULL, 6, NULL, NULL, 2, NULL, NULL, 8),
+('P', 'E', 'CH-P-0033', 88000.00, 'C', '2026-09-15', '2026-10-21', NULL, 'P', 'Pago pendiente', NULL, 11, NULL, 10, NULL, NULL, 8, NULL, NULL, 9),
+('P', 'E', 'CH-P-0034', 176000.00, 'D', '2026-09-18', '2026-11-02', NULL, 'P', 'Pago diferido a mediano plazo', NULL, 13, NULL, 5, NULL, NULL, 4, NULL, NULL, 10),
+('P', 'E', 'CH-P-0035', 54000.00, 'C', '2026-09-20', '2026-11-09', NULL, 'P', 'Pago pendiente', NULL, 15, NULL, 7, NULL, NULL, 2, NULL, NULL, 1);
 
 INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
-('T', 'A', 'CH-T-0011', 95000.00, 'C', '2026-08-05', '2026-08-25', '2026-08-25', 'C', 'Cobro acreditado', NULL, 5, NULL, NULL, 3, 9, NULL, NULL, NULL, 1),
-('T', 'A', 'CH-T-0012', 61000.00, 'D', '2026-08-10', '2026-09-02', NULL, 'R', 'Cheque de tercero rechazado', NULL, 3, NULL, NULL, 5, 4, NULL, NULL, NULL, 1),
-('T', 'A', 'CH-T-0013', 180000.00, 'C', '2026-09-06', '2026-11-15', NULL, 'P', 'Cobro con vencimiento lejano', NULL, 7, NULL, NULL, 4, 8, NULL, NULL, NULL, 1),
-('T', 'A', 'CH-T-0014', 72000.00, 'D', '2026-07-28', '2026-08-11', NULL, 'P', 'Cobro por vencer', NULL, 8, NULL, NULL, 6, 6, NULL, NULL, NULL, 1),
-('T', 'A', 'CH-T-0015', 250000.00, 'C', '2026-05-01', '2026-05-15', NULL, 'P', 'Cobro vencido', NULL, 5, NULL, NULL, 3, 4, NULL, NULL, NULL, 1);
+('T', 'A', 'CH-T-0025', 71000.00, 'C', '2026-07-10', '2026-08-10', NULL, 'P', 'Cobro vencido, sin gestión', NULL, 15, NULL, NULL, 8, 5, NULL, NULL, NULL, 8),
+('T', 'A', 'CH-T-0026', 208000.00, 'D', '2026-07-20', '2026-08-11', NULL, 'P', 'Cobro próximo a vencer', NULL, 17, NULL, NULL, 9, 1, NULL, NULL, NULL, 9),
+('T', 'A', 'CH-T-0027', 59000.00, 'C', '2026-07-25', '2026-08-13', NULL, 'P', 'Cobro por vencer', NULL, 25, NULL, NULL, 6, 7, NULL, NULL, NULL, 3),
+('T', 'A', 'CH-T-0028', 172000.00, 'D', '2026-07-28', '2026-08-15', NULL, 'P', 'Cobro por vencer en breve', NULL, 27, NULL, NULL, 2, 1, NULL, NULL, NULL, 4),
+('T', 'A', 'CH-T-0029', 38000.00, 'C', '2026-09-05', '2026-09-22', NULL, 'P', 'Cobro pendiente', NULL, 29, NULL, NULL, 5, 1, NULL, NULL, NULL, 5),
+('T', 'A', 'CH-T-0030', 244000.00, 'D', '2026-09-08', '2026-10-01', NULL, 'P', 'Cobro pendiente', NULL, 2, NULL, NULL, 7, 5, NULL, NULL, NULL, 6),
+('T', 'A', 'CH-T-0031', 87000.00, 'C', '2026-09-10', '2026-10-08', NULL, 'P', 'Cobro pendiente', NULL, 4, NULL, NULL, 8, 1, NULL, NULL, NULL, 7),
+('T', 'A', 'CH-T-0032', 122000.00, 'D', '2026-09-12', '2026-10-15', NULL, 'P', 'Cobro pendiente', NULL, 6, NULL, NULL, 1, 1, NULL, NULL, NULL, 8),
+('T', 'A', 'CH-T-0033', 76000.00, 'C', '2026-09-15', '2026-10-23', NULL, 'P', 'Cobro pendiente a mediano plazo', NULL, 8, NULL, NULL, 3, 7, NULL, NULL, NULL, 9),
+('T', 'A', 'CH-T-0034', 165000.00, 'D', '2026-09-18', '2026-11-04', NULL, 'P', 'Cobro pendiente', NULL, 10, NULL, NULL, 6, 1, NULL, NULL, NULL, 10),
+('T', 'A', 'CH-T-0035', 51000.00, 'C', '2026-09-20', '2026-11-11', NULL, 'P', 'Cobro con vencimiento lejano', NULL, 12, NULL, NULL, 9, 5, NULL, NULL, NULL, 1);
 
--- Volcando estructura para tabla movimientos
+-- Cheques Propios Cobrados (estado 'C' con imputación)
+INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+('P', 'E', 'CH-P-0036', 95000.00, 'C', '2026-06-10', '2026-07-10', '2026-07-10', 'C', 'Pago cobrado en término', NULL, 3, NULL, 1, NULL, NULL, 2, NULL, NULL, 1),
+('P', 'E', 'CH-P-0037', 145000.00, 'D', '2026-06-15', '2026-07-15', '2026-07-16', 'C', 'Pago diferido cobrado', NULL, 8, NULL, 6, NULL, NULL, 4, NULL, NULL, 3),
+('P', 'E', 'CH-P-0038', 72000.00, 'C', '2026-06-20', '2026-07-20', '2026-07-20', 'C', 'Pago cobrado al vencimiento', NULL, 16, NULL, 2, NULL, NULL, 6, NULL, NULL, 5),
+('P', 'E', 'CH-P-0039', 310000.00, 'D', '2026-05-01', '2026-06-01', '2026-06-02', 'C', 'Pago diferido cobrado con un día de demora', NULL, 24, NULL, 9, NULL, NULL, 3, NULL, NULL, 7),
+('P', 'E', 'CH-P-0040', 58000.00, 'C', '2026-07-01', '2026-08-01', '2026-08-01', 'C', 'Pago cobrado correctamente', NULL, 10, NULL, 3, NULL, NULL, 8, NULL, NULL, 9);
+
+-- Cheques Terceros Cobrados (estado 'C' con imputación)
+INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+('T', 'A', 'CH-T-0036', 82000.00, 'C', '2026-06-05', '2026-07-05', '2026-07-05', 'C', 'Cobro depositado en banco', 'D', 15, NULL, NULL, 5, 1, NULL, 6, NULL, 8),
+('T', 'A', 'CH-T-0037', 195000.00, 'D', '2026-06-12', '2026-07-12', '2026-07-13', 'C', 'Cobro diferido depositado', 'D', 25, NULL, NULL, 3, 5, NULL, 8, NULL, 4),
+('T', 'E', 'CH-T-0038', 67000.00, 'C', '2026-06-18', '2026-07-18', '2026-07-18', 'C', 'Cobro endosado a proveedor', 'E', 29, 6, NULL, 8, 1, NULL, NULL, 2, 6),
+('T', 'E', 'CH-T-0039', 230000.00, 'D', '2026-05-10', '2026-06-10', '2026-06-10', 'C', 'Cobro diferido endosado', 'E', 4, 12, NULL, 1, 7, NULL, NULL, 5, 10),
+('T', 'A', 'CH-T-0040', 48000.00, 'C', '2026-07-05', '2026-08-05', '2026-08-05', 'C', 'Cobro depositado en caja', 'D', 8, NULL, NULL, 6, 1, NULL, 1, NULL, 3);
+
+-- Cheques Propios Rechazados (estado 'R')
+INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+('P', 'E', 'CH-P-0041', 115000.00, 'D', '2026-06-01', '2026-07-01', NULL, 'R', 'Rechazado por fondos insuficientes', NULL, 20, NULL, 7, NULL, NULL, 2, NULL, NULL, 4),
+('P', 'E', 'CH-P-0042', 43000.00, 'C', '2026-06-25', '2026-07-25', NULL, 'R', 'Rechazado por firma no registrada', NULL, 26, NULL, 5, NULL, NULL, 6, NULL, NULL, 6),
+('P', 'E', 'CH-P-0043', 200000.00, 'D', '2026-05-15', '2026-06-15', NULL, 'R', 'Rechazado por cuenta cerrada', NULL, 18, NULL, 9, NULL, NULL, 4, NULL, NULL, 8);
+
+-- Cheques Terceros Rechazados (estado 'R')
+INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+('T', 'A', 'CH-T-0041', 93000.00, 'C', '2026-06-08', '2026-07-08', NULL, 'R', 'Rechazado sin fondos', NULL, 17, NULL, NULL, 2, 1, NULL, NULL, NULL, 5),
+('T', 'A', 'CH-T-0042', 156000.00, 'D', '2026-06-20', '2026-07-20', NULL, 'R', 'Rechazado por defecto formal', NULL, 21, NULL, NULL, 7, 5, NULL, NULL, NULL, 7),
+('T', 'A', 'CH-T-0043', 78000.00, 'C', '2026-05-20', '2026-06-20', NULL, 'R', 'Rechazado por cuenta inhabilitada', NULL, 13, NULL, NULL, 4, 1, NULL, NULL, NULL, 1);
+
 CREATE TABLE IF NOT EXISTS movimientos (
   id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
   id_concepto INTEGER,

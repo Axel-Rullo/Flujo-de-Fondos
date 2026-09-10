@@ -2,6 +2,8 @@
     if (window.__chequeFormsInit) return;
     window.__chequeFormsInit = true;
 
+    let idChequeImputar = null;
+
     function buildChequePropio(form) {
         return {
             clase: 'P',
@@ -40,19 +42,22 @@
 
     function buildImputarChequePropio(view) {
         return {
-            id: view.dataset.id,
+            id_cheque: view.dataset.id,
             fecha_destino: getFechaLocal(),
+            estado: 'C',
         };
     }
 
     function buildImputarChequeTerceros(form) {
         return {
+            id_cheque: idChequeImputar,
+            estado: 'C',
             uso: form.querySelector('#uso').value,
             clasificacion: form.querySelector('#uso').value === 'E' ? 'E' : 'A',
             fecha_destino: getFechaLocal(),
-            cuenta_salida: form.querySelector('#banco').value || null,
-            cuenta_entrada: form.querySelector('#cuenta').value || null,
-            titular_destino: form.querySelector('#titular').value || null,
+            id_cuenta_salida: form.querySelector('#banco').value || null,
+            id_cuenta_entrada: form.querySelector('#cuenta').value || null,
+            id_titular_destino: form.querySelector('#titular').value || null,
         };
     }
 
@@ -68,7 +73,7 @@
                 if (!confirmado) return;
 
                 try {
-                    const res = await window.ChequeService.rechazarCheque(view.dataset.id);
+                    const res = await window.ChequeService.rechazarCheque(Number(view.dataset.id));
                     if (!res.ok) {
                         showAlert(res.mensaje, 'error', 3000, 'center', true);
                     } else {
@@ -104,6 +109,7 @@
                             cargarParcial('Views/queries/ch_emitidos.html')
                         }
                     } else {
+                        idChequeImputar = view.dataset.id;
                         abrirModal('Views/forms/cheques/imputar/imputar_cheque_terceros.html')
                     }
                 } catch (err) {
@@ -117,7 +123,7 @@
     function submitChequeForms() {
         document.addEventListener('submit', async e => {
             const form = e.target;
-            if (form.id !== 'form_new_chequepropio' && form.id !== 'form_new_chequetercero') return;
+            if (form.id !== 'form_new_chequepropio' && form.id !== 'form_new_chequetercero' && form.id !== 'form_imputar_chequetercero') return;
 
             e.preventDefault();
 
@@ -135,7 +141,7 @@
                         window.cerrarModal();
                         cargarParcial('Views/queries/ch_emitidos.html')
                     }
-                } else {
+                } else if (form.id === 'form_new_chequetercero') {
                     cheque = buildChequeTercero(form);
                     const res = await window.ChequeService.newChequeTercero(cheque);
                     if (!res.ok) {
@@ -144,6 +150,18 @@
                         showAlert('¡Cheque ingresado exitosamente!', 'success', 2000, 'top', false);
                         form.reset();
                         window.cerrarModal();
+                        cargarParcial('Views/queries/ch_a_cobrar.html')
+                    }
+                } else {
+                    cheque = buildImputarChequeTerceros(form);
+                    const res = await window.ChequeService.imputarChequeTerceros(cheque);
+                    if (!res.ok) {
+                        showAlert(res.mensaje, 'error', 3000, 'center', true);
+                    } else {
+                        showAlert('¡Cheque imputado exitosamente!', 'success', 2000, 'top', false);
+                        form.reset();
+                        window.cerrarModal(); // cierra el modal de imputación (el de arriba)
+                        window.cerrarModal(); // cierra el view_cheque que quedó debajo en el stack
                         cargarParcial('Views/queries/ch_a_cobrar.html')
                     }
                 }

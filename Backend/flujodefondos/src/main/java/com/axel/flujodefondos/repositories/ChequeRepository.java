@@ -54,48 +54,47 @@ public class ChequeRepository {
 
     // ── LISTADO ───────────────────────────────────────────────────────
 
-public List<Cheque> findAllPropios() {
-    return jdbcTemplate.query(
-        "SELECT ch.id_cheque, ch.clase, ch.clasificacion, ch.numero, b.nombre AS banco, ch.importe, ch.tipo, " +
-        "ch.fecha_entrega, ch.fecha_cobro, ch.fecha_destino, ch.estado, ch.observacion, ch.uso, " +
-        "cp.nombre AS titular, cpd.nombre AS titular_destino, " +
-        "ce.nombre AS cuenta_entrada, cs.nombre AS cuenta_salida, " +
-        "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario, " +
-        "cb.nombre AS cuenta_banco " +
-        "FROM cheques ch " +
+    public List<Cheque> findAllPropios() {
+        return jdbcTemplate.query(
+            "SELECT ch.id_cheque, ch.clase, ch.clasificacion, ch.numero, b.nombre AS banco, ch.importe, ch.tipo, " +
+            "ch.fecha_entrega, ch.fecha_cobro, ch.fecha_destino, ch.estado, ch.observacion, ch.uso, " +
+            "cp.nombre AS titular, cpd.nombre AS titular_destino, " +
+            "ce.nombre AS cuenta_entrada, cs.nombre AS cuenta_salida, " +
+            "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario, " +
+            "cb.nombre AS cuenta_banco " +
+            "FROM cheques ch " +
 
-            // Titular
-            "LEFT JOIN clientes_proveedores cp ON ch.id_titular = cp.id_clipro " +
+                // Titular
+                "LEFT JOIN clientes_proveedores cp ON ch.id_titular = cp.id_clipro " +
 
-            // Titular destino
-            "LEFT JOIN clientes_proveedores cpd ON ch.id_titular_destino = cpd.id_clipro " +
+                // Titular destino
+                "LEFT JOIN clientes_proveedores cpd ON ch.id_titular_destino = cpd.id_clipro " +
 
-            // Cuenta de entrada
-            "LEFT JOIN cuentas ce ON ch.id_cuenta_entrada = ce.id_cuenta " +
+                // Cuenta de entrada
+                "LEFT JOIN cuentas ce ON ch.id_cuenta_entrada = ce.id_cuenta " +
 
-            // Cuenta de salida
-            "LEFT JOIN cuentas cs ON ch.id_cuenta_salida = cs.id_cuenta " +
+                // Cuenta de salida
+                "LEFT JOIN cuentas cs ON ch.id_cuenta_salida = cs.id_cuenta " +
 
-            // Cuenta bancaria propia
-            "LEFT JOIN cuentas cb ON ch.id_cuenta_banco = cb.id_cuenta " +
+                // Cuenta bancaria propia
+                "LEFT JOIN cuentas cb ON ch.id_cuenta_banco = cb.id_cuenta " +
 
-            // Concepto de entrada
-            "LEFT JOIN conceptos cce ON ch.id_concepto_entrada = cce.id_concepto " +
+                // Concepto de entrada
+                "LEFT JOIN conceptos cce ON ch.id_concepto_entrada = cce.id_concepto " +
 
-            // Concepto de salida
-            "LEFT JOIN conceptos ccs ON ch.id_concepto_salida = ccs.id_concepto " +
+                // Concepto de salida
+                "LEFT JOIN conceptos ccs ON ch.id_concepto_salida = ccs.id_concepto " +
 
-            // Banco del cheque
-            "LEFT JOIN bancos b ON ch.id_banco = b.id_banco " +
+                // Banco del cheque
+                "LEFT JOIN bancos b ON ch.id_banco = b.id_banco " +
 
-            // Usuario que registró el cheque
-            "LEFT JOIN usuarios u ON ch.id_usuario = u.id_usuario " +
+                // Usuario que registró el cheque
+                "LEFT JOIN usuarios u ON ch.id_usuario = u.id_usuario " +
 
-            "WHERE ch.clasificacion = 'E'",
-            chequeMapper
-        );
+                "WHERE ch.clasificacion = 'E'",
+                chequeMapper
+            );
     }
-
 
     public List<Cheque> findAllTerceros() {
         return jdbcTemplate.query(
@@ -163,18 +162,26 @@ public List<Cheque> findAllPropios() {
 
     public void imputarChequePropio(Cheque cheque) {
         jdbcTemplate.update(
-            "UPDATE cheques SET fecha_destino = ? WHERE id_cheque = ?",
-            cheque.getFecha_destino(), cheque.getId_cheque()
+            "UPDATE cheques SET fecha_destino = ?, estado = ? WHERE id_cheque = ?",
+            cheque.getFecha_destino(), cheque.getEstado(), cheque.getId_cheque()
         );
     }
 
     public void imputarChequeTercero(Cheque cheque) {
-        String clasificacion = "Endoso".equals(cheque.getUso()) ? "Emitido" : "A Cobrar";
-
         jdbcTemplate.update(
-            "UPDATE cheques SET uso = ?, fecha_destino = ?, id_cuenta_entrada = ?, id_titular_destino = ?, id_cuenta_salida = ?, clasificacion = ? WHERE id_cheque = ?",
-            cheque.getUso(), cheque.getFecha_destino(), cheque.getId_cuenta_entrada(),
-            cheque.getId_titular_destino(), cheque.getId_cuenta_salida(), clasificacion, cheque.getId_cheque()
+            "UPDATE cheques SET estado = ?, uso = ?, fecha_destino = ?, id_cuenta_entrada = ?, id_titular_destino = ?, id_cuenta_salida = ?, clasificacion = ? WHERE id_cheque = ?",
+            cheque.getEstado(), cheque.getUso(), cheque.getFecha_destino(), cheque.getId_cuenta_entrada(),
+            cheque.getId_titular_destino(), cheque.getId_cuenta_salida(), cheque.getClasificacion(),
+            cheque.getId_cheque()
+        );
+    }
+
+    // ── RECHAZO ──────────────────────────────────────────────────────
+
+    public void rechazarCheque(Long id) {
+        jdbcTemplate.update(
+            "UPDATE cheques SET estado = ? WHERE id_cheque = ?",
+            "R", id
         );
     }
 }

@@ -4,11 +4,8 @@ import com.axel.flujodefondos.entities.Sucursal;
 import com.axel.flujodefondos.entities.User;
 import com.axel.flujodefondos.repositories.SucursalRepository;
 import com.axel.flujodefondos.services.UserService;
-import com.axel.flujodefondos.services.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +21,6 @@ public class UserController {
 
     private final UserService userService;
     private final SucursalRepository sucursalRepository;
-    private final FileStorageService fileStorageService;
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
@@ -81,17 +77,6 @@ public class UserController {
         return Map.of("photo", userService.savePhoto(photo, oldPhoto));
     }
 
-    @GetMapping("/uploads/{subfolder}/{filename:.+}")
-    public ResponseEntity<Resource> serveFile(@PathVariable String subfolder, @PathVariable String filename) {
-        Resource resource = fileStorageService.loadAsResource(subfolder, filename);
-        if (resource != null) {
-            String contentType = fileStorageService.getContentType(subfolder, filename);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .body(resource);
-        }
-        return ResponseEntity.notFound().build();
-    }
 
     // ── SUCURSALES ───────────────────────────────────────────────────
 
