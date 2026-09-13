@@ -1,10 +1,13 @@
 package com.axel.flujodefondos.repositories;
 
-import com.axel.flujodefondos.entities.CuentaBanco;
+import com.axel.flujodefondos.entities.CuentaPropia;
+import com.axel.flujodefondos.entities.Banco;
+import com.axel.flujodefondos.entities.Tercero;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("null")
@@ -19,28 +22,72 @@ public class CuentaBancoRepository {
 
     // ── MAPPERS ──────────────────────────────────────────────────────
 
-    private final RowMapper<CuentaBanco> CuentaBancoMapper = (rs, rowNum) -> new CuentaBanco(
-        rs.getLong("id"),
-        rs.getString("nombre")
+    private final RowMapper<CuentaPropia> CuentaPropiaMapper = (rs, rowNum) -> new CuentaPropia(
+        rs.getLong("id_cuenta"),
+        rs.getString("nombre"),
+        null,
+        rs.getString("banco")
+    );
+
+    private final RowMapper<Banco> BancoMapper = (rs, rowNum) -> new Banco(
+        rs.getLong("id_banco"),
+        rs.getString("nombre"),
+        null
     );
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
-    public List<CuentaBanco> findAllCuentas() {
-        return jdbcTemplate.query("SELECT id_cuenta AS id, nombre FROM cuentas ORDER BY nombre ASC", CuentaBancoMapper);
+    public List<CuentaPropia> findAllCuentasPropias() {
+        return jdbcTemplate.query(
+            "SELECT c.id_cuenta, c.nombre, b.nombre AS banco FROM cuentas c LEFT JOIN bancos b ON b.id_banco = c.id_banco ORDER BY c.nombre ASC", 
+            CuentaPropiaMapper);
     }
 
-    public List<CuentaBanco> findAllBancos() {
-        return jdbcTemplate.query("SELECT id_banco AS id, nombre FROM bancos ORDER BY nombre ASC", CuentaBancoMapper);
+    public List<Banco> findAllBancosConClientes() {
+        // 1) todos los bancos
+        List<Banco> bancos = jdbcTemplate.query(
+            "SELECT id_banco, nombre FROM bancos ORDER BY nombre ASC",
+            BancoMapper
+        );
+
+        // 2) todos los clientes (solo nombre + alias) con su banco
+        List<Object[]> filas = jdbcTemplate.query(
+            """
+            SELECT bc.id_banco, cp.id_clipro, cp.nombre, bc.alias
+            FROM bancos_clientprov bc
+            JOIN clientes_proveedores cp ON cp.id_clipro = bc.id_clipro
+            ORDER BY cp.nombre ASC
+            """,
+            (rs, rowNum) -> {
+                Tercero t = new Tercero();
+                t.setId_clipro(rs.getLong("id_clipro"));
+                t.setNombre(rs.getString("nombre"));
+                t.setAlias(rs.getString("alias"));
+                return new Object[] { rs.getLong("id_banco"), t };
+            }
+        );
+
+        // 3) le asigno a cada banco sus clientes
+        for (Banco banco : bancos) {
+            List<Tercero> clientes = new ArrayList<>();
+            for (Object[] fila : filas) {
+                if (fila[0].equals(banco.getId_banco())) {
+                    clientes.add((Tercero) fila[1]);
+                }
+            }
+            banco.setClientes(clientes);
+        }
+
+        return bancos;
     }
 
     // ── BÚSQUEDA ─────────────────────────────────────────────────────
 
-    public Long findCuentaByNombre(String nombre) {
+    public Long findCuentaPropia(CuentaPropia cuentapropia) {
         return jdbcTemplate.query(
-            "SELECT id_cuenta FROM cuentas WHERE nombre = ?",
+            "SELECT id_cuenta FROM cuentas WHERE nombre = ? AND id_banco IS ?",
             (rs, rowNum) -> rs.getLong("id_cuenta"),
-            nombre
+            cuentapropia.getNombre(), cuentapropia.getId_banco()
         ).stream().findFirst().orElse(null);
     }
 
@@ -54,8 +101,10 @@ public class CuentaBancoRepository {
 
     // ── ALTA ─────────────────────────────────────────────────────────
 
-    public void insertCuenta(String nombre) {
-        jdbcTemplate.update("INSERT INTO cuentas (nombre) VALUES (?)", nombre);
+    public void insertCuentaPropia(CuentaPropia cuentapropia) {
+        jdbcTemplate.update("INSERT INTO cuentas (nombre, id_banco) VALUES (?, ?)",
+            cuentapropia.getNombre(), cuentapropia.getId_banco()
+        );
     }
 
     public void insertBanco(String nombre) {

@@ -1,6 +1,7 @@
 package com.axel.flujodefondos.services;
 
-import com.axel.flujodefondos.entities.CuentaBanco;
+import com.axel.flujodefondos.entities.CuentaPropia;
+import com.axel.flujodefondos.entities.Banco;
 import com.axel.flujodefondos.repositories.CuentaBancoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,19 +14,19 @@ public class CuentaBancoService {
 
     private final CuentaBancoRepository cuentaBancoRepository;
 
-    public List<CuentaBanco> findAllCuentas() {
-        return cuentaBancoRepository.findAllCuentas();
+    public List<CuentaPropia> findAllCuentasPropias() {
+        return cuentaBancoRepository.findAllCuentasPropias();
     }
 
-    public List<CuentaBanco> findAllBancos() {
-        return cuentaBancoRepository.findAllBancos();
+    public List<Banco> findAllBancos() {
+        return cuentaBancoRepository.findAllBancosConClientes();
     }
 
-    public void insertCuenta(String nombre) {
-        if (cuentaBancoRepository.findCuentaByNombre(nombre) != null) {
+    public void insertCuentaPropia(CuentaPropia cuentapropia) {
+        if (cuentaBancoRepository.findCuentaPropia(cuentapropia) != null) {
             throw new RuntimeException("La cuenta ya existe");
         }
-        cuentaBancoRepository.insertCuenta(nombre);
+        cuentaBancoRepository.insertCuentaPropia(cuentapropia);
     }
 
     public void insertBanco(String nombre) {

@@ -49,6 +49,40 @@
 <body>
     <!-- ICONOS -->
     <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <symbol id="icon-bank" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="21" x2="21" y2="21"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+            <polyline points="5 6 12 3 19 6"/>
+            <line x1="4" y1="10" x2="4" y2="21"/>
+            <line x1="20" y1="10" x2="20" y2="21"/>
+            <line x1="8" y1="14" x2="8" y2="17"/>
+            <line x1="12" y1="14" x2="12" y2="17"/>
+            <line x1="16" y1="14" x2="16" y2="17"/>
+        </symbol>
+        
+        <symbol id="icon-search" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </symbol>
+
+        <symbol id="icon-copy" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </symbol>
+
+        <symbol id="icon-link" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </symbol>
+        
         <symbol id="icon-cheque" viewBox="0 0 24 24">
             <path d="M0 0h24v24H0z" fill="none" />
             <path fill="none" stroke="currentColor" stroke-linecap="round" 
@@ -194,21 +228,21 @@
             </div>
             <aside class="accordion">
                 <div class="menu-group">
-                    <button data-target="sub-cuentas">CUENTAS / BANCOS <span class="chevron">▶</span></button>
+                    <button data-target="sub-cuentas">CUENTAS / BANCOS <span class="chevron"></span></button>
                     <div id="sub-cuentas" class="submenu">
                         <a data-modal="Views/forms/cuentas-bancos/new_cuentabanco.html" href="#">NUEVA CUENTA / BANCO</a>
                     </div>
                 </div>
 
                 <div class="menu-group">
-                    <button data-target="sub-conceptos">CONCEPTOS <span class="chevron">▶</span></button>
+                    <button data-target="sub-conceptos">CONCEPTOS <span class="chevron"></span></button>
                     <div id="sub-conceptos" class="submenu">
                         <a data-modal="Views/forms/conceptos/new_concepto.html" href="#">NUEVO CONCEPTO</a>
                     </div>
                 </div>
 
                 <div class="menu-group">
-                    <button data-target="sub-cheques">CHEQUES <span class="chevron">▶</span></button>
+                    <button data-target="sub-cheques">CHEQUES <span class="chevron"></span></button>
                     <div id="sub-cheques" class="submenu">
                         <a data-modal="Views/forms/cheques/nuevo/nuevo_cheque_propio.html" href="#">NUEVO CHEQUE PROPIO</a>
                         <a data-modal="Views/forms/cheques/nuevo/nuevo_cheque_terceros.html" href="#">NUEVO CHEQUE DE TERCEROS</a>
@@ -218,7 +252,7 @@
                 </div>
 
                 <div class="menu-group">
-                    <button data-target="sub-movimientos">MOVIMIENTOS <span class="chevron">▶</span></button>
+                    <button data-target="sub-movimientos">MOVIMIENTOS <span class="chevron"></span></button>
                     <div id="sub-movimientos" class="submenu">
                         <a data-modal="Views/forms/movimientos/nuevo_movimiento.html" href="#">NUEVO MOVIMIENTO</a>
                     </div>

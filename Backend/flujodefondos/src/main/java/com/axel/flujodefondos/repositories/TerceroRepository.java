@@ -27,7 +27,8 @@ public class TerceroRepository {
         rs.getString("telefono"),
         rs.getString("email"),
         rs.getString("localidad"),
-        rs.getString("tipo")
+        rs.getString("tipo"),
+        null
     );
 
     // ── TERCERO ───────────────────────────────────────────────────────
@@ -73,7 +74,7 @@ public class TerceroRepository {
                 "UPDATE clientes_proveedores SET nombre = ?, dni_cuit = ?, telefono = ?, email = ?, localidad = ?, tipo = ? WHERE id_clipro = ?",
                 tercero.getNombre(), tercero.getDni_cuit(), tercero.getTelefono(),
                 tercero.getEmail(), tercero.getLocalidad(), tercero.getTipo(),
-                tercero.getId()
+                tercero.getId_clipro()
         );
     }
 

@@ -44,22 +44,17 @@ INSERT INTO clientes_proveedores (id_clipro, nombre, dni_cuit, telefono, email, 
 -- Volcando estructura para tabla cuentas
 CREATE TABLE IF NOT EXISTS cuentas (
   id_cuenta INTEGER PRIMARY KEY AUTOINCREMENT,
-  nombre TEXT NOT NULL
+  nombre TEXT NOT NULL,
+  id_banco INTEGER,
+  FOREIGN KEY (id_banco) REFERENCES bancos (id_banco)
 );
 
-INSERT INTO cuentas (id_cuenta, nombre) VALUES
-	(1, 'Caja Casa Central'),
-	(2, 'Caja Totoras'),
-	(3, 'Caja San Genaro'),
-	(4, 'Caja Luis Palacios'),
-	(5, 'Caja Salto Grande'),
-	(6, 'Cuenta Corriente Banco Nación'),
-	(7, 'Cuenta Corriente Banco Provincia'),
-	(8, 'Caja de Ahorro Banco Galicia'),
-	(9, 'Cuenta Corriente Banco Macro'),
-	(10, 'Caja Lucio V. Lopez');
+INSERT INTO cuentas (id_cuenta, nombre, id_banco) VALUES
+	(1, 'Caja Casa Central', null),
+	(2, 'Banco Principal', 6),
+	(3, 'Banco Secundario', 3);
 
--- Volcando estructura para tabla bancos
+-- Volcando estructura para tabla bancos (limitado a 6 bancos)
 CREATE TABLE IF NOT EXISTS bancos (
   id_banco INTEGER PRIMARY KEY AUTOINCREMENT,
   nombre TEXT NOT NULL
@@ -71,11 +66,49 @@ INSERT INTO bancos (id_banco, nombre) VALUES
 	(3, 'Banco Galicia'),
 	(4, 'Banco Macro'),
 	(5, 'Banco Santander'),
-	(6, 'Banco BBVA'),
-	(7, 'Banco Credicoop'),
-	(8, 'Banco Industrial'),
-	(9, 'Banco HSBC'),
-	(10, 'Banco Patagonia');
+	(6, 'Banco BBVA');
+
+-- Volcando estructura para tabla bancos_clientprov (asocia cliente/proveedor <-> banco + alias)
+CREATE TABLE IF NOT EXISTS bancos_clientprov (
+  id_banco_clipro INTEGER PRIMARY KEY AUTOINCREMENT,
+  id_clipro INTEGER NOT NULL,
+  id_banco INTEGER NOT NULL,
+  alias TEXT,
+  FOREIGN KEY (id_clipro) REFERENCES clientes_proveedores (id_clipro),
+  FOREIGN KEY (id_banco) REFERENCES bancos (id_banco)
+);
+
+INSERT INTO bancos_clientprov (id_clipro, id_banco, alias) VALUES
+	(1, 1, 'juan.bianchi.nacion'),
+	(2, 2, 'maria.ferreyra.bpsf'),
+	(3, 3, 'dsanmartin.galicia.sa'),
+	(4, 4, 'losaromos.macro.agro'),
+	(5, 1, 'roberto.ponce.nacion'),
+	(6, 5, 'cerealesdelsur.santander'),
+	(7, 2, 'silvia.coronel.provincia'),
+	(8, 6, 'trivadavia.bbva.log'),
+	(9, 1, 'marcelo.gomez.nacion'),
+	(10, 3, 'insumosfunes.galicia'),
+	(11, 4, 'norma.ibarra.macro'),
+	(12, 3, 'molinossanjorge.galicia.sa'),
+	(13, 1, 'pablo.suarez.nacion'),
+	(14, 2, 'ferreteriacentral.provincia'),
+	(15, 5, 'claudia.ortiz.santander'),
+	(16, 6, 'metalurgicarojas.bbva'),
+	(17, 1, 'gustavo.peralta.nacion'),
+	(18, 4, 'combustibleslitoral.macro'),
+	(19, 2, 'laura.acosta.provincia'),
+	(20, 5, 'repuestosagrosur.santander'),
+	(21, 1, 'diego.molina.nacion'),
+	(22, 6, 'corralontotoras.bbva'),
+	(23, 3, 'andrea.vega.galicia'),
+	(24, 4, 'semillasdelnorte.macro.sa'),
+	(25, 1, 'hernan.dominguez.nacion'),
+	(26, 2, 'distrafaela.provincia'),
+	(27, 5, 'monica.rios.santander'),
+	(28, 6, 'acerosdelcentro.bbva'),
+	(29, 1, 'fernando.luna.nacion'),
+	(30, 3, 'agroquimicoscasilda.galicia');
 
 -- Volcando estructura para tabla sucursales
 CREATE TABLE IF NOT EXISTS sucursales (
@@ -129,8 +162,7 @@ INSERT INTO usuarios (id_usuario, user, pass, dni, nombre, email, telefono, rang
 
     (10, 'lean_mignacco', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 51789037, 'Leandro Mignacco', 'lean@gmail.com', '3422789012', 'Miembro', 3, NULL, 'N');
 
-
--- Volcando estructura para tabla conceptos
+-- Volcando estructura para tabla conceptos (recodificados 1.01, 1.02, 2.01... 15 conceptos)
 CREATE TABLE IF NOT EXISTS conceptos (
   id_concepto INTEGER PRIMARY KEY AUTOINCREMENT,
   cod_concepto TEXT NOT NULL,
@@ -139,14 +171,21 @@ CREATE TABLE IF NOT EXISTS conceptos (
 );
 
 INSERT INTO conceptos (id_concepto, cod_concepto, concepto, clasificacion) VALUES
-(1, '1.1', 'Cobranzas', 1),
-(2, '1.2', 'Pagos a Proveedores', 1),
-(3, '1.3', 'Sueldos y Cargas Sociales', 1),
-(4, '1.4', 'Gastos Generales', 1),
-(5, '2.1', 'Préstamos Recibidos', 2),
-(6, '2.2', 'Pago de Préstamos', 2),
-(7, '3.1', 'Venta de Bienes de Uso', 3),
-(8, '3.2', 'Compra de Bienes de Uso', 3);
+(1, '1.01', 'Cobranzas', 1),
+(2, '1.02', 'Pagos a Proveedores', 1),
+(3, '1.03', 'Sueldos y Cargas Sociales', 1),
+(4, '1.04', 'Gastos Generales', 1),
+(5, '1.05', 'Gastos de Alquiler', 1),
+(6, '1.06', 'Impuestos y Tasas', 1),
+(7, '2.01', 'Préstamos Recibidos', 2),
+(8, '2.02', 'Pago de Préstamos', 2),
+(9, '2.03', 'Intereses Pagados', 2),
+(10, '2.04', 'Intereses Cobrados', 2),
+(11, '2.05', 'Adelantos en Cuenta Corriente', 2),
+(12, '3.01', 'Venta de Bienes de Uso', 3),
+(13, '3.02', 'Compra de Bienes de Uso', 3),
+(14, '3.03', 'Venta de Inmuebles', 3),
+(15, '3.04', 'Compra de Rodados', 3);
 
 CREATE TABLE IF NOT EXISTS cheques (
   id_cheque INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -182,6 +221,8 @@ CREATE TABLE IF NOT EXISTS cheques (
 );
 
 INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+
+-- ==== Propios (P) / Emitidos, estado Pendiente (P) ====
 ('P', 'E', 'CH-P-0025', 78000.00, 'C', '2026-07-10', '2026-08-10', NULL, 'P', 'Pago vencido, sin gestión', NULL, 14, NULL, 5, NULL, NULL, 4, NULL, NULL, 8),
 ('P', 'E', 'CH-P-0026', 210000.00, 'D', '2026-07-20', '2026-08-11', NULL, 'P', 'Pago próximo a vencer', NULL, 16, NULL, 7, NULL, NULL, 6, NULL, NULL, 9),
 ('P', 'E', 'CH-P-0027', 67000.00, 'C', '2026-07-25', '2026-08-13', NULL, 'P', 'Pago por vencer', NULL, 24, NULL, 1, NULL, NULL, 2, NULL, NULL, 3),
@@ -192,47 +233,43 @@ INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega,
 ('P', 'E', 'CH-P-0032', 130000.00, 'D', '2026-09-12', '2026-10-13', NULL, 'P', 'Pago pendiente, vencimiento en octubre', NULL, 9, NULL, 6, NULL, NULL, 2, NULL, NULL, 8),
 ('P', 'E', 'CH-P-0033', 88000.00, 'C', '2026-09-15', '2026-10-21', NULL, 'P', 'Pago pendiente', NULL, 11, NULL, 10, NULL, NULL, 8, NULL, NULL, 9),
 ('P', 'E', 'CH-P-0034', 176000.00, 'D', '2026-09-18', '2026-11-02', NULL, 'P', 'Pago diferido a mediano plazo', NULL, 13, NULL, 5, NULL, NULL, 4, NULL, NULL, 10),
-('P', 'E', 'CH-P-0035', 54000.00, 'C', '2026-09-20', '2026-11-09', NULL, 'P', 'Pago pendiente', NULL, 15, NULL, 7, NULL, NULL, 2, NULL, NULL, 1);
+('P', 'E', 'CH-P-0035', 54000.00, 'C', '2026-09-20', '2026-11-09', NULL, 'P', 'Pago pendiente', NULL, 15, NULL, 7, NULL, NULL, 2, NULL, NULL, 1),
 
-INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
-('T', 'A', 'CH-T-0025', 71000.00, 'C', '2026-07-10', '2026-08-10', NULL, 'P', 'Cobro vencido, sin gestión', NULL, 15, NULL, NULL, 8, 5, NULL, NULL, NULL, 8),
-('T', 'A', 'CH-T-0026', 208000.00, 'D', '2026-07-20', '2026-08-11', NULL, 'P', 'Cobro próximo a vencer', NULL, 17, NULL, NULL, 9, 1, NULL, NULL, NULL, 9),
+-- ==== Terceros (T) / A Cobrar, estado Pendiente (P) ====
+('T', 'A', 'CH-T-0025', 71000.00, 'C', '2026-07-10', '2026-08-10', NULL, 'P', 'Cobro vencido, sin gestión', NULL, 15, NULL, NULL, 2, 5, NULL, NULL, NULL, 8),
+('T', 'A', 'CH-T-0026', 208000.00, 'D', '2026-07-20', '2026-08-11', NULL, 'P', 'Cobro próximo a vencer', NULL, 17, NULL, NULL, 3, 1, NULL, NULL, NULL, 9),
 ('T', 'A', 'CH-T-0027', 59000.00, 'C', '2026-07-25', '2026-08-13', NULL, 'P', 'Cobro por vencer', NULL, 25, NULL, NULL, 6, 7, NULL, NULL, NULL, 3),
 ('T', 'A', 'CH-T-0028', 172000.00, 'D', '2026-07-28', '2026-08-15', NULL, 'P', 'Cobro por vencer en breve', NULL, 27, NULL, NULL, 2, 1, NULL, NULL, NULL, 4),
 ('T', 'A', 'CH-T-0029', 38000.00, 'C', '2026-09-05', '2026-09-22', NULL, 'P', 'Cobro pendiente', NULL, 29, NULL, NULL, 5, 1, NULL, NULL, NULL, 5),
-('T', 'A', 'CH-T-0030', 244000.00, 'D', '2026-09-08', '2026-10-01', NULL, 'P', 'Cobro pendiente', NULL, 2, NULL, NULL, 7, 5, NULL, NULL, NULL, 6),
-('T', 'A', 'CH-T-0031', 87000.00, 'C', '2026-09-10', '2026-10-08', NULL, 'P', 'Cobro pendiente', NULL, 4, NULL, NULL, 8, 1, NULL, NULL, NULL, 7),
+('T', 'A', 'CH-T-0030', 244000.00, 'D', '2026-09-08', '2026-10-01', NULL, 'P', 'Cobro pendiente', NULL, 2, NULL, NULL, 1, 5, NULL, NULL, NULL, 6),
+('T', 'A', 'CH-T-0031', 87000.00, 'C', '2026-09-10', '2026-10-08', NULL, 'P', 'Cobro pendiente', NULL, 4, NULL, NULL, 2, 1, NULL, NULL, NULL, 7),
 ('T', 'A', 'CH-T-0032', 122000.00, 'D', '2026-09-12', '2026-10-15', NULL, 'P', 'Cobro pendiente', NULL, 6, NULL, NULL, 1, 1, NULL, NULL, NULL, 8),
 ('T', 'A', 'CH-T-0033', 76000.00, 'C', '2026-09-15', '2026-10-23', NULL, 'P', 'Cobro pendiente a mediano plazo', NULL, 8, NULL, NULL, 3, 7, NULL, NULL, NULL, 9),
 ('T', 'A', 'CH-T-0034', 165000.00, 'D', '2026-09-18', '2026-11-04', NULL, 'P', 'Cobro pendiente', NULL, 10, NULL, NULL, 6, 1, NULL, NULL, NULL, 10),
-('T', 'A', 'CH-T-0035', 51000.00, 'C', '2026-09-20', '2026-11-11', NULL, 'P', 'Cobro con vencimiento lejano', NULL, 12, NULL, NULL, 9, 5, NULL, NULL, NULL, 1);
+('T', 'A', 'CH-T-0035', 51000.00, 'C', '2026-09-20', '2026-11-11', NULL, 'P', 'Cobro con vencimiento lejano', NULL, 12, NULL, NULL, 3, 5, NULL, NULL, NULL, 1),
 
--- Cheques Propios Cobrados (estado 'C' con imputación)
-INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+-- ==== Propios (P) / Emitidos, estado Cobrado (C) ====
 ('P', 'E', 'CH-P-0036', 95000.00, 'C', '2026-06-10', '2026-07-10', '2026-07-10', 'C', 'Pago cobrado en término', NULL, 3, NULL, 1, NULL, NULL, 2, NULL, NULL, 1),
 ('P', 'E', 'CH-P-0037', 145000.00, 'D', '2026-06-15', '2026-07-15', '2026-07-16', 'C', 'Pago diferido cobrado', NULL, 8, NULL, 6, NULL, NULL, 4, NULL, NULL, 3),
 ('P', 'E', 'CH-P-0038', 72000.00, 'C', '2026-06-20', '2026-07-20', '2026-07-20', 'C', 'Pago cobrado al vencimiento', NULL, 16, NULL, 2, NULL, NULL, 6, NULL, NULL, 5),
 ('P', 'E', 'CH-P-0039', 310000.00, 'D', '2026-05-01', '2026-06-01', '2026-06-02', 'C', 'Pago diferido cobrado con un día de demora', NULL, 24, NULL, 9, NULL, NULL, 3, NULL, NULL, 7),
-('P', 'E', 'CH-P-0040', 58000.00, 'C', '2026-07-01', '2026-08-01', '2026-08-01', 'C', 'Pago cobrado correctamente', NULL, 10, NULL, 3, NULL, NULL, 8, NULL, NULL, 9);
+('P', 'E', 'CH-P-0040', 58000.00, 'C', '2026-07-01', '2026-08-01', '2026-08-01', 'C', 'Pago cobrado correctamente', NULL, 10, NULL, 3, NULL, NULL, 8, NULL, NULL, 9),
 
--- Cheques Terceros Cobrados (estado 'C' con imputación)
-INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+-- ==== Terceros (T) / A Cobrar, estado Cobrado (C) ====
 ('T', 'A', 'CH-T-0036', 82000.00, 'C', '2026-06-05', '2026-07-05', '2026-07-05', 'C', 'Cobro depositado en banco', 'D', 15, NULL, NULL, 5, 1, NULL, 6, NULL, 8),
 ('T', 'A', 'CH-T-0037', 195000.00, 'D', '2026-06-12', '2026-07-12', '2026-07-13', 'C', 'Cobro diferido depositado', 'D', 25, NULL, NULL, 3, 5, NULL, 8, NULL, 4),
-('T', 'E', 'CH-T-0038', 67000.00, 'C', '2026-06-18', '2026-07-18', '2026-07-18', 'C', 'Cobro endosado a proveedor', 'E', 29, 6, NULL, 8, 1, NULL, NULL, 2, 6),
+('T', 'E', 'CH-T-0038', 67000.00, 'C', '2026-06-18', '2026-07-18', '2026-07-18', 'C', 'Cobro endosado a proveedor', 'E', 29, 6, NULL, 2, 1, NULL, NULL, 2, 6),
 ('T', 'E', 'CH-T-0039', 230000.00, 'D', '2026-05-10', '2026-06-10', '2026-06-10', 'C', 'Cobro diferido endosado', 'E', 4, 12, NULL, 1, 7, NULL, NULL, 5, 10),
-('T', 'A', 'CH-T-0040', 48000.00, 'C', '2026-07-05', '2026-08-05', '2026-08-05', 'C', 'Cobro depositado en caja', 'D', 8, NULL, NULL, 6, 1, NULL, 1, NULL, 3);
+('T', 'A', 'CH-T-0040', 48000.00, 'C', '2026-07-05', '2026-08-05', '2026-08-05', 'C', 'Cobro depositado en caja', 'D', 8, NULL, NULL, 6, 1, NULL, 1, NULL, 3),
 
--- Cheques Propios Rechazados (estado 'R')
-INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+-- ==== Propios (P) / Emitidos, estado Rechazado (R) ====
 ('P', 'E', 'CH-P-0041', 115000.00, 'D', '2026-06-01', '2026-07-01', NULL, 'R', 'Rechazado por fondos insuficientes', NULL, 20, NULL, 7, NULL, NULL, 2, NULL, NULL, 4),
 ('P', 'E', 'CH-P-0042', 43000.00, 'C', '2026-06-25', '2026-07-25', NULL, 'R', 'Rechazado por firma no registrada', NULL, 26, NULL, 5, NULL, NULL, 6, NULL, NULL, 6),
-('P', 'E', 'CH-P-0043', 200000.00, 'D', '2026-05-15', '2026-06-15', NULL, 'R', 'Rechazado por cuenta cerrada', NULL, 18, NULL, 9, NULL, NULL, 4, NULL, NULL, 8);
+('P', 'E', 'CH-P-0043', 200000.00, 'D', '2026-05-15', '2026-06-15', NULL, 'R', 'Rechazado por cuenta cerrada', NULL, 18, NULL, 9, NULL, NULL, 4, NULL, NULL, 8),
 
--- Cheques Terceros Rechazados (estado 'R')
-INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+-- ==== Terceros (T) / A Cobrar, estado Rechazado (R) ====
 ('T', 'A', 'CH-T-0041', 93000.00, 'C', '2026-06-08', '2026-07-08', NULL, 'R', 'Rechazado sin fondos', NULL, 17, NULL, NULL, 2, 1, NULL, NULL, NULL, 5),
-('T', 'A', 'CH-T-0042', 156000.00, 'D', '2026-06-20', '2026-07-20', NULL, 'R', 'Rechazado por defecto formal', NULL, 21, NULL, NULL, 7, 5, NULL, NULL, NULL, 7),
+('T', 'A', 'CH-T-0042', 156000.00, 'D', '2026-06-20', '2026-07-20', NULL, 'R', 'Rechazado por defecto formal', NULL, 21, NULL, NULL, 1, 5, NULL, NULL, NULL, 7),
 ('T', 'A', 'CH-T-0043', 78000.00, 'C', '2026-05-20', '2026-06-20', NULL, 'R', 'Rechazado por cuenta inhabilitada', NULL, 13, NULL, NULL, 4, 1, NULL, NULL, NULL, 1);
 
 CREATE TABLE IF NOT EXISTS movimientos (

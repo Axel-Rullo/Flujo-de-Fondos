@@ -13,6 +13,7 @@
             
                 try {
                     if (form.id === 'form_new_concepto') {
+                        concepto.codigo = form.querySelector('#codigo').value
                         concepto.clasificacion = form.querySelector('#clasificacion').value
                         const res = await window.ConceptoService.newConcepto(concepto);
                         if (!res.ok) {

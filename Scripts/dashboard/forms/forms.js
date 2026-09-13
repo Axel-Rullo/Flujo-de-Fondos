@@ -12,14 +12,16 @@ function ajustarColumnas(container) {
 //////////////////////////////////////////////
 
 document.addEventListener('change', e => {
-    if (e.target.id !== 'tipo_ch' && e.target.id !== 'uso') return;
+    if (e.target.id !== 'tipo_ch' && e.target.id !== 'uso' && e.target.id !== 'type_cuenta') return;
     const form = e.target.closest('form');
     if (e.target.id === 'tipo_ch') {
-        form.querySelector('#fecha_cobro').disabled = e.target.value !== 'D';
-    } else {
+        form.querySelector('#fecha_pago').disabled = e.target.value !== 'D';
+    } else if (e.target.id === 'uso') {
         toggleTomSelect(form.querySelector('#cuenta'), e.target.value === 'D');
         toggleTomSelect(form.querySelector('#titular'), e.target.value === 'E');
-        toggleTomSelect(form.querySelector('#banco'), e.target.value === 'E');
+        toggleTomSelect(form.querySelector('#concepto'), e.target.value === 'E');
+    } else {
+        toggleTomSelect(form.querySelector('#banco'), e.target.value === 'B');
     }
 });
 
@@ -124,7 +126,7 @@ async function loadTerceros(container) {
     }
 }
 
-async function loadCuentas(container) {
+async function loadCuentasPropias(container) {
     try {
         const select = container.querySelector('#cuenta');
         if (!select || select.tomselect) return;
@@ -153,7 +155,7 @@ async function loadCuentas(container) {
     }
 }
 
-async function loadBancos(container) {
+async function loadCuentasTerceros(container) {
     try {
         const select = container.querySelector('#banco');
         if (!select || select.tomselect) return;
@@ -182,4 +184,14 @@ async function loadBancos(container) {
     }
 }
 
-window.formLoaders = [loadSucursales, loadConceptos, loadTerceros, loadCuentas, loadBancos];
+async function loadFechaHoy (container) {
+    try {
+        const campos = container.querySelectorAll('#fecha_emision, #fecha_destino');
+        campos.forEach(campo => campo.value = getFechaLocal());
+    } catch (err) {
+        showAlert("Error al calcular la fecha actual", "error", 3000, 'center', true);
+        console.error('Error al calcular la fecha actual:', err);
+    }
+}
+
+window.formLoaders = [loadSucursales, loadConceptos, loadTerceros, loadCuentasPropias, loadCuentasTerceros, loadFechaHoy];

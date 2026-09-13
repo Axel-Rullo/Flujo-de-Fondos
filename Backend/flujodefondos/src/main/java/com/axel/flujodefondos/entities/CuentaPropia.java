@@ -11,13 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Tercero {
-    Long id_clipro;
+public class CuentaPropia {
+    Long id_cuenta;
     String nombre;
-    String dni_cuit;
-    String telefono;
-    String email;
-    String localidad;
-    String tipo;
-    String alias;
+    Long id_banco;
+    String banco;
 }

@@ -13,7 +13,7 @@ window.ConceptoTemplates = {
                 this.tablaConceptos = null;
             }
             this.tablaConceptos = new Tabulator("#conceptos-list", {
-                index: "id_cheque",
+                index: "id_concepto",
                 data: data,
                 columnDefaults: {headerSort:false},
                 layout: "fitColumns",

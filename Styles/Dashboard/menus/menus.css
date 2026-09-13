@@ -34,6 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 0.32rem;
     font-size: 0.64rem;
     font-weight: bold;
 }
@@ -142,14 +143,18 @@
 
 /* ── INDICADOR DE DESPLIEGUE ───────────────────────── */
 
-/* Flecha que indica si un menú puede desplegarse */
-button .chevron {
-    margin-left: 0.32rem;
-    display: inline-block;
-    transition: transform 0.2s;
+/* Flecha que indica si un menú puede desplegarse (misma flecha que cuentas_bancos.css) */
+.chevron {
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.18s ease;
+    flex-shrink: 0;
 }
 
 /* Rota la flecha cuando el menú está abierto */
 button.active .chevron {
-    transform: rotate(90deg);
+    transform: rotate(45deg);
 }

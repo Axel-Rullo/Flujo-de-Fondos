@@ -3,7 +3,7 @@
 ////////////////////////////////////////////////////
 
 function grupoDe(boton) {
-    return boton.closest('.nav-item, .menu-group, .submenu-nivel2');
+    return boton.closest('.nav-item, .menu-group, .submenu-nivel2, .grupo_banco');
 }
 
 function iniciarMenus() {
@@ -58,7 +58,7 @@ function cerrarHermanos(boton) {
     const padre   = miGrupo?.parentElement;
     if (!padre) return;
 
-    padre.querySelectorAll(':scope > .nav-item, :scope > .menu-group, :scope > .submenu-nivel2')
+    padre.querySelectorAll(':scope > .nav-item, :scope > .menu-group, :scope > .submenu-nivel2, :scope > .grupo_banco')
         .forEach(grupo => {
             if (grupo === miGrupo) return;
 

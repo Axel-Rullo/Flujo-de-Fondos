@@ -25,8 +25,6 @@ public class ConceptoService {
     if (conceptoRepository.findConceptoByNombre(concepto.getNombre()) != null) {
         throw new RuntimeException("La cuenta ya existe");
     }
-    Integer count = conceptoRepository.countByClasificacion(concepto.getClasificacion());
-    concepto.setCodigo(concepto.getClasificacion() + "." + (count + 1));
     conceptoRepository.insert(concepto);
     }
 

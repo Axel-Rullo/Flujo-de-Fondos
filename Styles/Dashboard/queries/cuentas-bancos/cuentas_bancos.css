@@ -1,20 +1,312 @@
 .cuentas-bancos {
-    background-color: var(--black);
     display: flex;
     flex-direction: row;
     width: 100%;
 }
 
-.cuentas {
+.cuentas_propias,
+.cuentas_terceros {
     display: flex;
     flex-direction: column;
-    width: 50%;
-    margin-right: 2px;
+    padding: 1rem;
 }
 
-.bancos {
+.cuentas_propias {
+    width: 20%;
+    border-right: 1px solid var(--user-divider);
+}
+
+.cuentas_terceros {
+    width: 80%;
+}
+
+/* ── Encabezados ─────────────────────────────────────────── */
+
+.title_cuentas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 2rem;
+    margin: 0 0 1rem;
+}
+
+.title_cuentas .title {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+}
+
+.title_cuentas h2,
+.group_cuenta_propia h1,
+.grupo_banco_header h2 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--white);
+}
+
+.title_cuentas span,
+.grupo_banco_header .cantidad_grupo {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--text-muted);
+}
+
+/* ── Buscador con ícono ──────────────────────────────────── */
+
+.buscador_cuentas_propias {
+    margin: 0 0 1rem;
+}
+
+.buscador_cuentas_terceros {
+    width: calc(20vw);
+}
+
+.input_icono {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    border-radius: 0.4rem;
+    background: var(--white);
+    box-sizing: border-box;
+}
+
+.input_icono .icono_input {
+    width: 0.9rem;
+    height: 0.9rem;
+    color: var(--black);
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+.input_icono .buscador {
+    flex: 1;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+    outline: none;
+    color: var(--black);
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.input_icono .buscador::placeholder {
+    color: var(--black);
+    opacity: 0.45;
+    font-weight: normal;
+}
+
+/* ── Botones "agregar" (borde punteado) ──────────────────── */
+
+.acciones_terceros {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.new_cuenta_propia,
+.btn_banco,
+.btn_enlazar {
+    background: transparent;
+    color: var(--white);
+    border: 2px dashed var(--white);
+    font-weight: bold;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn_banco,
+.btn_enlazar {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 2rem;
+    padding: 0 0.7rem;
+    box-sizing: border-box;
+    border-radius: 0.25rem;
+}
+
+.new_cuenta_propia {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    font-size: 0.75rem;
+}
+
+.btn_banco {
+    width: 3rem;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.btn_enlazar {
+    width: 12rem;
+    font-size: 0.75rem;
+}
+
+.btn_enlazar .icono_btn,
+.btn_banco .icono_btn {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex-shrink: 0;
+}
+
+.btn_enlazar:hover,
+.new_cuenta_propia:hover,
+.btn_banco:hover {
+    border-color: var(--button-1);
+    color: var(--button-1);
+}
+
+/* ── Tarjetas (propias y grupos de terceros) ────────────────── */
+
+.lista_cuentas_propias,
+.lista_cuentas_terceros {
     display: flex;
     flex-direction: column;
-    width: 50%;
-    margin-left: 2px;
+    gap: 1rem;
+}
+
+.group_cuenta_propia {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-button-color-1);
+    border-left: 3px solid var(--button-1);
+    background: transparent;
+    padding: 0.5rem;
+    transition: background 0.15s ease;
+}
+
+.group_cuenta_propia:hover {
+    background: var(--button-hover-1);
+}
+
+.grupo_banco {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-button-color-1);
+    border-left: 3px solid var(--button-1);
+    background: var(--background-1);
+    overflow: hidden;
+}
+
+.grupo_banco_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    border-bottom: 1px solid var(--user-divider);
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.grupo_banco_header:hover {
+    background: var(--button-hover-1);
+}
+
+.grupo_banco_titulo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.grupo_banco_header .chevron {
+    color: var(--text-muted);
+}
+
+.grupo_banco_lista {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.grupo_banco_lista.open {
+    max-height: 600px;
+}
+
+.group_cuenta_propia .valores {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.group_cuenta_propia .valores span:last-child {
+    color: var(--limegreen);
+    font-weight: bold;
+}
+
+.fila_cliente {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.5rem;
+    transition: background 0.15s ease;
+}
+
+.fila_cliente:hover {
+    background: var(--button-hover-1);
+}
+
+.fila_cliente:not(:last-child) {
+    border-bottom: 1px solid var(--user-divider);
+}
+
+.fila_cliente .nombre_cliente {
+    font-size: 0.9rem;
+    color: var(--white);
+}
+
+.alias_wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border-button-color-1);
+    border-radius: 0.4rem;
+    padding: 0.2rem 0.4rem;
+}
+
+.alias_cliente {
+    font-size: 0.75rem;
+    color: var(--white);
+}
+
+.divisor {
+    width: 1px;
+    height: 1rem;
+    background: var(--border-button-color-1);
+}
+
+.btn_copiar {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+    padding: 0.1rem;
+    transition: color 0.15s ease;
+}
+
+.btn_copiar svg {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.btn_copiar:hover {
+    color: var(--button-1);
 }

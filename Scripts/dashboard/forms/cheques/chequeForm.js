@@ -12,8 +12,8 @@
             tipo: form.querySelector('#tipo_ch').value,
             numero: form.querySelector('#numero').value,
             importe: form.querySelector('#importe').value,
-            fecha_cobro: form.querySelector('#tipo_ch').value === 'D' ? form.querySelector('#fecha_cobro').value : getFechaLocal(),
-            fecha_entrega: getFechaLocal(),
+            fecha_cobro: form.querySelector('#tipo_ch').value === 'D' ? form.querySelector('#fecha_pago').value : form.querySelector('#fecha_emision').value,
+            fecha_entrega: form.querySelector('#fecha_emision').value,
             observacion: form.querySelector('#observaciones').value,
             id_cuenta_banco: form.querySelector('#cuenta').value,
             id_titular: form.querySelector('#titular').value,
@@ -30,8 +30,8 @@
             tipo: form.querySelector('#tipo_ch').value,
             numero: form.querySelector('#numero').value,
             importe: form.querySelector('#importe').value,
-            fecha_cobro: form.querySelector('#tipo_ch').value === 'D' ? form.querySelector('#fecha_cobro').value : getFechaLocal(),
-            fecha_entrega: getFechaLocal(),
+            fecha_cobro: form.querySelector('#tipo_ch').value === 'D' ? form.querySelector('#fecha_pago').value : form.querySelector('#fecha_emision').value,
+            fecha_entrega: form.querySelector('#fecha_emision').value,
             observacion: form.querySelector('#observaciones').value,
             id_banco: form.querySelector('#banco').value,
             id_titular: form.querySelector('#titular').value,
@@ -43,7 +43,7 @@
     function buildImputarChequePropio(view) {
         return {
             id_cheque: view.dataset.id,
-            fecha_destino: getFechaLocal(),
+            fecha_destino: form.querySelector('#fecha_destino').value,
             estado: 'C',
         };
     }
@@ -54,7 +54,7 @@
             estado: 'C',
             uso: form.querySelector('#uso').value,
             clasificacion: form.querySelector('#uso').value === 'E' ? 'E' : 'A',
-            fecha_destino: getFechaLocal(),
+            fecha_destino: form.querySelector('#fecha_destino').value,
             id_cuenta_salida: form.querySelector('#banco').value || null,
             id_cuenta_entrada: form.querySelector('#cuenta').value || null,
             id_titular_destino: form.querySelector('#titular').value || null,
@@ -132,6 +132,14 @@
             try {
                 if (form.id === 'form_new_chequepropio') {
                     cheque = buildChequePropio(form);
+                    if (cheque.fecha_entrega > getFechaLocal()) {
+                        showAlert('La Fecha de Emision no puede ser\nuna Fecha posterior a la Fecha Actual', 'warning', 4000, 'center', true);
+                        return;
+                    }
+                    if (cheque.tipo === 'D' && cheque.fecha_cobro <= cheque.fecha_entrega) {
+                        showAlert('La Fecha de Pago debe de ser mínimo\nun dia mayor a la Fecha de Emision', 'warning', 4000, 'center', true);
+                        return;
+                    }
                     const res = await window.ChequeService.newChequePropio(cheque);
                     if (!res.ok) {
                         showAlert(res.mensaje, 'error', 3000, 'center', true);
@@ -143,6 +151,14 @@
                     }
                 } else if (form.id === 'form_new_chequetercero') {
                     cheque = buildChequeTercero(form);
+                    if (cheque.fecha_entrega > getFechaLocal()) {
+                        showAlert('La Fecha de Emision no puede ser\nuna Fecha posterior a la Fecha Actual', 'warning', 4000, 'center', true);
+                        return;
+                    }
+                    if (cheque.tipo === 'D' && cheque.fecha_cobro <= cheque.fecha_entrega) {
+                        showAlert('La Fecha de Pago debe de ser mínimo\nun dia mayor a la Fecha de Emision', 'warning', 4000, 'center', true);
+                        return;
+                    }
                     const res = await window.ChequeService.newChequeTercero(cheque);
                     if (!res.ok) {
                         showAlert(res.mensaje, 'error', 3000, 'center', true);

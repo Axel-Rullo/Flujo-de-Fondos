@@ -5,6 +5,7 @@
 const { app, BrowserWindow, Menu, ipcMain, powerMonitor } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
+const fs = require('node:fs');
 const http = require('node:http');
 const { spawn } = require('child_process');
 
@@ -12,6 +13,31 @@ Menu.setApplicationMenu(null);
 
 let win;
 let yaAvisado = false;
+
+//////////////////////////////////////////////
+// 📁 RUTAS DE DATOS
+//////////////////////////////////////////////
+
+const userDataPath = app.getPath('userData');
+const dbDir = path.join(userDataPath, 'database');
+
+// Profiles vive en userData (escribible siempre, incluso instalado en Program Files).
+// Si empaquetás una carpeta Profiles con imágenes por defecto vía extraResources,
+// esta la copia una sola vez a userData la primera vez que corre la app.
+const profilesDir = path.join(userDataPath, 'Profiles');
+
+function seedProfilesIfNeeded() {
+    if (fs.existsSync(profilesDir)) return;
+
+    fs.mkdirSync(profilesDir, { recursive: true });
+
+    if (app.isPackaged) {
+        const seedDir = path.join(process.resourcesPath, 'Profiles');
+        if (fs.existsSync(seedDir)) {
+            fs.cpSync(seedDir, profilesDir, { recursive: true });
+        }
+    }
+}
 
 //////////////////////////////////////////////
 // ☕ BACKEND JAVA
@@ -25,16 +51,13 @@ function startJavaBackend() {
         const jarPath = path.join(process.resourcesPath, 'Backend', 'flujodefondos.jar');
         const javaExe = path.join(process.resourcesPath, 'Backend', 'jre', 'bin', 'java.exe');
 
-        // Configurar la ruta de datos del usuario (AppData) para la base de datos y archivos
-        const fs = require('fs');
-        const userDataPath = app.getPath('userData');
-        const dbDir = path.join(userDataPath, 'database');
-        const uploadsDir = path.join(userDataPath, 'uploads');
-
         if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
-        if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+        seedProfilesIfNeeded();
 
-        javaServer = spawn(javaExe, ['-jar', jarPath], {
+        javaServer = spawn(javaExe, [
+            '-jar', jarPath,
+            `--app.storage.base-path=${userDataPath}`
+        ], {
             cwd: userDataPath // Ejecutar Java desde AppData para evitar errores de permisos
         });
 

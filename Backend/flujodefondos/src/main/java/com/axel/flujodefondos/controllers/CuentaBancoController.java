@@ -1,6 +1,7 @@
 package com.axel.flujodefondos.controllers;
 
-import com.axel.flujodefondos.entities.CuentaBanco;
+import com.axel.flujodefondos.entities.CuentaPropia;
+import com.axel.flujodefondos.entities.Banco;
 import com.axel.flujodefondos.services.CuentaBancoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,19 +17,19 @@ public class CuentaBancoController {
     private final CuentaBancoService cuentaBancoService;
 
     @GetMapping("/cuentas/list")
-    public List<CuentaBanco> findAllCuentas() {
-        return cuentaBancoService.findAllCuentas();
+    public List<CuentaPropia> findAllCuentasPropias() {
+        return cuentaBancoService.findAllCuentasPropias();
     }
 
     @GetMapping("/bancos/list")
-    public List<CuentaBanco> findAllBancos() {
+    public List<Banco> findAllBancos() {
         return cuentaBancoService.findAllBancos();
     }
 
     @PostMapping("/cuentas/new")
-    public Map<String, Object> insertCuenta(@RequestBody CuentaBanco cuentabanco) {
+    public Map<String, Object> insertCuentaPropia(@RequestBody CuentaPropia cuentapropia) {
         try {
-            cuentaBancoService.insertCuenta(cuentabanco.getNombre());
+            cuentaBancoService.insertCuentaPropia(cuentapropia);
             return Map.of("ok", true);
         } catch (RuntimeException e) {
             return Map.of("ok", false, "mensaje", e.getMessage());
@@ -36,9 +37,9 @@ public class CuentaBancoController {
     }
 
     @PostMapping("/bancos/new")
-    public Map<String, Object> insertBanco(@RequestBody CuentaBanco cuentabanco) {
+    public Map<String, Object> insertBanco(@RequestBody Banco banco) {
         try {
-            cuentaBancoService.insertBanco(cuentabanco.getNombre());
+            cuentaBancoService.insertBanco(banco.getNombre());
             return Map.of("ok", true);
         } catch (RuntimeException e) {
             return Map.of("ok", false, "mensaje", e.getMessage());
