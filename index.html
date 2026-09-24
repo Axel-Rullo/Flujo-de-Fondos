@@ -34,14 +34,17 @@
     <!-- login -->
     <link rel="stylesheet" href="./Styles/login/login.css">
     <!-- dashboard -->
+    <link rel="stylesheet" href="./Styles/dashboard/bienvenida.css">
     <link rel="stylesheet" href="./Styles/dashboard/header/header.css">
     <link rel="stylesheet" href="./Styles/dashboard/menus/menus.css">
     <link rel="stylesheet" href="./Styles/dashboard/nav/nav.css">
     <link rel="stylesheet" href="./Styles/dashboard/modal/modal.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/forms.css">
+    <link rel="stylesheet" href="./Styles/dashboard/forms/cheques/resumen_cheque.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/users/form_user_list.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/cheques/view_cheque.css">
+    <link rel="stylesheet" href="./Styles/dashboard/forms/cheques/list_cheques.css">
     <link rel="stylesheet" href="./Styles/dashboard/queries/general-data/general-data.css">
     <link rel="stylesheet" href="./Styles/dashboard/queries/cuentas-bancos/cuentas_bancos.css">
     <link rel="stylesheet" href="./Styles/dashboard/tables/tables.css">
@@ -49,6 +52,33 @@
 <body>
     <!-- ICONOS -->
     <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <symbol id="icono-cheque-cobrado" viewBox="0 0 48 48">
+        <rect x="4" y="8" width="32" height="24" rx="3" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1"/>
+        <line x1="8" y1="15" x2="26" y2="15" stroke="#888780" stroke-width="1"/>
+        <line x1="8" y1="21" x2="30" y2="21" stroke="#888780" stroke-width="1"/>
+        <path d="M8 27 Q12 24 16 27 T24 27" fill="none" stroke="#888780" stroke-width="1"/>
+        <circle cx="32" cy="32" r="12" fill="#EAF3DE" stroke="#639922" stroke-width="1.5"/>
+        <path d="M27 32 L30.5 35.5 L37 27" fill="none" stroke="#3B6D11" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+
+        <symbol id="icono-cheque-rechazado" viewBox="0 0 48 48">
+        <rect x="4" y="8" width="32" height="24" rx="3" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1"/>
+        <line x1="8" y1="15" x2="26" y2="15" stroke="#888780" stroke-width="1"/>
+        <line x1="8" y1="21" x2="30" y2="21" stroke="#888780" stroke-width="1"/>
+        <path d="M8 27 Q12 24 16 27 T24 27" fill="none" stroke="#888780" stroke-width="1"/>
+        <circle cx="32" cy="32" r="12" fill="#FCEBEB" stroke="#E24B4A" stroke-width="1.5"/>
+        <path d="M27.5 27.5 L36.5 36.5 M27.5 36.5 L36.5 27.5" fill="none" stroke="#A32D2D" stroke-width="2.5" stroke-linecap="round"/>
+        </symbol>
+
+        <symbol id="icono-cheque-anulado" viewBox="0 0 48 48">
+        <rect x="4" y="8" width="32" height="24" rx="3" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="1"/>
+        <line x1="8" y1="15" x2="26" y2="15" stroke="#888780" stroke-width="1"/>
+        <line x1="8" y1="21" x2="30" y2="21" stroke="#888780" stroke-width="1"/>
+        <path d="M8 27 Q12 24 16 27 T24 27" fill="none" stroke="#888780" stroke-width="1"/>
+        <circle cx="32" cy="32" r="12" fill="#F1EFE8" stroke="#888780" stroke-width="1.5"/>
+        <path d="M27.5 27.5 L36.5 36.5" fill="none" stroke="#5F5E5A" stroke-width="2.5" stroke-linecap="round"/>
+        </symbol>
+        
         <symbol id="icon-bank" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2"
             stroke-linecap="round" stroke-linejoin="round">
@@ -228,13 +258,6 @@
             </div>
             <aside class="accordion">
                 <div class="menu-group">
-                    <button data-target="sub-cuentas">CUENTAS / BANCOS <span class="chevron"></span></button>
-                    <div id="sub-cuentas" class="submenu">
-                        <a data-modal="Views/forms/cuentas-bancos/new_cuentabanco.html" href="#">NUEVA CUENTA / BANCO</a>
-                    </div>
-                </div>
-
-                <div class="menu-group">
                     <button data-target="sub-conceptos">CONCEPTOS <span class="chevron"></span></button>
                     <div id="sub-conceptos" class="submenu">
                         <a data-modal="Views/forms/conceptos/new_concepto.html" href="#">NUEVO CONCEPTO</a>
@@ -246,8 +269,6 @@
                     <div id="sub-cheques" class="submenu">
                         <a data-modal="Views/forms/cheques/nuevo/nuevo_cheque_propio.html" href="#">NUEVO CHEQUE PROPIO</a>
                         <a data-modal="Views/forms/cheques/nuevo/nuevo_cheque_terceros.html" href="#">NUEVO CHEQUE DE TERCEROS</a>
-                        <a data-modal="Views/forms/cheques/imputar/imputar_cheque_terceros.html" href="#">IMPUTAR CHEQUE DE TERCEROS</a>
-                        <a data-modal="Views/forms/cheques/view_cheque.html" href="#">Perfil</a>
                     </div>
                 </div>
 
@@ -314,6 +335,12 @@
         </div>
     </div>
 
+    <!-- BIENVENIDA -->
+    <div class="bienvenida oculto">
+        <div class="saludo"></div>
+        <div class="extra">Este es tu resumen diario</div>
+    </div>
+
     <!-- PRECARGA DE IMAGENES -->
     <div style="display:none;">
         <img src="./Icons/logo.png" alt="">
@@ -325,6 +352,7 @@
     <!-- SCRIPTS -->
     <!-- #region -->
     <script src="router.js"></script>
+    <script src="Scripts/dashboard/bienvenida.js"></script>
     <script src="./Scripts/api.js"></script>
     <script src="./Scripts/modal.js"></script>
     <script src="./Scripts/alerts.js"></script>

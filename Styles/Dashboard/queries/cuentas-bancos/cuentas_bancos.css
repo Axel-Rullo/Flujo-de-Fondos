@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    height: 100%; /* Limita la altura para que no desborde hacia abajo */
+    overflow: hidden; /* Evita scroll general en la página */
 }
 
 .cuentas_propias,
@@ -9,15 +11,16 @@
     display: flex;
     flex-direction: column;
     padding: 1rem;
+    overflow-y: auto; /* Activa la barra de scroll individual para cada bloque */
 }
 
 .cuentas_propias {
-    width: 20%;
+    width: 35%;
     border-right: 1px solid var(--user-divider);
 }
 
 .cuentas_terceros {
-    width: 80%;
+    width: 65%;
 }
 
 /* ── Encabezados ─────────────────────────────────────────── */
@@ -133,7 +136,7 @@
     width: 100%;
     padding: 0.5rem;
     border-radius: 0.5rem;
-    margin: 1rem 0;
+    margin: 0 0 1rem;
     font-size: 0.75rem;
 }
 

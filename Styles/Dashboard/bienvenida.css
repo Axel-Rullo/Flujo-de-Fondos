@@ -1,0 +1,55 @@
+.bienvenida {
+    background-color: var(--background-1);
+    z-index: 9999;
+    position: absolute;
+    /* Antes: inset: 0; → tapaba también el titlebar (y sus botones de minimizar/
+       maximizar/cerrar). Arranca debajo de la barra de título (38px, igual que
+       #titlebar en titlebar.css) para dejarla siempre visible y usable. */
+    top: 38px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    /* Estado inicial y estado al que vuelve al desaparecer */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease-in-out;
+}
+
+.bienvenida.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.bienvenida.oculto {
+    display: none;
+}
+
+/* Animación del texto */
+.bienvenida .saludo,
+.bienvenida .extra {
+    transition: transform 0.8s ease-in-out;
+    transform: scale(0.95);
+}
+
+.bienvenida.visible .saludo,
+.bienvenida.visible .extra {
+    transform: scale(1);
+}
+
+.bienvenida .saludo {
+    font-size: 4rem;
+    color: var(--button-1);
+    font-weight: bold;
+}
+
+.bienvenida .extra {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+}

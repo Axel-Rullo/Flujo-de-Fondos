@@ -25,12 +25,28 @@ public class ChequeService {
 
     // ── LISTADOS ──────────────────────────────────────────────────────
 
-    public List<Cheque> listAllPropios() {
-        return chequeRepository.findAllPropios();
+    public List<Cheque> listAllPropios(String estado) {
+        return chequeRepository.findAllPropios(estado);
     }
 
-    public List<Cheque> listAllTerceros() {
-        return chequeRepository.findAllTerceros();
+    public List<Cheque> listAllTerceros(String estado) {
+        return chequeRepository.findAllTerceros(estado);
+    }
+
+    // ── HISTORIAL ────────────────────────────────────────────────────
+
+    public List<Cheque> listBajasPropios(String estado) {
+        return chequeRepository.findAllBajasPropios(estado);
+    }
+
+    public List<Cheque> listBajasTerceros(String estado) {
+        return chequeRepository.findAllBajasTerceros(estado);
+    }
+
+    // ── DETALLE ──────────────────────────────────────────────────────
+
+    public Cheque getCheque(Long id) {
+        return chequeRepository.findById(id);
     }
 
     // ── IMPUTACIÓN ───────────────────────────────────────────────────
@@ -45,7 +61,13 @@ public class ChequeService {
 
     // ── RECHAZO ──────────────────────────────────────────────────────
 
-    public void rechazarCheque(Long id) {
-        chequeRepository.rechazarCheque(id);
+    public void rechazarCheque(Cheque cheque) {
+        chequeRepository.rechazarCheque(cheque);
+    }
+
+    // ── ANULACION ────────────────────────────────────────────────────
+
+    public void anularCheque(Cheque cheque) {
+        chequeRepository.anularCheque(cheque);
     }
 }

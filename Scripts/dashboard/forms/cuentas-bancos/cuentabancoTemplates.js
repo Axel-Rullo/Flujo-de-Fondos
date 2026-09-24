@@ -8,7 +8,7 @@ window.CuentaBancoTemplates = {
             <div class="group_cuenta_propia">
                 <h1 class="nombre_cuenta">${cuenta.nombre}</h1>
                 <div class="valores">
-                    <span>${cuenta.banco ? cuenta.banco : 'Caja'}</span><span>$ 0</span>
+                    <span>${cuenta.banco ? cuenta.banco : 'Caja'}</span><span>$ ${formatearImporte(cuenta.saldo || 0)}</span>
                 </div>
             </div>
         `;

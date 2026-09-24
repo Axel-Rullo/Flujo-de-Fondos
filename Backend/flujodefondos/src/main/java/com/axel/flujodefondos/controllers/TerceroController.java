@@ -20,6 +20,11 @@ public class TerceroController {
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
+    @GetMapping("/tercero/list/names")
+    public List<Tercero> findAllTercerosNames() {
+        return terceroService.findAllTercerosNames();
+    }
+
     @GetMapping("/tercero/list/active")
     public List<Tercero> listAllActive() {
         return terceroService.listAllActive();

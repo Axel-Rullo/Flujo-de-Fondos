@@ -95,7 +95,7 @@
 }
 
 #titlebar .tb-btn.bt-block-login:active,
-#titlebar .tb-btn.bt-user-list:active, {
+#titlebar .tb-btn.bt-user-list:active {
     background-color: var(--block-login-active);
     color: var(--black);
 }
@@ -132,3 +132,57 @@
     background-color: var(--titlebar-close-active);
     color: var(--white);
 }
+
+/* ── ENTRADA ANIMADA ──────────────────────────────── */
+
+/* Oculta el menú y los accesos de cuenta mientras se muestra la bienvenida (los botones de ventana no se tocan) */
+#titlebar.tb-espera .header,
+#titlebar.tb-espera .tb-account-controls {
+    visibility: hidden;
+}
+
+/* Desde la izquierda hacia la derecha */
+@keyframes tbEntraIzquierda {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Desde la derecha hacia la izquierda */
+@keyframes tbEntraDerecha {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Bloques del lado izquierdo: logo y grupos del menú */
+#titlebar.tb-entra .header-title,
+#titlebar.tb-entra .menu-group {
+    animation: tbEntraIzquierda 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#titlebar.tb-entra .menu-group:nth-child(1) { animation-delay: 0.08s; }
+#titlebar.tb-entra .menu-group:nth-child(2) { animation-delay: 0.16s; }
+#titlebar.tb-entra .menu-group:nth-child(3) { animation-delay: 0.24s; }
+
+/* Botones del lado derecho: entra primero el más cercano al borde (perfil) */
+#titlebar.tb-entra .tb-account-controls .tb-btn {
+    animation: tbEntraDerecha 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+#titlebar.tb-entra .tb-account-controls .tb-btn:nth-child(4) { animation-delay: 0.1s; }
+#titlebar.tb-entra .tb-account-controls .tb-btn:nth-child(3) { animation-delay: 0.18s; }
+#titlebar.tb-entra .tb-account-controls .tb-btn:nth-child(2) { animation-delay: 0.26s; }
+#titlebar.tb-entra .tb-account-controls .tb-btn:nth-child(1) { animation-delay: 0.34s; }

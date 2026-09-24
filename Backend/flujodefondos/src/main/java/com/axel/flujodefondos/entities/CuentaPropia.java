@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,6 +16,7 @@ import lombok.Setter;
 public class CuentaPropia {
     Long id_cuenta;
     String nombre;
+    BigDecimal saldo;
     Long id_banco;
     String banco;
 }

@@ -1,6 +1,7 @@
 package com.axel.flujodefondos.repositories;
 
 import com.axel.flujodefondos.entities.Cheque;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,122 +20,134 @@ public class ChequeRepository {
 
     // ── MAPPERS ──────────────────────────────────────────────────────
 
-    private final RowMapper<Cheque> chequeMapper = (rs, rowNum) -> new Cheque(
-        rs.getLong("id_cheque"),
-        rs.getString("clase"),
-        rs.getString("clasificacion"),
-        rs.getString("numero"),
-        rs.getString("banco"),
-        rs.getBigDecimal("importe"),
-        rs.getString("tipo"),
-        rs.getString("fecha_entrega"),
-        rs.getString("fecha_cobro"),
-        rs.getString("fecha_destino"),
-        rs.getString("estado"),
-        rs.getString("observacion"),
-        rs.getString("uso"),
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        rs.getString("titular"),
-        rs.getString("titular_destino"),
-        rs.getString("cuenta_entrada"),
-        rs.getString("cuenta_salida"),
-        rs.getString("concepto_entrada"),
-        rs.getString("concepto_salida"),
-        rs.getString("usuario"),
-        rs.getString("cuenta_banco")
-    );
+    private final RowMapper<Cheque> chequeMapper = new BeanPropertyRowMapper<>(Cheque.class);
 
     // ── LISTADO ───────────────────────────────────────────────────────
 
-    public List<Cheque> findAllPropios() {
+    public List<Cheque> findAllPropios(String estado) {
         return jdbcTemplate.query(
-            "SELECT ch.id_cheque, ch.clase, ch.clasificacion, ch.numero, b.nombre AS banco, ch.importe, ch.tipo, " +
-            "ch.fecha_entrega, ch.fecha_cobro, ch.fecha_destino, ch.estado, ch.observacion, ch.uso, " +
-            "cp.nombre AS titular, cpd.nombre AS titular_destino, " +
-            "ce.nombre AS cuenta_entrada, cs.nombre AS cuenta_salida, " +
-            "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario, " +
-            "cb.nombre AS cuenta_banco " +
+            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.estado, " +
+            "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision " +
             "FROM cheques ch " +
 
-                // Titular
-                "LEFT JOIN clientes_proveedores cp ON ch.id_titular = cp.id_clipro " +
+            // Titular en emisión
+            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
 
-                // Titular destino
-                "LEFT JOIN clientes_proveedores cpd ON ch.id_titular_destino = cpd.id_clipro " +
+            // Cuenta propia en emisión
+            "LEFT JOIN cuentas cb ON ch.id_cuenta_propia_emision = cb.id_cuenta " +
 
-                // Cuenta de entrada
-                "LEFT JOIN cuentas ce ON ch.id_cuenta_entrada = ce.id_cuenta " +
-
-                // Cuenta de salida
-                "LEFT JOIN cuentas cs ON ch.id_cuenta_salida = cs.id_cuenta " +
-
-                // Cuenta bancaria propia
-                "LEFT JOIN cuentas cb ON ch.id_cuenta_banco = cb.id_cuenta " +
-
-                // Concepto de entrada
-                "LEFT JOIN conceptos cce ON ch.id_concepto_entrada = cce.id_concepto " +
-
-                // Concepto de salida
-                "LEFT JOIN conceptos ccs ON ch.id_concepto_salida = ccs.id_concepto " +
-
-                // Banco del cheque
-                "LEFT JOIN bancos b ON ch.id_banco = b.id_banco " +
-
-                // Usuario que registró el cheque
-                "LEFT JOIN usuarios u ON ch.id_usuario = u.id_usuario " +
-
-                "WHERE ch.clasificacion = 'E'",
-                chequeMapper
-            );
+            "WHERE ch.clase = 'P' AND ch.estado = ?",
+            chequeMapper,
+            estado
+        );
     }
 
-    public List<Cheque> findAllTerceros() {
+    public List<Cheque> findAllTerceros(String estado) {
         return jdbcTemplate.query(
-            "SELECT ch.id_cheque, ch.clase, ch.clasificacion, ch.numero, b.nombre AS banco, ch.importe, ch.tipo, " +
-            "ch.fecha_entrega, ch.fecha_cobro, ch.fecha_destino, ch.estado, ch.observacion, ch.uso, " +
-            "cp.nombre AS titular, cpd.nombre AS titular_destino, " +
-            "ce.nombre AS cuenta_entrada, cs.nombre AS cuenta_salida, " +
-            "cce.concepto AS concepto_entrada, ccs.concepto AS concepto_salida, u.nombre AS usuario, " +
-            "cb.nombre AS cuenta_banco " +
+            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.uso, " +
+            "cp.nombre AS clipro_emision, cpd.nombre AS clipro_imputar, ce.nombre AS cuenta_propia_imputar, b.nombre AS banco_emision " +
             "FROM cheques ch " +
 
-            // Titular del cheque
-            "LEFT JOIN clientes_proveedores cp ON ch.id_titular = cp.id_clipro " +
+            // Titular en emisión
+            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
 
-            // Titular destino del cheque
-            "LEFT JOIN clientes_proveedores cpd ON ch.id_titular_destino = cpd.id_clipro " +
+            // Titular en imputación
+            "LEFT JOIN clientes_proveedores cpd ON ch.id_clipro_imputar = cpd.id_clipro " +
 
-            // Cuenta de entrada
-            "LEFT JOIN cuentas ce ON ch.id_cuenta_entrada = ce.id_cuenta " +
-
-            // Cuenta de salida
-            "LEFT JOIN cuentas cs ON ch.id_cuenta_salida = cs.id_cuenta " +
-
-            // Cuenta bancaria propia
-            "LEFT JOIN cuentas cb ON ch.id_cuenta_banco = cb.id_cuenta " +
-
-            // Concepto de entrada
-            "LEFT JOIN conceptos cce ON ch.id_concepto_entrada = cce.id_concepto " +
-
-            // Concepto de salida
-            "LEFT JOIN conceptos ccs ON ch.id_concepto_salida = ccs.id_concepto " +
+            // Cuenta propia en imputación (depósito)
+            "LEFT JOIN cuentas ce ON ch.id_cuenta_propia_imputar = ce.id_cuenta " +
 
             // Banco del cheque
-            "LEFT JOIN bancos b ON ch.id_banco = b.id_banco " +
+            "LEFT JOIN bancos b ON ch.id_banco_emision = b.id_banco " +
+
+            "WHERE ch.clase = 'T' AND ch.estado = ?",
+            chequeMapper,
+            estado
+        );
+    }
+
+    // ── HISTORIAL ────────────────────────────────────────────────────
+
+    public List<Cheque> findAllBajasPropios(String estado) {
+        return jdbcTemplate.query(
+            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.fecha_destino, ch.estado, ch.motivo, ch.clase, " +
+            "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision, u.nombre AS usuario " +
+            "FROM cheques ch " +
+
+            // Titular en emisión
+            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
+
+            // Cuenta propia en emisión
+            "LEFT JOIN cuentas cb ON ch.id_cuenta_propia_emision = cb.id_cuenta " +
+
+            // Usuario
+            "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
+
+            "WHERE ch.clase = 'P' AND ch.estado = ?",
+            chequeMapper,
+            estado
+        );
+    }
+
+    public List<Cheque> findAllBajasTerceros(String estado) {
+        return jdbcTemplate.query(
+            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.motivo, " +
+            "cp.nombre AS clipro_emision, b.nombre AS banco_emision, u.nombre AS usuario, ch.clase " +
+            "FROM cheques ch " +
+
+            // Titular en emisión
+            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
+
+            // Banco del cheque
+            "LEFT JOIN bancos b ON ch.id_banco_emision = b.id_banco " +
+
+            // Usuario
+            "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
+
+            "WHERE ch.clase = 'T' AND ch.estado = ?",
+            chequeMapper,
+            estado
+        );
+    }
+
+    // ── DETALLE ──────────────────────────────────────────────────────
+
+    public Cheque findById(Long id) {
+        return jdbcTemplate.queryForObject(
+            "SELECT ch.id_cheque, ch.clase, ch.clasificacion, ch.numero, ch.importe, ch.tipo, " +
+            "ch.fecha_emision, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.observacion, ch.motivo, ch.uso, " +
+            "cp.nombre AS clipro_emision, cpd.nombre AS clipro_imputar, b.nombre AS banco_emision, " +
+            "cb.nombre AS cuenta_propia_emision, ce.nombre AS cuenta_propia_imputar, " +
+            "cce.concepto AS concepto_emision, ccs.concepto AS concepto_imputar, u.nombre AS usuario " +
+            "FROM cheques ch " +
+
+            // Titular en emisión
+            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
+
+            // Titular en imputación
+            "LEFT JOIN clientes_proveedores cpd ON ch.id_clipro_imputar = cpd.id_clipro " +
+
+            // Cuenta propia en imputación (depósito)
+            "LEFT JOIN cuentas ce ON ch.id_cuenta_propia_imputar = ce.id_cuenta " +
+
+            // Cuenta propia en emisión
+            "LEFT JOIN cuentas cb ON ch.id_cuenta_propia_emision = cb.id_cuenta " +
+
+            // Concepto en emisión
+            "LEFT JOIN conceptos cce ON ch.id_concepto_emision = cce.id_concepto " +
+
+            // Concepto en imputación (endoso)
+            "LEFT JOIN conceptos ccs ON ch.id_concepto_imputar = ccs.id_concepto " +
+
+            // Banco del cheque
+            "LEFT JOIN bancos b ON ch.id_banco_emision = b.id_banco " +
 
             // Usuario que registró el cheque
             "LEFT JOIN usuarios u ON ch.id_usuario = u.id_usuario " +
 
-            "WHERE ch.clasificacion = 'A'",
-            chequeMapper
+            "WHERE ch.id_cheque = ?",
+            chequeMapper,
+            id
         );
     }
 
@@ -142,19 +155,19 @@ public class ChequeRepository {
 
     public void insertChequePropio(Cheque cheque) {
         jdbcTemplate.update(
-            "INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, estado, observacion, id_titular, id_cuenta_banco, id_concepto_salida, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            cheque.getClase(), cheque.getClasificacion(), cheque.getNumero(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_entrega(),
-            cheque.getFecha_cobro(), cheque.getEstado(), cheque.getObservacion(),
-            cheque.getId_titular(), cheque.getId_cuenta_banco(), cheque.getId_concepto_salida(), cheque.getId_usuario()
+            "INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_emision, fecha_pago, estado, observacion, id_clipro_emision, id_cuenta_propia_emision, id_concepto_emision, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "P", "E", cheque.getNumero(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_emision(),
+            cheque.getFecha_pago(), "P", cheque.getObservacion(), cheque.getId_clipro_emision(), 
+            cheque.getId_cuenta_propia_emision(), cheque.getId_concepto_emision(), cheque.getId_usuario()
         );
     }
 
     public void insertChequeTercero(Cheque cheque) {
         jdbcTemplate.update(
-            "INSERT INTO cheques (clase, clasificacion, numero, id_banco, importe, tipo, fecha_entrega, fecha_cobro, estado, observacion, id_titular, id_concepto_entrada, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            cheque.getClase(), cheque.getClasificacion(), cheque.getNumero(), cheque.getId_banco(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_entrega(),
-            cheque.getFecha_cobro(), cheque.getEstado(), cheque.getObservacion(),
-            cheque.getId_titular(), cheque.getId_concepto_entrada(), cheque.getId_usuario()
+            "INSERT INTO cheques (clase, clasificacion, numero, id_banco_emision, importe, tipo, fecha_emision, fecha_pago, estado, observacion, id_clipro_emision, id_concepto_emision, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "T", "A", cheque.getNumero(), cheque.getId_banco_emision(), cheque.getImporte(), cheque.getTipo(), 
+            cheque.getFecha_emision(), cheque.getFecha_pago(), "P", cheque.getObservacion(),
+            cheque.getId_clipro_emision(), cheque.getId_concepto_emision(), cheque.getId_usuario()
         );
     }
 
@@ -163,25 +176,33 @@ public class ChequeRepository {
     public void imputarChequePropio(Cheque cheque) {
         jdbcTemplate.update(
             "UPDATE cheques SET fecha_destino = ?, estado = ? WHERE id_cheque = ?",
-            cheque.getFecha_destino(), cheque.getEstado(), cheque.getId_cheque()
+            cheque.getFecha_destino(), "C", cheque.getId_cheque()
         );
     }
 
     public void imputarChequeTercero(Cheque cheque) {
         jdbcTemplate.update(
-            "UPDATE cheques SET estado = ?, uso = ?, fecha_destino = ?, id_cuenta_entrada = ?, id_titular_destino = ?, id_cuenta_salida = ?, clasificacion = ? WHERE id_cheque = ?",
-            cheque.getEstado(), cheque.getUso(), cheque.getFecha_destino(), cheque.getId_cuenta_entrada(),
-            cheque.getId_titular_destino(), cheque.getId_cuenta_salida(), cheque.getClasificacion(),
-            cheque.getId_cheque()
+            "UPDATE cheques SET estado = ?, uso = ?, fecha_destino = ?, id_cuenta_propia_imputar = ?, id_clipro_imputar = ?, id_concepto_imputar = ? WHERE id_cheque = ?",
+            "C", cheque.getUso(), cheque.getFecha_destino(), cheque.getId_cuenta_propia_imputar(),
+            cheque.getId_clipro_imputar(), cheque.getId_concepto_imputar(), cheque.getId_cheque()
         );
     }
 
     // ── RECHAZO ──────────────────────────────────────────────────────
 
-    public void rechazarCheque(Long id) {
+    public void rechazarCheque(Cheque cheque) {
         jdbcTemplate.update(
-            "UPDATE cheques SET estado = ? WHERE id_cheque = ?",
-            "R", id
+            "UPDATE cheques SET estado = ?, motivo = ?, fecha_destino = ? WHERE id_cheque = ?",
+            "R", cheque.getMotivo(), cheque.getFecha_destino(), cheque.getId_cheque()
+        );
+    }
+
+    // ── ANULACION ────────────────────────────────────────────────────
+
+    public void anularCheque(Cheque cheque) {
+        jdbcTemplate.update(
+            "UPDATE cheques SET estado = ?, motivo = ?, fecha_destino = ? WHERE id_cheque = ?",
+            "A", cheque.getMotivo(), cheque.getFecha_destino(), cheque.getId_cheque()
         );
     }
 }

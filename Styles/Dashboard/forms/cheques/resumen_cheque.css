@@ -1,0 +1,99 @@
+.resumen_cheque {
+    display: grid;
+    grid-template-columns: 1fr repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1.5rem; /* Mayor separación entre cajas */
+    width: auto;
+    padding: 1rem; /* Un poco de respiro general */
+}
+
+.dia-grid {
+    width: 14rem; /* Un pelín más ancho */
+    min-height: 9.5rem; /* Un ~25% más alto */
+    border-radius: 1rem;
+    border: 4px solid var(--white);
+    padding: 1rem; /* Mayor separación interna */
+    transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.dia-grid:hover {
+    background-color: var(--dia-grid-hover-bg);
+    transform: translateY(-2px); /* Un levante súper sutil al pasar el mouse */
+}
+
+.dia-grid:first-child {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    border: 4px solid var(--gold);
+    justify-content: center;
+    box-shadow: 0 0 20px var(--gold-glow); /* Brillito inicial */
+}
+
+.dia-grid:first-child:hover {
+    box-shadow: 0 0 30px 2px var(--gold-glow-hover); /* El brillo se intensifica mucho más */
+    background-color: var(--dia-grid-hover-bg); /* Mantiene el hover de fondo también */
+}
+
+.dia-grid,
+.conteo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Al alinear al centro, el gap dicta la separación exacta en todos */
+    text-align: center;
+    gap: 0.75rem; /* Más separación entre los campos (labels, barra, etc) */
+}
+
+.dia_header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.25rem; /* Separación mínima entre día y fecha */
+}
+
+.dia_header .dia_label {
+    color: var(--button-1);
+    font-size: 1.1rem; /* Un toque más grande */
+}
+
+.barra-conteo {
+    height: 0.5rem;
+    width: 95%;
+    background-color: var(--green);
+    border-radius: 4px; /* Un poco de estilo simple a la barra */
+}
+
+.dia-counts {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+    gap: 1.5rem; /* Más espacio entre emitidos y a cobrar */
+    width: 100%;
+}
+
+.conteo {
+    flex: 1;
+    min-width: 0;
+    gap: 0.35rem; /* Separación entre el valor numérico y el label */
+}
+
+.conteo-label {
+    white-space: nowrap;
+    font-size: 0.95rem;
+}
+
+.conteo.conteo-emitidos .conteo-valor {
+    color: var(--red);
+    font-size: 1.3rem; /* Valor más legible */
+    font-weight: bold;
+}
+
+.conteo.conteo-acobrar .conteo-valor {
+    color: var(--blue);
+    font-size: 1.3rem;
+    font-weight: bold;
+}

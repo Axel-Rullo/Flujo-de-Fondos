@@ -2,6 +2,7 @@ package com.axel.flujodefondos.controllers;
 
 import com.axel.flujodefondos.entities.CuentaPropia;
 import com.axel.flujodefondos.entities.Banco;
+import com.axel.flujodefondos.entities.BancoCliPro;
 import com.axel.flujodefondos.services.CuentaBancoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,17 @@ public class CuentaBancoController {
         return cuentaBancoService.findAllCuentasPropias();
     }
 
-    @GetMapping("/bancos/list")
-    public List<Banco> findAllBancos() {
-        return cuentaBancoService.findAllBancos();
+    @GetMapping("/bancos/list/names")
+    public List<Banco> findAllBancosNames() {
+        return cuentaBancoService.findAllBancosNames();
     }
 
-    @PostMapping("/cuentas/new")
+    @GetMapping("/bancos/list/clipros")
+    public List<Banco> findAllBancosCliPro() {
+        return cuentaBancoService.findAllBancosCliPro();
+    }
+
+    @PostMapping("/cuentas/new/cuentapropia")
     public Map<String, Object> insertCuentaPropia(@RequestBody CuentaPropia cuentapropia) {
         try {
             cuentaBancoService.insertCuentaPropia(cuentapropia);
@@ -36,10 +42,20 @@ public class CuentaBancoController {
         }
     }
 
-    @PostMapping("/bancos/new")
+    @PostMapping("/bancos/new/banco")
     public Map<String, Object> insertBanco(@RequestBody Banco banco) {
         try {
             cuentaBancoService.insertBanco(banco.getNombre());
+            return Map.of("ok", true);
+        } catch (RuntimeException e) {
+            return Map.of("ok", false, "mensaje", e.getMessage());
+        }
+    }
+
+    @PostMapping("/bancos/new/clipro")
+    public Map<String, Object> insertBancoCliPro(@RequestBody BancoCliPro bancoclipro) {
+        try {
+            cuentaBancoService.insertBancoCliPro(bancoclipro);
             return Map.of("ok", true);
         } catch (RuntimeException e) {
             return Map.of("ok", false, "mensaje", e.getMessage());

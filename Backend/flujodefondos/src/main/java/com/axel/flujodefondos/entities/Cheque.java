@@ -18,30 +18,29 @@ public class Cheque {
     String clase;
     String clasificacion;
     String numero;
-    String banco;
     BigDecimal importe;
     String tipo;
-    String fecha_entrega;
-    String fecha_cobro;
+    String fecha_emision;
+    String fecha_pago;
     String fecha_destino;
     String estado;
     String observacion;
+    String motivo;
     String uso;
-    String id_titular;
-    String id_titular_destino;
-    String id_banco;
-    String id_cuenta_banco;
-    String id_cuenta_entrada;
-    String id_cuenta_salida;
-    String id_concepto_entrada;
-    String id_concepto_salida;
-    String id_usuario;
-    String titular;
-    String titular_destino;
-    String cuenta_entrada;
-    String cuenta_salida;
-    String concepto_entrada;
-    String concepto_salida;
+    String id_clipro_emision; // CH T y CH P
+    String id_clipro_imputar; // CH T
+    String id_banco_emision; // CH T
+    String id_cuenta_propia_emision; // CH P
+    String id_cuenta_propia_imputar; // CH T
+    String id_concepto_emision; // CH T y CH P
+    String id_concepto_imputar; // CH T
+    String id_usuario; // User que ingresa
+    String clipro_emision;
+    String clipro_imputar;
+    String banco_emision;
+    String cuenta_propia_emision;
+    String cuenta_propia_imputar;
+    String concepto_emision;
+    String concepto_imputar;
     String usuario;
-    String cuenta_banco;
 }

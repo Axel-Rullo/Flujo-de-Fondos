@@ -31,16 +31,11 @@ function initBuscadorCuentasPropias() {
     input.addEventListener('input', function(e) {
         const query = e.target.value.toLowerCase();
 
-        let algunoVisible = false;
-
         document.querySelectorAll('.group_cuenta_propia').forEach(grupoCuentaPropia => {
-
             const nombre = grupoCuentaPropia.querySelector('.nombre_cuenta').textContent.toLowerCase();
             const valores = grupoCuentaPropia.querySelector('.valores').textContent.toLowerCase();
             const coincide = nombre.includes(query) || valores.includes(query);
-
             grupoCuentaPropia.style.display = coincide ? '' : 'none';
-            if (coincide) algunoVisible = true;
         });
     });
 }
@@ -53,7 +48,7 @@ function initBuscadorCuentasPropias() {
 
         try {
             const cuentas = await window.CuentaBancoService.listCuentas();
-            const bancos = await window.CuentaBancoService.listBancos();
+            const bancos = await window.CuentaBancoService.listBancosCliPros();
             window.CuentaBancoTemplates.mostrarCuentasPropias(cuentas, containerCuentasPropias);
             window.CuentaBancoTemplates.mostrarBancosClipros(bancos, containerBancos);
             initBuscadorCuentasPropias();

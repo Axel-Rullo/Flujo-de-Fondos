@@ -1,18 +1,30 @@
 window.ChequeService = {
     newChequePropio: async (cheque) => {
-        return await apiPost('/cheques/propios/new', cheque);
+        return await apiPost('/cheques/propios/emision', cheque);
     },
     
     newChequeTercero: async (cheque) => {
-        return await apiPost('/cheques/terceros/new', cheque);
+        return await apiPost('/cheques/terceros/emision', cheque);
     },
 
-    listChequesPropios: async () => {
-        return await apiGet('/cheques/propios/list');
+    listChequesPropios: async (estado) => {
+        return await apiPost('/cheques/propios/list', { estado });
     },
     
-    listChequesTerceros: async () => {
-        return await apiGet('/cheques/terceros/list');
+    listChequesTerceros: async (estado) => {
+        return await apiPost('/cheques/terceros/list', { estado });
+    },
+
+    listBajasPropios: async (estado) => {
+        return await apiPost('/cheques/propios/bajas', { estado });
+    },
+
+    listBajasTerceros: async (estado) => {
+        return await apiPost('/cheques/terceros/bajas', { estado });
+    },
+
+    getCheque: async (id) => {
+        return await apiPost('/cheques/detalle', { id_cheque: id });
     },
 
     imputarChequePropio: async (cheque) => {
@@ -23,7 +35,11 @@ window.ChequeService = {
         return await apiPost('/cheques/terceros/imputar', cheque);
     },
 
-    rechazarCheque: async (id) => {
-        return await apiPost('/cheques/rechazar', id);
+    rechazarCheque: async (cheque) => {
+        return await apiPost('/cheques/rechazar', cheque);
+    },
+
+    anularCheque: async (cheque) => {
+        return await apiPost('/cheques/anular', cheque);
     }
 }

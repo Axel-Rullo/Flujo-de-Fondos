@@ -20,6 +20,17 @@ public class TerceroRepository {
 
     // ── MAPPERS ──────────────────────────────────────────────────────
 
+    private final RowMapper<Tercero> tercerosNamesMapper = (rs, rowNum) -> new Tercero(
+        rs.getLong("id_clipro"),
+        rs.getString("nombre"),
+        null,
+        null,
+        null,
+        null,
+        rs.getString("tipo"),
+        null
+    );
+
     private final RowMapper<Tercero> terceroMapper = (rs, rowNum) -> new Tercero(
         rs.getLong("id_clipro"),
         rs.getString("nombre"),
@@ -42,6 +53,13 @@ public class TerceroRepository {
     }
 
     // ── LISTADO DE TERCEROS ───────────────────────────────────────────
+
+    public List<Tercero> findAllTercerosNames() {
+        return jdbcTemplate.query(
+                "SELECT id_clipro, nombre, tipo FROM clientes_proveedores WHERE estado='E' ORDER BY nombre ASC",
+                tercerosNamesMapper
+        );
+    }
 
     public List<Tercero> findAllActive() {
         return jdbcTemplate.query(

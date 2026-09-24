@@ -9,6 +9,7 @@
     --orange: orange;
     --blue: blue;
     --gray: gray;
+    --gold: gold;
     --text-muted: rgba(255, 255, 255, 0.4);
 
     /* ── TITLEBAR ──────────────────────────────────────────────────── */
@@ -67,4 +68,9 @@
     --modal-box-bg:  #1a2540;
     --modal-shadow:  rgba(0, 0, 0, 0.4);
     --modal-close:   #888;
+
+    /* ── RESUMEN CHEQUE ────────────────────────────────────────────── */
+    --dia-grid-hover-bg: rgba(255, 255, 255, 0.05);
+    --gold-glow:         rgba(255, 215, 0, 0.35);
+    --gold-glow-hover:   rgba(255, 215, 0, 0.7); /* Brillo mucho más intenso al hacer hover */
 }

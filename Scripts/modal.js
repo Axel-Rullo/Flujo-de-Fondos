@@ -4,7 +4,10 @@ const overlay = document.getElementById('modal-overlay');
 const closeBtn = document.querySelector('.modal-close');
 const modalBody = document.getElementById('modal-body');
 
-window.abrirModal = async function(archivo) {
+// Mientras es true, el modal no se puede cerrar con ESC ni con la X
+let modalObligatorio = false;
+
+window.abrirModal = async function(archivo, obligatorio = false) {
     if (!overlay) return;
     try {
         window.cerrarTodosLosMenus?.();
@@ -12,6 +15,8 @@ window.abrirModal = async function(archivo) {
         const formGrid = modalBody?.querySelector('.form-grid');
         if (formGrid) ajustarColumnas(formGrid);
         await Promise.all(window.formLoaders.map(fn => fn(modalBody)));
+        modalObligatorio = obligatorio;
+        if (closeBtn) closeBtn.style.display = obligatorio ? 'none' : '';
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
         return modalBody;
@@ -29,6 +34,7 @@ window.cerrarModal = function() {
     setTimeout(() => {
         if (modalBody) modalBody.innerHTML = '';
     }, 200);
+    window.dispatchEvent(new CustomEvent('modal:cerrado'));
 };
 
 // ── Event Listeners ──
@@ -38,16 +44,9 @@ if (closeBtn) {
     closeBtn.addEventListener('click', window.cerrarModal);
 }
 
-// Cerrar al hacer clic fuera del modal
-overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) {
-        window.cerrarModal();
-    }
-});
-
 // Cerrar con la tecla Escape
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+    if (e.key === 'Escape' && overlay.classList.contains('open') && !modalObligatorio) {
         window.cerrarModal();
     }
 });

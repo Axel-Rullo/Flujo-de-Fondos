@@ -43,16 +43,17 @@ INSERT INTO clientes_proveedores (id_clipro, nombre, dni_cuit, telefono, email, 
 
 -- Volcando estructura para tabla cuentas
 CREATE TABLE IF NOT EXISTS cuentas (
-  id_cuenta INTEGER PRIMARY KEY AUTOINCREMENT,
-  nombre TEXT NOT NULL,
-  id_banco INTEGER,
-  FOREIGN KEY (id_banco) REFERENCES bancos (id_banco)
+    id_cuenta INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    saldo DECIMAL(15,2),
+    id_banco INTEGER,
+    FOREIGN KEY (id_banco) REFERENCES bancos (id_banco)
 );
 
-INSERT INTO cuentas (id_cuenta, nombre, id_banco) VALUES
-	(1, 'Caja Casa Central', null),
-	(2, 'Banco Principal', 6),
-	(3, 'Banco Secundario', 3);
+INSERT INTO cuentas (id_cuenta, nombre, saldo, id_banco) VALUES
+	(1, 'Caja Casa Central', 1024000, null),
+	(2, 'Banco Principal', 3860000, 6),
+	(3, 'Banco Secundario', 560000, 3);
 
 -- Volcando estructura para tabla bancos (limitado a 6 bancos)
 CREATE TABLE IF NOT EXISTS bancos (
@@ -171,120 +172,115 @@ CREATE TABLE IF NOT EXISTS conceptos (
 );
 
 INSERT INTO conceptos (id_concepto, cod_concepto, concepto, clasificacion) VALUES
-(1, '1.01', 'Cobranzas', 1),
-(2, '1.02', 'Pagos a Proveedores', 1),
-(3, '1.03', 'Sueldos y Cargas Sociales', 1),
-(4, '1.04', 'Gastos Generales', 1),
-(5, '1.05', 'Gastos de Alquiler', 1),
-(6, '1.06', 'Impuestos y Tasas', 1),
-(7, '2.01', 'Préstamos Recibidos', 2),
-(8, '2.02', 'Pago de Préstamos', 2),
-(9, '2.03', 'Intereses Pagados', 2),
-(10, '2.04', 'Intereses Cobrados', 2),
-(11, '2.05', 'Adelantos en Cuenta Corriente', 2),
-(12, '3.01', 'Venta de Bienes de Uso', 3),
-(13, '3.02', 'Compra de Bienes de Uso', 3),
-(14, '3.03', 'Venta de Inmuebles', 3),
-(15, '3.04', 'Compra de Rodados', 3);
+    (1, '1.01', 'Cobranzas', 1),
+    (2, '1.02', 'Pagos a Proveedores', 1),
+    (3, '1.03', 'Sueldos y Cargas Sociales', 1),
+    (4, '1.04', 'Gastos Generales', 1),
+    (5, '1.05', 'Gastos de Alquiler', 1),
+    (6, '1.06', 'Impuestos y Tasas', 1),
+    (7, '2.01', 'Préstamos Recibidos', 2),
+    (8, '2.02', 'Pago de Préstamos', 2),
+    (9, '2.03', 'Intereses Pagados', 2),
+    (10, '2.04', 'Intereses Cobrados', 2),
+    (11, '2.05', 'Adelantos en Cuenta Corriente', 2),
+    (12, '3.01', 'Venta de Bienes de Uso', 3),
+    (13, '3.02', 'Compra de Bienes de Uso', 3),
+    (14, '3.03', 'Venta de Inmuebles', 3),
+    (15, '3.04', 'Compra de Rodados', 3);
 
 CREATE TABLE IF NOT EXISTS cheques (
-  id_cheque INTEGER PRIMARY KEY AUTOINCREMENT,
-  clase TEXT NOT NULL,              -- 'Propio' | 'Tercero'
-  clasificacion TEXT NOT NULL,      -- 'Emitido' | 'A Cobrar'
-  numero TEXT NOT NULL,
-  importe DECIMAL(15,2) NOT NULL,
-  tipo TEXT NOT NULL,               -- 'Comun' | 'Diferido'
-  fecha_entrega DATE,
-  fecha_cobro DATE,
-  fecha_destino DATE,
-  estado TEXT,
-  observacion TEXT,
-  uso TEXT,                         -- 'Deposito' | 'Endoso', solo aplica a terceros
-  id_titular INTEGER,               -- alta: emisor (terceros) o destino (propios)
-  id_titular_destino INTEGER,       -- imputación: a quién se endosa/deposita (terceros)
-  id_cuenta_banco INTEGER,          -- alta propios: cuenta bancaria propia
-  id_banco INTEGER,                 -- alta terceros: banco ajeno
-  id_concepto_entrada INTEGER,      -- alta terceros: Cuenta Entrada
-  id_concepto_salida INTEGER,       -- alta propios: Cuenta Salida
-  id_cuenta_entrada INTEGER,        -- imputación (real)
-  id_cuenta_salida INTEGER,         -- imputación (real)
-  id_usuario INTEGER,               -- usuario que carga el cheque
-  FOREIGN KEY (id_titular) REFERENCES clientes_proveedores (id_clipro),
-  FOREIGN KEY (id_titular_destino) REFERENCES clientes_proveedores (id_clipro),
-  FOREIGN KEY (id_cuenta_banco) REFERENCES cuentas (id_cuenta),
-  FOREIGN KEY (id_banco) REFERENCES bancos (id_banco),
-  FOREIGN KEY (id_concepto_entrada) REFERENCES conceptos (id_concepto),
-  FOREIGN KEY (id_concepto_salida) REFERENCES conceptos (id_concepto),
-  FOREIGN KEY (id_cuenta_entrada) REFERENCES cuentas (id_cuenta),
-  FOREIGN KEY (id_cuenta_salida) REFERENCES cuentas (id_cuenta),
-  FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+    id_cheque INTEGER PRIMARY KEY AUTOINCREMENT,
+    clase TEXT NOT NULL,              -- 'Propio' | 'Tercero'
+    clasificacion TEXT NOT NULL,      -- 'Emitido' | 'A Cobrar'
+    numero TEXT NOT NULL,
+    importe DECIMAL(15,2) NOT NULL,
+    tipo TEXT NOT NULL,               -- 'Comun' | 'Diferido'
+    fecha_emision DATE NOT NULL,
+    fecha_pago DATE NOT NULL,
+    fecha_destino DATE,
+    estado TEXT NOT NULL,
+    observacion TEXT,
+    motivo TEXT,
+    uso TEXT,                         -- 'Deposito' | 'Endoso', solo aplica a terceros
+    id_clipro_emision INTEGER NOT NULL,        -- alta: emisor (terceros) o destino (propios)
+    id_clipro_imputar INTEGER,        -- imputación: a quién se endosa (terceros)
+    id_cuenta_propia_emision INTEGER, -- alta propios: cuenta propia
+    id_banco_emision INTEGER,         -- alta terceros: banco ajeno
+    id_concepto_emision INTEGER NOT NULL,      -- alta terceros: Cuenta Entrada / alta propios: Cuenta Salida
+    id_cuenta_propia_imputar INTEGER, -- imputación (real): depósito
+    id_concepto_imputar INTEGER,      -- imputación (real): endoso
+    id_usuario INTEGER NOT NULL,      -- usuario que carga el cheque
+    FOREIGN KEY (id_clipro_emision) REFERENCES clientes_proveedores (id_clipro),
+    FOREIGN KEY (id_clipro_imputar) REFERENCES clientes_proveedores (id_clipro),
+    FOREIGN KEY (id_cuenta_propia_emision) REFERENCES cuentas (id_cuenta),
+    FOREIGN KEY (id_banco_emision) REFERENCES bancos (id_banco),
+    FOREIGN KEY (id_concepto_emision) REFERENCES conceptos (id_concepto),
+    FOREIGN KEY (id_cuenta_propia_imputar) REFERENCES cuentas (id_cuenta),
+    FOREIGN KEY (id_concepto_imputar) REFERENCES conceptos (id_concepto),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
 );
 
-INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_entrega, fecha_cobro, fecha_destino, estado, observacion, uso, id_titular, id_titular_destino, id_cuenta_banco, id_banco, id_concepto_entrada, id_concepto_salida, id_cuenta_entrada, id_cuenta_salida, id_usuario) VALUES
+INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_emision, fecha_pago, fecha_destino, estado, observacion, motivo, uso, id_clipro_emision, id_clipro_imputar, id_cuenta_propia_emision, id_banco_emision, id_concepto_emision, id_cuenta_propia_imputar, id_concepto_imputar, id_usuario) VALUES
+    -- ==== Propios (P) / Emitidos, estado Pendiente (P) ====
+    ('P', 'E', 'CH-P-0001', 184500.00, 'C', '2026-09-19', '2026-09-19', NULL, 'P', 'Pago de mercadería', NULL, NULL, 3, NULL, 2, NULL, 2, NULL, NULL, 1),
+    ('P', 'E', 'CH-P-0002', 96800.00, 'C', '2026-09-20', '2026-09-20', NULL, 'P', 'Pago de combustible', NULL, NULL, 18, NULL, 2, NULL, 4, NULL, NULL, 2),
+    ('P', 'E', 'CH-P-0003', 320000.00, 'D', '2026-09-20', '2026-10-20', NULL, 'P', 'Pago diferido a 30 días', NULL, NULL, 6, NULL, 3, NULL, 2, NULL, NULL, 3),
+    ('P', 'E', 'CH-P-0004', 275000.00, 'D', '2026-09-19', '2026-11-18', NULL, 'P', 'Pago diferido a 60 días', NULL, NULL, 12, NULL, 3, NULL, 2, NULL, NULL, 4),
+    ('P', 'E', 'CH-P-0005', 210000.00, 'D', '2026-08-26', '2026-09-25', NULL, 'P', 'Vence el viernes', NULL, NULL, 16, NULL, 2, NULL, 13, NULL, NULL, 5),
 
--- ==== Propios (P) / Emitidos, estado Pendiente (P) ====
-('P', 'E', 'CH-P-0025', 78000.00, 'C', '2026-07-10', '2026-08-10', NULL, 'P', 'Pago vencido, sin gestión', NULL, 14, NULL, 5, NULL, NULL, 4, NULL, NULL, 8),
-('P', 'E', 'CH-P-0026', 210000.00, 'D', '2026-07-20', '2026-08-11', NULL, 'P', 'Pago próximo a vencer', NULL, 16, NULL, 7, NULL, NULL, 6, NULL, NULL, 9),
-('P', 'E', 'CH-P-0027', 67000.00, 'C', '2026-07-25', '2026-08-13', NULL, 'P', 'Pago por vencer', NULL, 24, NULL, 1, NULL, NULL, 2, NULL, NULL, 3),
-('P', 'E', 'CH-P-0028', 185000.00, 'D', '2026-07-28', '2026-08-15', NULL, 'P', 'Pago por vencer en breve', NULL, 26, NULL, 2, NULL, NULL, 4, NULL, NULL, 4),
-('P', 'E', 'CH-P-0029', 42000.00, 'C', '2026-09-05', '2026-09-21', NULL, 'P', 'Pago pendiente', NULL, 28, NULL, 8, NULL, NULL, 2, NULL, NULL, 5),
-('P', 'E', 'CH-P-0030', 260000.00, 'D', '2026-09-08', '2026-09-29', NULL, 'P', 'Pago pendiente', NULL, 1, NULL, 9, NULL, NULL, 6, NULL, NULL, 6),
-('P', 'E', 'CH-P-0031', 99000.00, 'C', '2026-09-10', '2026-10-06', NULL, 'P', 'Pago pendiente', NULL, 5, NULL, 3, NULL, NULL, 3, NULL, NULL, 7),
-('P', 'E', 'CH-P-0032', 130000.00, 'D', '2026-09-12', '2026-10-13', NULL, 'P', 'Pago pendiente, vencimiento en octubre', NULL, 9, NULL, 6, NULL, NULL, 2, NULL, NULL, 8),
-('P', 'E', 'CH-P-0033', 88000.00, 'C', '2026-09-15', '2026-10-21', NULL, 'P', 'Pago pendiente', NULL, 11, NULL, 10, NULL, NULL, 8, NULL, NULL, 9),
-('P', 'E', 'CH-P-0034', 176000.00, 'D', '2026-09-18', '2026-11-02', NULL, 'P', 'Pago diferido a mediano plazo', NULL, 13, NULL, 5, NULL, NULL, 4, NULL, NULL, 10),
-('P', 'E', 'CH-P-0035', 54000.00, 'C', '2026-09-20', '2026-11-09', NULL, 'P', 'Pago pendiente', NULL, 15, NULL, 7, NULL, NULL, 2, NULL, NULL, 1),
+    -- ==== Propios (P) / Emitidos, estado Cobrado (C) ====
+    ('P', 'E', 'CH-P-0006', 58000.00, 'C', '2026-08-31', '2026-08-31', '2026-09-02', 'C', 'Cobrado por el proveedor', NULL, NULL, 8, NULL, 2, NULL, 4, NULL, NULL, 6),
+    ('P', 'E', 'CH-P-0007', 72500.00, 'C', '2026-09-08', '2026-09-08', '2026-09-09', 'C', 'Cobrado por el proveedor', NULL, NULL, 20, NULL, 3, NULL, 2, NULL, NULL, 7),
+    ('P', 'E', 'CH-P-0008', 150000.00, 'D', '2026-07-27', '2026-08-26', '2026-08-27', 'C', 'Diferido cobrado un día después del vencimiento', NULL, NULL, 4, NULL, 2, NULL, 2, NULL, NULL, 8),
+    ('P', 'E', 'CH-P-0009', 240000.00, 'D', '2026-08-12', '2026-09-11', '2026-09-14', 'C', 'Diferido cobrado el lunes siguiente', NULL, NULL, 24, NULL, 3, NULL, 2, NULL, NULL, 1),
 
--- ==== Terceros (T) / A Cobrar, estado Pendiente (P) ====
-('T', 'A', 'CH-T-0025', 71000.00, 'C', '2026-07-10', '2026-08-10', NULL, 'P', 'Cobro vencido, sin gestión', NULL, 15, NULL, NULL, 2, 5, NULL, NULL, NULL, 8),
-('T', 'A', 'CH-T-0026', 208000.00, 'D', '2026-07-20', '2026-08-11', NULL, 'P', 'Cobro próximo a vencer', NULL, 17, NULL, NULL, 3, 1, NULL, NULL, NULL, 9),
-('T', 'A', 'CH-T-0027', 59000.00, 'C', '2026-07-25', '2026-08-13', NULL, 'P', 'Cobro por vencer', NULL, 25, NULL, NULL, 6, 7, NULL, NULL, NULL, 3),
-('T', 'A', 'CH-T-0028', 172000.00, 'D', '2026-07-28', '2026-08-15', NULL, 'P', 'Cobro por vencer en breve', NULL, 27, NULL, NULL, 2, 1, NULL, NULL, NULL, 4),
-('T', 'A', 'CH-T-0029', 38000.00, 'C', '2026-09-05', '2026-09-22', NULL, 'P', 'Cobro pendiente', NULL, 29, NULL, NULL, 5, 1, NULL, NULL, NULL, 5),
-('T', 'A', 'CH-T-0030', 244000.00, 'D', '2026-09-08', '2026-10-01', NULL, 'P', 'Cobro pendiente', NULL, 2, NULL, NULL, 1, 5, NULL, NULL, NULL, 6),
-('T', 'A', 'CH-T-0031', 87000.00, 'C', '2026-09-10', '2026-10-08', NULL, 'P', 'Cobro pendiente', NULL, 4, NULL, NULL, 2, 1, NULL, NULL, NULL, 7),
-('T', 'A', 'CH-T-0032', 122000.00, 'D', '2026-09-12', '2026-10-15', NULL, 'P', 'Cobro pendiente', NULL, 6, NULL, NULL, 1, 1, NULL, NULL, NULL, 8),
-('T', 'A', 'CH-T-0033', 76000.00, 'C', '2026-09-15', '2026-10-23', NULL, 'P', 'Cobro pendiente a mediano plazo', NULL, 8, NULL, NULL, 3, 7, NULL, NULL, NULL, 9),
-('T', 'A', 'CH-T-0034', 165000.00, 'D', '2026-09-18', '2026-11-04', NULL, 'P', 'Cobro pendiente', NULL, 10, NULL, NULL, 6, 1, NULL, NULL, NULL, 10),
-('T', 'A', 'CH-T-0035', 51000.00, 'C', '2026-09-20', '2026-11-11', NULL, 'P', 'Cobro con vencimiento lejano', NULL, 12, NULL, NULL, 3, 5, NULL, NULL, NULL, 1),
+    -- ==== Propios (P) / Emitidos, estado Rechazado (R) ====
+    ('P', 'E', 'CH-P-0010', 135000.00, 'D', '2026-07-20', '2026-08-19', '2026-08-20', 'R', 'Rechazado por el banco', 'Fondos insuficientes en la cuenta', NULL, 28, NULL, 3, NULL, 2, NULL, NULL, 2),
+    ('P', 'E', 'CH-P-0011', 88000.00, 'C', '2026-09-01', '2026-09-01', '2026-09-03', 'R', 'Rechazado por el banco', 'Firma no coincide con la registrada', NULL, 10, NULL, 2, NULL, 2, NULL, NULL, 3),
+    ('P', 'E', 'CH-P-0012', 165000.00, 'D', '2026-08-03', '2026-09-02', '2026-09-04', 'R', 'Rechazado por el banco', 'Importe en letras no coincide con el numérico', NULL, 26, NULL, 2, NULL, 2, NULL, NULL, 4),
 
--- ==== Propios (P) / Emitidos, estado Cobrado (C) ====
-('P', 'E', 'CH-P-0036', 95000.00, 'C', '2026-06-10', '2026-07-10', '2026-07-10', 'C', 'Pago cobrado en término', NULL, 3, NULL, 1, NULL, NULL, 2, NULL, NULL, 1),
-('P', 'E', 'CH-P-0037', 145000.00, 'D', '2026-06-15', '2026-07-15', '2026-07-16', 'C', 'Pago diferido cobrado', NULL, 8, NULL, 6, NULL, NULL, 4, NULL, NULL, 3),
-('P', 'E', 'CH-P-0038', 72000.00, 'C', '2026-06-20', '2026-07-20', '2026-07-20', 'C', 'Pago cobrado al vencimiento', NULL, 16, NULL, 2, NULL, NULL, 6, NULL, NULL, 5),
-('P', 'E', 'CH-P-0039', 310000.00, 'D', '2026-05-01', '2026-06-01', '2026-06-02', 'C', 'Pago diferido cobrado con un día de demora', NULL, 24, NULL, 9, NULL, NULL, 3, NULL, NULL, 7),
-('P', 'E', 'CH-P-0040', 58000.00, 'C', '2026-07-01', '2026-08-01', '2026-08-01', 'C', 'Pago cobrado correctamente', NULL, 10, NULL, 3, NULL, NULL, 8, NULL, NULL, 9),
+    -- ==== Propios (P) / Emitidos, estado Anulado (A) ====
+    ('P', 'E', 'CH-P-0013', 49000.00, 'C', '2026-09-14', '2026-09-14', '2026-09-15', 'A', 'Anulado antes de entregarlo', 'Error en el importe al emitir, se reemplaza por otro cheque', NULL, 30, NULL, 3, NULL, 2, NULL, NULL, 5),
 
--- ==== Terceros (T) / A Cobrar, estado Cobrado (C) ====
-('T', 'A', 'CH-T-0036', 82000.00, 'C', '2026-06-05', '2026-07-05', '2026-07-05', 'C', 'Cobro depositado en banco', 'D', 15, NULL, NULL, 5, 1, NULL, 6, NULL, 8),
-('T', 'A', 'CH-T-0037', 195000.00, 'D', '2026-06-12', '2026-07-12', '2026-07-13', 'C', 'Cobro diferido depositado', 'D', 25, NULL, NULL, 3, 5, NULL, 8, NULL, 4),
-('T', 'E', 'CH-T-0038', 67000.00, 'C', '2026-06-18', '2026-07-18', '2026-07-18', 'C', 'Cobro endosado a proveedor', 'E', 29, 6, NULL, 2, 1, NULL, NULL, 2, 6),
-('T', 'E', 'CH-T-0039', 230000.00, 'D', '2026-05-10', '2026-06-10', '2026-06-10', 'C', 'Cobro diferido endosado', 'E', 4, 12, NULL, 1, 7, NULL, NULL, 5, 10),
-('T', 'A', 'CH-T-0040', 48000.00, 'C', '2026-07-05', '2026-08-05', '2026-08-05', 'C', 'Cobro depositado en caja', 'D', 8, NULL, NULL, 6, 1, NULL, 1, NULL, 3),
+    -- ==== Terceros (T) / A Cobrar, estado Pendiente (P) ====
+    ('T', 'A', 'CH-T-0001', 62000.00, 'C', '2026-09-19', '2026-09-19', NULL, 'P', 'Cobranza de venta', NULL, NULL, 1, NULL, NULL, 1, 1, NULL, NULL, 1),
+    ('T', 'A', 'CH-T-0002', 118000.00, 'C', '2026-09-20', '2026-09-20', NULL, 'P', 'Cobranza de venta', NULL, NULL, 11, NULL, NULL, 4, 1, NULL, NULL, 2),
+    ('T', 'A', 'CH-T-0003', 225000.00, 'D', '2026-09-20', '2026-10-20', NULL, 'P', 'Cheque diferido a 30 días', NULL, NULL, 2, NULL, NULL, 2, 1, NULL, NULL, 3),
+    ('T', 'A', 'CH-T-0004', 190000.00, 'D', '2026-09-19', '2026-11-18', NULL, 'P', 'Cheque diferido a 60 días', NULL, NULL, 15, NULL, NULL, 5, 1, NULL, NULL, 4),
+    ('T', 'A', 'CH-T-0005', 145000.00, 'D', '2026-08-26', '2026-09-25', NULL, 'P', 'Vence el viernes', NULL, NULL, 13, NULL, NULL, 1, 1, NULL, NULL, 5),
 
--- ==== Propios (P) / Emitidos, estado Rechazado (R) ====
-('P', 'E', 'CH-P-0041', 115000.00, 'D', '2026-06-01', '2026-07-01', NULL, 'R', 'Rechazado por fondos insuficientes', NULL, 20, NULL, 7, NULL, NULL, 2, NULL, NULL, 4),
-('P', 'E', 'CH-P-0042', 43000.00, 'C', '2026-06-25', '2026-07-25', NULL, 'R', 'Rechazado por firma no registrada', NULL, 26, NULL, 5, NULL, NULL, 6, NULL, NULL, 6),
-('P', 'E', 'CH-P-0043', 200000.00, 'D', '2026-05-15', '2026-06-15', NULL, 'R', 'Rechazado por cuenta cerrada', NULL, 18, NULL, 9, NULL, NULL, 4, NULL, NULL, 8),
+    -- ==== Terceros (T) / A Cobrar, estado Cobrado (C) ====
+    ('T', 'A', 'CH-T-0006', 54000.00, 'C', '2026-09-01', '2026-09-01', '2026-09-02', 'C', 'Depositado en cuenta', NULL, 'D', 7, NULL, NULL, 2, 1, 2, NULL, 6),
+    ('T', 'A', 'CH-T-0007', 210000.00, 'D', '2026-07-29', '2026-08-28', '2026-08-31', 'C', 'Depositado el lunes siguiente al vencimiento', NULL, 'D', 17, NULL, NULL, 1, 1, 3, NULL, 7),
+    ('T', 'A', 'CH-T-0008', 83000.00, 'C', '2026-09-10', '2026-09-10', '2026-09-11', 'C', 'Endosado a proveedor', NULL, 'E', 21, 6, NULL, 1, 1, NULL, 2, 8),
+    ('T', 'A', 'CH-T-0009', 176000.00, 'D', '2026-08-05', '2026-09-04', '2026-09-04', 'C', 'Endosado a proveedor', NULL, 'E', 23, 12, NULL, 3, 1, NULL, 2, 1),
 
--- ==== Terceros (T) / A Cobrar, estado Rechazado (R) ====
-('T', 'A', 'CH-T-0041', 93000.00, 'C', '2026-06-08', '2026-07-08', NULL, 'R', 'Rechazado sin fondos', NULL, 17, NULL, NULL, 2, 1, NULL, NULL, NULL, 5),
-('T', 'A', 'CH-T-0042', 156000.00, 'D', '2026-06-20', '2026-07-20', NULL, 'R', 'Rechazado por defecto formal', NULL, 21, NULL, NULL, 1, 5, NULL, NULL, NULL, 7),
-('T', 'A', 'CH-T-0043', 78000.00, 'C', '2026-05-20', '2026-06-20', NULL, 'R', 'Rechazado por cuenta inhabilitada', NULL, 13, NULL, NULL, 4, 1, NULL, NULL, NULL, 1);
+    -- ==== Terceros (T) / A Cobrar, estado Rechazado (R) ====
+    ('T', 'A', 'CH-T-0010', 132000.00, 'D', '2026-07-22', '2026-08-21', '2026-08-24', 'R', 'Rechazado por el banco librador', 'Fondos insuficientes', NULL, 25, NULL, NULL, 1, 1, NULL, NULL, 2),
+    ('T', 'A', 'CH-T-0011', 67000.00, 'C', '2026-09-03', '2026-09-03', '2026-09-08', 'R', 'Rechazado por el banco librador', 'Cuenta cerrada del librador', NULL, 29, NULL, NULL, 1, 1, NULL, NULL, 3),
+    ('T', 'A', 'CH-T-0012', 198000.00, 'D', '2026-08-10', '2026-09-09', '2026-09-11', 'R', 'Rechazado por el banco librador', 'Defecto formal: enmienda sin salvar en la fecha de pago', NULL, 5, NULL, NULL, 1, 1, NULL, NULL, 4),
+
+    -- ==== Terceros (T) / A Cobrar, estado Anulado (A) ====
+    ('T', 'A', 'CH-T-0013', 91000.00, 'C', '2026-09-15', '2026-09-15', '2026-09-16', 'A', 'Anulado, cargado por error', 'El cliente entregó el cheque por otro importe', NULL, 11, NULL, NULL, 4, 1, NULL, NULL, 5);
 
 CREATE TABLE IF NOT EXISTS movimientos (
-  id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
-  id_concepto INTEGER,
-  id_cuenta INTEGER,
-  fecha DATE,
-  importe DECIMAL(15,2),
-  id_usuario INTEGER,
-  id_sucursal INTEGER,
-  observaciones TEXT,
-  id_tipo INTEGER,
-  FOREIGN KEY (id_concepto) REFERENCES conceptos (id_concepto),
-  FOREIGN KEY (id_cuenta) REFERENCES cuentas (id_cuenta),
-  FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario),
-  FOREIGN KEY (id_sucursal) REFERENCES sucursales (id_sucursal),
-  FOREIGN KEY (id_tipo) REFERENCES tipos (id_tipo)
+    id_movimiento INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha DATE,
+    id_cuenta INTEGER,
+    id_concepto INTEGER,
+    ingreso DECIMAL(15,2),
+    egreso DECIMAL(15,2),
+    saldo DECIMAL(15,2),
+    observaciones TEXT,
+    ch_endosado BOOLEAN NOT NULL DEFAULT FALSE,
+    id_usuario INTEGER,
+    id_sucursal INTEGER,
+    FOREIGN KEY (id_cuenta) REFERENCES cuentas (id_cuenta),
+    FOREIGN KEY (id_concepto) REFERENCES conceptos (id_concepto),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario),
+    FOREIGN KEY (id_sucursal) REFERENCES sucursales (id_sucursal),
+    CHECK (
+        (ch_endosado = FALSE AND id_cuenta IS NOT NULL) OR
+        (ch_endosado = TRUE  AND id_cuenta IS NULL)
+    )
 );

@@ -15,6 +15,10 @@ public class TerceroService {
 
     // ── LISTADOS ──────────────────────────────────────────────────────
 
+    public List<Tercero> findAllTercerosNames() {
+        return terceroRepository.findAllTercerosNames();
+    }
+
     public List<Tercero> listAllActive() {
         return terceroRepository.findAllActive();
     }

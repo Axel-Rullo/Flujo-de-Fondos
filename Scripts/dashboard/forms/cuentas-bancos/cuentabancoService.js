@@ -1,17 +1,21 @@
 window.CuentaBancoService = {
     newCuenta: async (cuenta) => {
-        return await apiPost('/cuentas/new', cuenta);
+        return await apiPost('/cuentas/new/cuentapropia', cuenta);
     },
 
     newBanco: async (banco) => {
-        return await apiPost('/bancos/new', banco);
+        return await apiPost('/bancos/new/banco', banco);
+    },
+
+    newBancoCliPro: async (banco) => {
+        return await apiPost('/bancos/new/clipro', banco);
     },
 
     listCuentas: async () => {
         return await apiGet('/cuentas/list');
     },
 
-    listBancos: async () => {
-        return await apiGet('/bancos/list');
+    listBancosCliPros: async () => {
+        return await apiGet('/bancos/list/clipros');
     }
 }

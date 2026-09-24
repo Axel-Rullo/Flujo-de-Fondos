@@ -20,28 +20,47 @@ public class ChequeController {
 
     // ── ALTA ─────────────────────────────────────────────────────────
 
-    @PostMapping("/cheques/propios/new")
+    @PostMapping("/cheques/propios/emision")
     public ResponseEntity<Map<String, Object>> newChequePropio(@RequestBody Cheque cheque) {
         chequeService.createChequePropio(cheque);
         return ResponseEntity.ok(Map.of("ok", true));
     }
 
-    @PostMapping("/cheques/terceros/new")
+    @PostMapping("/cheques/terceros/emision")
     public ResponseEntity<Map<String, Object>> newChequeTercero(@RequestBody Cheque cheque) {
         chequeService.createChequeTercero(cheque);
         return ResponseEntity.ok(Map.of("ok", true));
     }
 
     // ── LISTADO ──────────────────────────────────────────────────────
-
-    @GetMapping("/cheques/propios/list")
-    public List<Cheque> listAllPropios() {
-        return chequeService.listAllPropios();
+ 
+    @PostMapping("/cheques/propios/list")
+    public List<Cheque> listAllPropios(@RequestBody Cheque cheque) {
+        return chequeService.listAllPropios(cheque.getEstado());
     }
 
-    @GetMapping("/cheques/terceros/list")
-    public List<Cheque> listAllTerceros() {
-        return chequeService.listAllTerceros();
+    @PostMapping("/cheques/terceros/list")
+    public List<Cheque> listAllTerceros(@RequestBody Cheque cheque) {
+        return chequeService.listAllTerceros(cheque.getEstado());
+    }
+
+    // ── HISTORIAL ────────────────────────────────────────────────────
+
+    @PostMapping("/cheques/propios/bajas")
+    public List<Cheque> listBajasPropios(@RequestBody Cheque cheque) {
+        return chequeService.listBajasPropios(cheque.getEstado());
+    }
+
+    @PostMapping("/cheques/terceros/bajas")
+    public List<Cheque> listBajasTerceros(@RequestBody Cheque cheque) {
+        return chequeService.listBajasTerceros(cheque.getEstado());
+    }
+
+    // ── DETALLE ──────────────────────────────────────────────────────
+
+    @PostMapping("/cheques/detalle")
+    public Cheque getCheque(@RequestBody Cheque cheque) {
+        return chequeService.getCheque(cheque.getId_cheque());
     }
 
     // ── IMPUTACIÓN ───────────────────────────────────────────────────
@@ -61,8 +80,16 @@ public class ChequeController {
     // ── RECHAZO ──────────────────────────────────────────────────────
 
     @PostMapping("/cheques/rechazar")
-    public ResponseEntity<Map<String, Object>> rechazarCheque(@RequestBody Long id) {
-        chequeService.rechazarCheque(id);
+    public ResponseEntity<Map<String, Object>> rechazarCheque(@RequestBody Cheque cheque) {
+        chequeService.rechazarCheque(cheque);
+        return ResponseEntity.ok(Map.of("ok", true));
+    }
+
+    // ── ANULACION ────────────────────────────────────────────────────
+
+    @PostMapping("/cheques/anular")
+    public ResponseEntity<Map<String, Object>> anularCheque(@RequestBody Cheque cheque) {
+        chequeService.anularCheque(cheque);
         return ResponseEntity.ok(Map.of("ok", true));
     }
 }

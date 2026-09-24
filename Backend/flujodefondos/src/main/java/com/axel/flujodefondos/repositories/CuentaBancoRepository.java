@@ -2,13 +2,19 @@ package com.axel.flujodefondos.repositories;
 
 import com.axel.flujodefondos.entities.CuentaPropia;
 import com.axel.flujodefondos.entities.Banco;
+import com.axel.flujodefondos.entities.BancoCliPro;
 import com.axel.flujodefondos.entities.Tercero;
+
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("null")
 @Repository
@@ -22,35 +28,31 @@ public class CuentaBancoRepository {
 
     // ── MAPPERS ──────────────────────────────────────────────────────
 
-    private final RowMapper<CuentaPropia> CuentaPropiaMapper = (rs, rowNum) -> new CuentaPropia(
-        rs.getLong("id_cuenta"),
-        rs.getString("nombre"),
-        null,
-        rs.getString("banco")
-    );
+    private final RowMapper<CuentaPropia> cuentaPropiaMapper = new BeanPropertyRowMapper<>(CuentaPropia.class);
 
-    private final RowMapper<Banco> BancoMapper = (rs, rowNum) -> new Banco(
-        rs.getLong("id_banco"),
-        rs.getString("nombre"),
-        null
-    );
+    private final RowMapper<Banco> bancoMapper = new BeanPropertyRowMapper<>(Banco.class);
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
     public List<CuentaPropia> findAllCuentasPropias() {
         return jdbcTemplate.query(
-            "SELECT c.id_cuenta, c.nombre, b.nombre AS banco FROM cuentas c LEFT JOIN bancos b ON b.id_banco = c.id_banco ORDER BY c.nombre ASC", 
-            CuentaPropiaMapper);
+            "SELECT c.id_cuenta, c.nombre, c.saldo, b.nombre AS banco FROM cuentas c LEFT JOIN bancos b ON b.id_banco = c.id_banco ORDER BY c.nombre ASC", 
+            cuentaPropiaMapper);
     }
 
-    public List<Banco> findAllBancosConClientes() {
-        // 1) todos los bancos
+    public List<Banco> findAllBancosNames() {
+        return jdbcTemplate.query(
+            "SELECT id_banco, nombre FROM bancos ORDER BY nombre ASC",
+            bancoMapper
+        );
+    }
+
+    public List<Banco> findAllBancosCliPro() {
         List<Banco> bancos = jdbcTemplate.query(
             "SELECT id_banco, nombre FROM bancos ORDER BY nombre ASC",
-            BancoMapper
+            bancoMapper
         );
 
-        // 2) todos los clientes (solo nombre + alias) con su banco
         List<Object[]> filas = jdbcTemplate.query(
             """
             SELECT bc.id_banco, cp.id_clipro, cp.nombre, bc.alias
@@ -67,15 +69,13 @@ public class CuentaBancoRepository {
             }
         );
 
-        // 3) le asigno a cada banco sus clientes
+        Map<Long, List<Tercero>> clientesPorBanco = new HashMap<>();
+        for (Object[] fila : filas) {
+            clientesPorBanco.computeIfAbsent((Long) fila[0], k -> new ArrayList<>()).add((Tercero) fila[1]);
+        }
+
         for (Banco banco : bancos) {
-            List<Tercero> clientes = new ArrayList<>();
-            for (Object[] fila : filas) {
-                if (fila[0].equals(banco.getId_banco())) {
-                    clientes.add((Tercero) fila[1]);
-                }
-            }
-            banco.setClientes(clientes);
+            banco.setClientes(clientesPorBanco.getOrDefault(banco.getId_banco(), new ArrayList<>()));
         }
 
         return bancos;
@@ -91,6 +91,21 @@ public class CuentaBancoRepository {
         ).stream().findFirst().orElse(null);
     }
 
+    public CuentaPropia findById(Long idCuenta) {
+        return jdbcTemplate.query(
+            "SELECT c.id_cuenta, c.nombre, c.saldo, b.nombre AS banco FROM cuentas c LEFT JOIN bancos b ON b.id_banco = c.id_banco WHERE c.id_cuenta = ?",
+            cuentaPropiaMapper, idCuenta
+        ).stream().findFirst().orElse(null);
+    }
+
+    public BigDecimal getSaldoTotalCuentas() {
+        BigDecimal total = jdbcTemplate.queryForObject(
+            "SELECT COALESCE(SUM(saldo), 0) FROM cuentas",
+            BigDecimal.class
+        );
+        return total;
+    }
+
     public Long findBancoByNombre(String nombre) {
         return jdbcTemplate.query(
             "SELECT id_banco FROM bancos WHERE nombre = ?",
@@ -99,15 +114,35 @@ public class CuentaBancoRepository {
         ).stream().findFirst().orElse(null);
     }
 
+    public Long findBancoCliPro(BancoCliPro bancoclipro) {
+        return jdbcTemplate.query(
+            "SELECT id_banco_clipro FROM bancos_clientprov WHERE id_banco = ? and alias = ?",
+            (rs, rowNum) -> rs.getLong("id_banco_clipro"),
+            bancoclipro.getId_banco(), bancoclipro.getAlias()
+        ).stream().findFirst().orElse(null);
+    }
+
     // ── ALTA ─────────────────────────────────────────────────────────
 
     public void insertCuentaPropia(CuentaPropia cuentapropia) {
-        jdbcTemplate.update("INSERT INTO cuentas (nombre, id_banco) VALUES (?, ?)",
-            cuentapropia.getNombre(), cuentapropia.getId_banco()
+        jdbcTemplate.update("INSERT INTO cuentas (nombre, saldo, id_banco) VALUES (?, ?, ?)",
+            cuentapropia.getNombre(), cuentapropia.getSaldo(), cuentapropia.getId_banco()
         );
     }
 
     public void insertBanco(String nombre) {
         jdbcTemplate.update("INSERT INTO bancos (nombre) VALUES (?)", nombre);
+    }
+
+    public void insertBancoClipro(BancoCliPro bancoclipro) {
+    jdbcTemplate.update("INSERT INTO bancos_clientprov (id_banco, id_clipro, alias) VALUES (?, ?, ?)",
+        bancoclipro.getId_banco(), bancoclipro.getId_clipro(), bancoclipro.getAlias());
+    }
+
+    // ── SALDO ────────────────────────────────────────────────────────
+    public void updateSaldoCuentaPropia(CuentaPropia cuentaPropia) {
+    jdbcTemplate.update(
+        "UPDATE cuentas SET saldo = ? WHERE id_cuenta = ?",
+        cuentaPropia.getSaldo(), cuentaPropia.getId_cuenta());
     }
 }

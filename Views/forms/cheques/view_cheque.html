@@ -18,12 +18,16 @@
             <div class="section-label">Fechas</div>
             <div class="grid">
                 <div class="row">
-                    <span class="label">Fecha de Entrega</span>
-                    <span class="fecha_entrega value"></span>
+                    <span class="label">Fecha de Emision</span>
+                    <span class="fecha_emision value"></span>
+                </div>
+                <div class="row">
+                    <span class="label">Fecha de Pago</span>
+                    <span class="fecha_pago value"></span>
                 </div>
                 <div class="row">
                     <span class="label">Fecha de Cobro</span>
-                    <span class="fecha_cobro value"></span>
+                    <span class="fecha_vencimiento value"></span>
                 </div>
                 <div class="row">
                     <span class="label">Fecha de Destino</span>
@@ -36,15 +40,19 @@
             <div class="grid">
                 <div class="row">
                     <span class="label">Titular original</span>
-                    <span class="titular_original value"></span>
+                    <span class="clipro_emision value"></span>
+                </div>
+                <div class="row">
+                    <span class="cuenta_banco_emision_label label"></span>
+                    <span class="cuenta_banco_emision value"></span>
+                </div>
+                <div class="row">
+                    <span class="concepto_emision_label label"></span>
+                    <span class="concepto_emision value"></span>
                 </div>
                 <div class="row">
                     <span class="label">Otorgado por</span>
                     <span class="otorgado_por value"></span>
-                </div>
-                <div class="row">
-                    <span class="label">Cuenta / Banco</span>
-                    <span class="cuenta_banco value"></span>
                 </div>
             </div>
         </div>
@@ -52,38 +60,37 @@
             <div class="section-label destino"></div>
             <div class="grid">
                 <div class="row">
-                    <span class="titular_destino_label label"></span>
-                    <span class="titular_destino value"></span>
+                    <span class="destino_label label"></span>
+                    <span class="destino value"></span>
                 </div>
-                <div class="row row-cuenta-salida">
-                    <span class="label">Cuenta de salida</span>
-                    <span class="cuenta_salida value"></span>
+                <div class="row row-concepto-imputar">
+                    <span class="label"></span>
+                    <span class="cuenta_concepto_imputar value"></span>
                 </div>
             </div>
         </div>
         <div class="section-cheque">
-            <div class="section-label">Uso y Observaciones</div>
+            <div class="section-label">Uso y Descripciones</div>
             <div class="grid">
                 <div id="uso" class="row">
                     <span class="label">Uso</span>
                     <span class="uso value"></span>
                 </div>
                 <div class="row">
-                    <span class="label">Concepto</span>
-                    <span class="concepto value"></span>
-                </div>
-                <div class="row">
                     <span class="label">Observación</span>
                     <span class="observacion value"></span>
+                </div>
+                <div class="row row-motivo">
+                    <span class="label">Motivo</span>
+                    <span class="motivo value"></span>
                 </div>
             </div>
         </div>
     </div>
     <div class="form-actions">
-        <button type="button" class="btn btn-cancel" data-close-modal>Cancelar</button>
-        <button type="button" id="btn-cancel" class="btn btn-delete">Anular CH</button>
-        <button type="button" class="btn btn-delete" data-close-modal>Rechazar</button>
-        <button type="button" class="btn btn-primary" data-close-modal>Reactivar</button>
-        <button type="submit" id="btn-primary" class="btn btn-primary">Imputar CH</button>
+        <button type="button" class="btn btn-cancel" data-close-modal>Cerrar</button>
+        <button type="button" id="btn-anular" class="btn btn-delete">Anular CH</button>
+        <button type="button" id="btn-reject" class="btn btn-delete">Rechazar</button>
+        <button type="button" id="btn-primary" class="btn btn-primary">Imputar CH</button>
     </div>
 </div>

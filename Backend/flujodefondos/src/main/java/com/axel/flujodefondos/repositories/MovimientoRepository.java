@@ -1,14 +1,12 @@
 package com.axel.flujodefondos.repositories;
 
 import com.axel.flujodefondos.entities.Movimiento;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 @SuppressWarnings("null")
 @Repository
@@ -20,25 +18,30 @@ public class MovimientoRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Movimiento> movimientoMapper = (rs, rowNum) -> new Movimiento(
-        rs.getLong("id_movimiento"),
-        rs.getString("nombre"),
-        rs.getString("id_banco")
-    );
+    private final RowMapper<Movimiento> movimientoMapper = new BeanPropertyRowMapper<>(Movimiento.class);
 
     public List<Movimiento> findAll() {
-        return jdbcTemplate.query("SELECT id_movimiento, nombre, id_banco FROM movimientos ORDER BY nombre ASC", movimientoMapper);
+        return jdbcTemplate.query(
+            "SELECT m.id_movimiento, m.fecha, m.id_cuenta, m.id_concepto, " +
+            "m.ingreso, m.egreso, m.saldo, m.observaciones, m.ch_endosado, " +
+            "m.id_usuario, m.id_sucursal, " +
+            "cu.nombre AS cuenta, co.concepto AS concepto " +
+            "FROM movimientos m " +
+            "LEFT JOIN cuentas cu ON cu.id_cuenta = m.id_cuenta " +
+            "JOIN conceptos co ON co.id_concepto = m.id_concepto " +
+            "ORDER BY fecha ASC",
+            movimientoMapper
+        );
     }
 
-    public Long insert(Movimiento movimiento) {
-        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("movimientos")
-                .usingGeneratedKeyColumns("id_movimiento");
-        
-        Map<String, Object> params = new HashMap<>();
-        params.put("nombre", movimiento.getNombre());
-        params.put("id_banco", movimiento.getId_banco() != null ? Long.parseLong(movimiento.getId_banco()) : null);
-                
-        return insert.executeAndReturnKey(params).longValue();
+    public void insert(Movimiento movimiento) {
+        jdbcTemplate.update(
+            "INSERT INTO movimientos (fecha, id_cuenta, id_concepto, ingreso, egreso, saldo, observaciones, " +
+            "ch_endosado, id_usuario, id_sucursal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            movimiento.getFecha(), movimiento.getId_cuenta(),
+            movimiento.getId_concepto(), movimiento.getIngreso(), movimiento.getEgreso(),
+            movimiento.getSaldo(), movimiento.getObservaciones(), movimiento.getCh_endosado(),
+            movimiento.getId_usuario(), movimiento.getId_sucursal()
+        );
     }
 }

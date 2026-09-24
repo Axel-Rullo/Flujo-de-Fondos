@@ -15,22 +15,25 @@ async function leerHtml(ruta) {
 
 async function ejecutarScripts(contenedor, grupo) {
     document.querySelectorAll(`script[${grupo}]`).forEach(s => s.remove());
+    const promesas = [];
     for (const viejo of contenedor.querySelectorAll('script')) {
         const nuevo = document.createElement('script');
         nuevo.setAttribute(grupo, '');
         if (viejo.src) {
-            await new Promise(resolve => {
+            nuevo.async = false;
+            promesas.push(new Promise(resolve => {
                 nuevo.onload = resolve;
                 nuevo.onerror = () => { console.error('Error al cargar:', viejo.src); resolve(); };
                 nuevo.src = viejo.src;
-                document.head.appendChild(nuevo);
-            });
+            }));
+            document.head.appendChild(nuevo);
         } else {
             nuevo.textContent = viejo.textContent;
             document.head.appendChild(nuevo);
         }
         viejo.remove();
     }
+    await Promise.all(promesas);
 }
 
 // 📄 CARGADORES
@@ -51,6 +54,7 @@ async function cargarRuta() {
         void app.offsetWidth; // reflow → reinicia animación
         app.classList.add('vista-enter');
         await ejecutarScripts(app, 'data-ruta');
+        window.dispatchEvent(new CustomEvent('ruta:lista', { detail: hash }));
     } catch (e) {
         console.error('Error al cargar ruta:', e);
         app.innerHTML = '<p>Vista no encontrada</p>';

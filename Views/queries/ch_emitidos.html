@@ -1,4 +1,15 @@
 <div class="cheques-container">
-    <div id="tabla-cheques-propios"></div>
+    <div class="header_cheques">
+        <div class="title">
+            <h2 class="lista_cheques"></h2>
+        </div>
+        <div class="filtros_cheques">
+            <div class="input_icono">
+                <svg class="icono_input"><use href="#icon-search"/></svg>
+                <input type="text" id="buscador-cheque" class="buscador_cheques" placeholder="Buscar Cheque Emitido...">
+            </div>
+        </div>
+    </div>
+    <div id="tabla-cheques-emitidos"></div>
 </div>
 <script src="Scripts/dashboard/forms/cheques/chequeList.js"></script>

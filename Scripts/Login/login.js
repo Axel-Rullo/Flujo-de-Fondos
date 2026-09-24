@@ -31,13 +31,19 @@ function iniciarLogin() {
 
             if (data.ok) {
                 window.currentUser = data.usuario;
-                showAlert('Inicio de sesión exitoso', "success", 2000, 'top', false);
-                if (data.usuario?.rango === 'Admin') {
-                    btns_admin.forEach(btn => btn.classList.add("admin"));
-                }
-                window.location.hash = 'dashboard';
-                header.classList.add('active');
-                block_login.classList.add('visible');
+                
+                // Mostrar bienvenida primero para que haga el fade-in
+                window.mostrarBienvenida();
+
+                // Cambiar el DOM por detrás una vez que la pantalla de bienvenida esté negra/opaca
+                setTimeout(() => {
+                    if (data.usuario?.rango === 'Admin') {
+                        btns_admin.forEach(btn => btn.classList.add("admin"));
+                    }
+                    header.classList.add('active');
+                    block_login.classList.add('visible');
+                    window.location.hash = 'dashboard';
+                }, 750); // Darle tiempo al CSS para cubrir la pantalla (transición de 0.8s)
             } else {
                 showAlert(data.mensaje, "error", 3000, 'center', true);
                 togglePassword.style.display = 'none';
