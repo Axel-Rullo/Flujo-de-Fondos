@@ -1,95 +1,74 @@
-// graficos.js
-
 (function () {
 
-// ── PALETA DE COLORES (desde theme.css) ───────
+    // ── SALDO TOTAL DE LAS CUENTAS ───────
 
-const themeStyles = getComputedStyle(document.documentElement);
-const colorVar = (nombre) => themeStyles.getPropertyValue(nombre).trim();
+    async function mostrarTotales() {
+        const cuentas_saldo_total = document.querySelector('.total_saldos_cuentas');
 
-Chart.defaults.font.family = "'Inter', sans-serif";
+        const saldoTotal = await window.CuentaBancoService.cuentas_saldo_total();
 
-// ── GRÁFICO CIRCULAR: FLUJO ───────────────────
+        cuentas_saldo_total.textContent = formatearImporte(saldoTotal);
+    }
 
-function renderChartIngresosEgresos() {
-    const ctx = document.getElementById('chart-ingresos-egresos');
-    Chart.getChart(ctx)?.destroy(); // evita conflicto al recargar la vista
+    // ── SALDO POR CUENTA (barras por porcentaje) ──
 
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Cuenta A', 'Cuenta B', 'Cuenta C', 'Cuenta D', 'Cuenta E'],
-            datasets: [{
-                data: [1000000, 2000000, 3000000, 4000000, 5000000],
-                backgroundColor: [colorVar('--orange'), colorVar('--red'), colorVar('--blue'), colorVar('--yellow'), colorVar('--green')],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'bottom', align: 'start', labels: { color: colorVar('--white'), font: { size: 14, weight: 'bold' } } },
-                datalabels: {
-                    color: colorVar('--white'),
-                    font: { weight: 'bold', size: 16 },
-                    formatter: (value) => value.toLocaleString('es-AR'),
-                    textStrokeColor: colorVar('--black'),
-                    textStrokeWidth: 3
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-    });
-}
+    async function renderSaldoPorCuenta() {
+        const contenedor = document.getElementById('cuentas-lista');
 
-// ── GRÁFICO DE BARRAS: CHEQUES ───────────────────
+        const cuentas = await window.CuentaBancoService.listCuentas();
+        const maxSaldo = Math.max(...cuentas.map(c => c.saldo));
 
-function renderChartCheques() {
-    const ctx = document.getElementById('chart-cheques');
-    Chart.getChart(ctx)?.destroy(); // evita conflicto al recargar la vista
+        contenedor.innerHTML = cuentas
+            .slice()
+            .sort((a, b) => b.saldo - a.saldo)
+            .map(c => {
+                const banco = c.banco ? c.banco : 'Caja';
+                const ancho = maxSaldo > 0 ? (c.saldo / maxSaldo) * 100 : 0;
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Corrientes', 'Diferidos', 'A Vencer', 'Vencidos'],
-            datasets: [{
-                data: [4000000, 3000000, 2000000, 1000000],
-                backgroundColor: [colorVar('--green'), colorVar('--blue'), colorVar('--red'), colorVar('--yellow')],
-                borderWidth: 2,
-                borderColor: colorVar('--black'),
-                borderSkipped: false
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false },
-                datalabels: {
-                    color: colorVar('--white'),
-                    font: { weight: 'bold', size: 16 },
-                    formatter: (value) => value.toLocaleString('es-AR'),
-                    textStrokeColor: colorVar('--black'),
-                    textStrokeWidth: 3
-                }
-            },
-            scales: {
-                x: {
-                    ticks: { color: colorVar('--white'), font: { size: 14, weight: 'bold' } },
-                    grid: { display: false },
-                    border: { display: true, color: colorVar('--black'), width: 2 }
-                },
-                y: {
-                    ticks: { color: colorVar('--white'), font: { size: 14, weight: 'bold' } },
-                    grid: { display: false },
-                    border: { display: true, color: colorVar('--black'), width: 2 }
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-    });
-}
+                return `
+                    <div class="cuenta-row">
+                        <span class="nombre">
+                            <span class="nombre-cuenta">${c.nombre}</span>
+                            <span class="nombre-banco">${banco}</span>
+                        </span>
+                        <div class="barra-wrap"><div class="barra" style="width:${ancho}%"></div></div>
+                        <span class="valor">$ ${formatearImporte(c.saldo)}</span>
+                    </div>
+                `;
+            })
+            .join('');
+    }
 
-renderChartIngresosEgresos();
-renderChartCheques();
+    // ── CHEQUES: EMITIDOS VS A COBRAR ─────
 
+    function renderCheques() {
+        const emitidos = { corrientes: 2000000, diferidos: 3000000 };
+        const aCobrar = { corrientes: 4000000, diferidos: 1000000 };
+
+        renderChequeFila('cheque-bars-corrientes', emitidos.corrientes, aCobrar.corrientes);
+        renderChequeFila('cheque-bars-diferidos', emitidos.diferidos, aCobrar.diferidos);
+
+        const totalCorrientes = emitidos.corrientes + aCobrar.corrientes;
+        const totalDiferidos = emitidos.diferidos + aCobrar.diferidos;
+        const totalGeneral = totalCorrientes + totalDiferidos;
+
+        document.querySelector('.total_corrientes').textContent = formatearImporte(totalCorrientes);
+        document.querySelector('.total_diferidos').textContent = formatearImporte(totalDiferidos);
+        document.querySelector('.total_general').textContent = formatearImporte(totalGeneral);
+    }
+
+    function renderChequeFila(idContenedor, valorEmitidos, valorACobrar) {
+        const anchoACobrar = valorEmitidos > 0 ? (valorACobrar / valorEmitidos) * 100 : 0;
+        const anchoEmitidos = valorACobrar > 0 ? (valorEmitidos / valorACobrar) * 100 : 0;
+
+        document.getElementById(idContenedor).innerHTML = `
+            <div class="side left"><div class="bar emitidos" style="width:${anchoEmitidos}%">${formatearImporte(valorEmitidos)}</div></div>
+            <div class="cheque-center">vs</div>
+            <div class="side right"><div class="bar acobrar" style="width:${anchoACobrar}%">${formatearImporte(valorACobrar)}</div></div>
+        `;
+    }
+
+    mostrarTotales();
+    renderSaldoPorCuenta();
+    renderCheques();
 })();

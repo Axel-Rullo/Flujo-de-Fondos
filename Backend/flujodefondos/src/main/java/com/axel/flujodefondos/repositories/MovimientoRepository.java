@@ -44,4 +44,11 @@ public class MovimientoRepository {
             movimiento.getId_usuario(), movimiento.getId_sucursal()
         );
     }
+
+    public String findFechaUltimoMovimiento() {
+    return jdbcTemplate.query(
+        "SELECT fecha FROM movimientos ORDER BY fecha DESC LIMIT 1",
+        (rs, rowNum) -> rs.getString("fecha")
+    ).stream().findFirst().orElse(null);
+}
 }

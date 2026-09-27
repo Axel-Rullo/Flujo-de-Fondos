@@ -6,9 +6,15 @@ window.CliproTemplates = {
         "#B45309", "#C026D3", "#1D4ED8", "#15803D", "#B91C1C",
         "#7E22CE", "#0F766E", "#D97706", "#DB2777", "#475569"
     ],
+
+    colorIndex: 0,
+
     getRandomColor: function() {
-        return this.avatarColors[Math.floor(Math.random() * this.avatarColors.length)];
+        const color = this.avatarColors[this.colorIndex % this.avatarColors.length];
+        this.colorIndex++;
+        return color;
     },
+
     getAvatar: function(clipro, size = 40) {
         const parts = clipro.nombre.trim().split(/\s+/);
         let iniciales = '';
@@ -29,6 +35,8 @@ window.CliproTemplates = {
     },
 
     renderCliprosList: function(clipros, container, estado) {
+        this.colorIndex = 0;
+        
         const html = clipros.map(clipro => {
             const botonAction = estado == 'N' ?
             `<button class="btn-reactive-entity" data-id="${clipro.id}" title="Activar">

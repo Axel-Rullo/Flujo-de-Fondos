@@ -5,5 +5,9 @@ window.movimientoService = {
     
     newMovimiento: async (movimiento) => {
         return await apiPost('/movimiento/new', movimiento);
+    },
+
+    newMovimientoInicial: async () => {
+        return await apiGet('/movimiento/saldo_inicial');
     }
 }

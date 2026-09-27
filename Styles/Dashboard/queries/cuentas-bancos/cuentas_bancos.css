@@ -1,26 +1,58 @@
 .cuentas-bancos {
     display: flex;
     flex-direction: row;
+    gap: 1rem;
     width: 100%;
-    height: 100%; /* Limita la altura para que no desborde hacia abajo */
-    overflow: hidden; /* Evita scroll general en la página */
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--datos-bg);
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 .cuentas_propias,
 .cuentas_terceros {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    overflow-y: auto; /* Activa la barra de scroll individual para cada bloque */
+    background-color: var(--datos-panel-bg);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .cuentas_propias {
     width: 35%;
-    border-right: 1px solid var(--user-divider);
 }
 
 .cuentas_terceros {
     width: 65%;
+}
+
+/* ── Scroll interno ────────────────────────────────────────── */
+
+.scroll_cuentas {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+    overflow-y: auto; /* Activa la barra de scroll individual para cada bloque */
+    scrollbar-gutter: stable; /* Reserva el espacio de la scrollbar para que no corra el contenido al aparecer */
+    box-sizing: border-box;
+}
+
+.scroll_cuentas::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll_cuentas::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll_cuentas::-webkit-scrollbar-thumb {
+    background: var(--border-button-color-1);
+    border-radius: 0.5rem;
+}
+
+.scroll_cuentas::-webkit-scrollbar-thumb:hover {
+    background: var(--white);
 }
 
 /* ── Encabezados ─────────────────────────────────────────── */
@@ -46,6 +78,11 @@
     font-weight: bold;
     margin: 0;
     color: var(--white);
+}
+
+.title_cuentas h2 {
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
 .title_cuentas span,
@@ -179,25 +216,39 @@
     flex-direction: column;
     gap: 0.5rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--border-button-color-1);
-    border-left: 3px solid var(--button-1);
-    background: transparent;
+    border-left: 4px solid var(--c);
+    background: var(--titlebar-btn-active);
     padding: 0.5rem;
-    transition: background 0.15s ease;
+    transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .group_cuenta_propia:hover {
-    background: var(--button-hover-1);
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px -4px var(--c);
+}
+
+.group_cuenta_propia:hover .valores span:last-child {
+    filter: brightness(1.35);
 }
 
 .grupo_banco {
     display: flex;
     flex-direction: column;
     border-radius: 0.5rem;
-    border: 1px solid var(--border-button-color-1);
-    border-left: 3px solid var(--button-1);
-    background: var(--background-1);
+    border-left: 4px solid var(--c);
     overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.grupo_banco:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px -4px var(--c);
+}
+
+.grupo_banco:has(.grupo_banco_header:hover) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px -4px var(--c);
 }
 
 .grupo_banco_header {
@@ -208,16 +259,16 @@
     padding: 0.5rem;
     border: none;
     border-bottom: 1px solid var(--user-divider);
-    background: none;
+    background: var(--grupo-banco-header-bg);
     color: inherit;
     font: inherit;
     text-align: left;
     cursor: pointer;
-    transition: background 0.15s ease;
+    transition: filter 0.15s ease;
 }
 
 .grupo_banco_header:hover {
-    background: var(--button-hover-1);
+    filter: brightness(1.15);
 }
 
 .grupo_banco_titulo {
@@ -227,7 +278,7 @@
 }
 
 .grupo_banco_header .chevron {
-    color: var(--text-muted);
+    color: var(--c);
 }
 
 .grupo_banco_lista {
@@ -236,6 +287,7 @@
     transition: max-height 0.2s ease;
     display: flex;
     flex-direction: column;
+    background: var(--grupo-banco-lista-bg);
 }
 
 .grupo_banco_lista.open {
@@ -249,7 +301,7 @@
 }
 
 .group_cuenta_propia .valores span:last-child {
-    color: var(--limegreen);
+    color: var(--c);
     font-weight: bold;
 }
 

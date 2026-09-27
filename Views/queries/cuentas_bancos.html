@@ -1,44 +1,48 @@
 <div class="cuentas-bancos">
     <div id="cuentas_propias" class="cuentas_propias">
-        <div class="title_cuentas">
-            <h2>Cuentas propias</h2>
-            <span id="cantidad-propias"></span>
-        </div>
-        <button class="new_cuenta_propia" data-modal="Views/forms/cuentas-bancos/new_cuentapropia.html">+ Añadir cuenta propia</button>
-        <div id="buscador_cuentas_propias" class="buscador_cuentas_propias">
-            <div class="input_icono">
-                <svg class="icono_input"><use href="#icon-search"/></svg>
-                <input type="text" id="buscador-propias" class="buscador" placeholder="Buscar cuenta propia...">
+        <div class="scroll_cuentas">
+            <div class="title_cuentas">
+                <h2>Cuentas propias</h2>
+                <span id="cantidad-propias"></span>
             </div>
+            <button class="new_cuenta_propia" data-modal="Views/forms/cuentas-bancos/new_cuentapropia.html">+ Añadir cuenta propia</button>
+            <div id="buscador_cuentas_propias" class="buscador_cuentas_propias">
+                <div class="input_icono">
+                    <svg class="icono_input"><use href="#icon-search"/></svg>
+                    <input type="text" id="buscador-propias" class="buscador" placeholder="Buscar cuenta propia...">
+                </div>
+            </div>
+            <div id="lista_cuentas_propias" class="lista_cuentas_propias"></div>
         </div>
-        <div id="lista_cuentas_propias" class="lista_cuentas_propias"></div>
     </div>
 
     <div id="cuentas_terceros" class="cuentas_terceros">
-        <div class="title_cuentas">
-            <div class="title">
-                <h2>Bancos</h2>
-                <span id="cantidad-terceros"></span>
-            </div>
-            <div class="acciones_terceros">
-                <button class="btn_banco" data-modal="Views/forms/cuentas-bancos/new_banco.html">
-                    + 
-                    <svg class="icono_btn"><use href="#icon-bank"/></svg>
-                </button>
-                <button class="btn_enlazar" data-modal="Views/forms/cuentas-bancos/new_banco_clipro.html">
-                    <svg class="icono_btn"><use href="#icon-link"/></svg>
-                    Enlazar banco y cliente
-                </button>
-                <div id="buscador_cuentas_terceros" class="buscador_cuentas_terceros">
-                    <div class="input_icono">
-                        <svg class="icono_input"><use href="#icon-search"/></svg>
-                        <input type="text" id="buscador-terceros" class="buscador" placeholder="Buscar Banco o Cliente/Proveedor...">
+        <div class="scroll_cuentas">
+            <div class="title_cuentas">
+                <div class="title">
+                    <h2>Bancos</h2>
+                    <span id="cantidad-terceros"></span>
+                </div>
+                <div class="acciones_terceros">
+                    <button class="btn_banco" data-modal="Views/forms/cuentas-bancos/new_banco.html">
+                        + 
+                        <svg class="icono_btn"><use href="#icon-bank"/></svg>
+                    </button>
+                    <button class="btn_enlazar" data-modal="Views/forms/cuentas-bancos/new_banco_clipro.html">
+                        <svg class="icono_btn"><use href="#icon-link"/></svg>
+                        Enlazar banco y cliente
+                    </button>
+                    <div id="buscador_cuentas_terceros" class="buscador_cuentas_terceros">
+                        <div class="input_icono">
+                            <svg class="icono_input"><use href="#icon-search"/></svg>
+                            <input type="text" id="buscador-terceros" class="buscador" placeholder="Buscar Banco o Cliente/Proveedor...">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div id="lista_cuentas_terceros" class="lista_cuentas_terceros"></div>
+            <div id="lista_cuentas_terceros" class="lista_cuentas_terceros"></div>
+        </div>
     </div>
 </div>
 

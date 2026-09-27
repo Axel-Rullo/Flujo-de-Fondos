@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import java.util.List;
 import java.math.BigDecimal;
 
@@ -37,5 +39,37 @@ public class MovimientoService {
 
         movimiento.setSaldo(cuentabancoRepository.getSaldoTotalCuentas());
         movimientoRepository.insert(movimiento);
+    }
+
+    @Transactional
+    public void inicializarSaldosDelMes() {
+        String primerDiaDelMes = LocalDate.now().withDayOfMonth(1).toString();
+
+        String ultimaFecha = movimientoRepository.findFechaUltimoMovimiento();
+        boolean yaHayMovimientoEsteMes = ultimaFecha != null
+            && ultimaFecha.substring(0, 7).equals(primerDiaDelMes.substring(0, 7));
+
+        if (yaHayMovimientoEsteMes) return;
+
+        List<CuentaPropia> cuentas = cuentabancoRepository.findAllCuentasPropias();
+        BigDecimal saldoAcumulado = BigDecimal.ZERO;
+
+        for (CuentaPropia cuenta : cuentas) {
+            BigDecimal saldoCuenta = cuenta.getSaldo() != null ? cuenta.getSaldo() : BigDecimal.ZERO;
+            saldoAcumulado = saldoAcumulado.add(saldoCuenta);
+
+            Movimiento mov = new Movimiento();
+            mov.setFecha(primerDiaDelMes);
+            mov.setId_cuenta(cuenta.getId_cuenta());
+            mov.setId_concepto("1");
+            mov.setIngreso(saldoCuenta);
+            mov.setObservaciones("Saldo inicial del mes");
+            mov.setCh_endosado(false);
+            mov.setId_usuario(null);
+            mov.setId_sucursal(null);
+            mov.setSaldo(saldoAcumulado);
+
+            movimientoRepository.insert(mov);
+        }
     }
 }

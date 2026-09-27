@@ -28,4 +28,9 @@ public class MovimientoController {
         movimientoService.createMovimiento(movimiento);
         return ResponseEntity.ok(Map.of("ok", true));
     }
+
+    @GetMapping("/movimiento/saldo_inicial")
+    public void inicializarSaldosDelMes() {
+        movimientoService.inicializarSaldosDelMes();
+    }
 }

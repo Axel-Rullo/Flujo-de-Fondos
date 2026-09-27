@@ -4,6 +4,7 @@
         if (!containerMovimientos) return;
 
         try {
+            await window.movimientoService.newMovimientoInicial();
             const movimientos = await window.movimientoService.listMovimientos();
             await window.movimientoTemplates.crearTablaMovimientos(movimientos);
         } catch (err) {

@@ -6,7 +6,7 @@
         if (!select) return renderChequeList();
 
         const ts = new TomSelect(select, {
-            wrapperClass: 'ts-wrapper type_cheque',
+            wrapperClass: 'ts-wrapper clase_cheque',
             dropdownParent: 'body',
             dropdownClass: 'ts-dropdown status-dropdown-cheque',
             controlInput: null,
@@ -24,6 +24,7 @@
         const tsClase = new TomSelect(selectClase, {
             wrapperClass: 'ts-wrapper clase_cheque',
             dropdownParent: 'body',
+            dropdownClass: 'ts-dropdown status-dropdown-cheque',
             controlInput: null
         });
         tsClase.setValue('P', true);

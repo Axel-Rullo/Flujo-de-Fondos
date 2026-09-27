@@ -4,7 +4,17 @@ window.ChequeTemplates = {
     //////////////////////////////////////////////
 
     fillChequeModal: async function(ch, container) {
+    // ── BOTONES ──
+    const bloqueado = ch.estado !== 'P';
+    const btnAnular = container.querySelector('#btn-anular');
+    const btnRechazar = container.querySelector('#btn-reject');
+    const btnImputar = container.querySelector('#btn-primary');
+    if (btnAnular) btnAnular.style.display = bloqueado ? 'none' : '';
+    if (btnRechazar) btnRechazar.style.display = bloqueado ? 'none' : '';
+    if (btnImputar) btnImputar.style.display = bloqueado ? 'none' : '';
+
     const cheque = await window.ChequeService.getCheque(ch.id_cheque);
+    
     const view = container.id === 'view_cheque' ? container : container.querySelector('#view_cheque');
     view.dataset.id = cheque.id_cheque;
     view.dataset.clase = cheque.clase;
@@ -32,15 +42,6 @@ window.ChequeTemplates = {
     estadoSection.textContent = estado.texto;
     estadoSection.style.backgroundColor = estado.fondo;
     estadoSection.style.color = estado.color;
-
-    // ── BOTONES ──
-    const bloqueado = cheque.estado !== 'P';
-    const btnAnular = container.querySelector('#btn-anular');
-    const btnRechazar = container.querySelector('#btn-reject');
-    const btnImputar = container.querySelector('#btn-primary');
-    if (btnAnular) btnAnular.disabled = bloqueado;
-    if (btnRechazar) btnRechazar.disabled = bloqueado;
-    if (btnImputar) btnImputar.disabled = bloqueado;
 
     // ── FECHAS ──
     container.querySelector('.fecha_emision').textContent = cheque.fecha_emision || '--';
@@ -95,7 +96,7 @@ window.ChequeTemplates = {
     } else {
         motivoRow.style.display = 'none';
     }
-},
+    },
 
     crearTablaChequesEmitidos: async function(data) {
         if (this.tablaEmitidos) {

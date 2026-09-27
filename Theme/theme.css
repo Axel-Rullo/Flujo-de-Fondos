@@ -39,6 +39,21 @@
 
     --button-hover-1: #1A2740;
 
+    /* ── DATOS GENERALES ───────────────────────────────────────────── */
+    --datos-bg:       #2b3446;
+    --datos-panel-bg: #35405a;
+
+    --emerald: #34D399;
+    --coral:   #FB7185;
+    --amber:   #FBBF24;
+    --violet:  #A78BFA;
+    --lime:    #4ADE80;
+    --sky:     #60A5FA;
+
+    /* ── CUENTAS Y BANCOS ──────────────────────────────────────────── */
+    --grupo-banco-header-bg: rgba(255, 255, 255, 0.10);
+    --grupo-banco-lista-bg:  rgba(0, 0, 0, 0.18);
+
     /* ── NAV ───────────────────────────────────────────────────────── */
     --border-button-color-1: rgba(255, 255, 255, 0.4);
     --color-input: #666;
@@ -72,5 +87,5 @@
     /* ── RESUMEN CHEQUE ────────────────────────────────────────────── */
     --dia-grid-hover-bg: rgba(255, 255, 255, 0.05);
     --gold-glow:         rgba(255, 215, 0, 0.35);
-    --gold-glow-hover:   rgba(255, 215, 0, 0.7); /* Brillo mucho más intenso al hacer hover */
+    --gold-glow-hover:   rgba(255, 215, 0, 0.7);
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController
@@ -30,6 +31,11 @@ public class CuentaBancoController {
     @GetMapping("/bancos/list/clipros")
     public List<Banco> findAllBancosCliPro() {
         return cuentaBancoService.findAllBancosCliPro();
+    }
+
+    @GetMapping("/cuentas/saldo_total")
+    public BigDecimal getSaldoTotalCuentas() {
+        return cuentaBancoService.getSaldoTotalCuentas();
     }
 
     @PostMapping("/cuentas/new/cuentapropia")

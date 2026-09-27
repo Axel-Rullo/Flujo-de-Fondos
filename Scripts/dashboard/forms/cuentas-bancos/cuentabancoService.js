@@ -15,6 +15,10 @@ window.CuentaBancoService = {
         return await apiGet('/cuentas/list');
     },
 
+    cuentas_saldo_total: async () => {
+        return await apiGet('/cuentas/saldo_total');
+    },
+
     listBancosCliPros: async () => {
         return await apiGet('/bancos/list/clipros');
     }

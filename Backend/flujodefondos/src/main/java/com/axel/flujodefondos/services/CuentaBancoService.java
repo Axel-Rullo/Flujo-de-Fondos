@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,10 @@ public class CuentaBancoService {
 
     public List<Banco> findAllBancosCliPro() {
         return cuentaBancoRepository.findAllBancosCliPro();
+    }
+
+    public BigDecimal getSaldoTotalCuentas() {
+        return cuentaBancoRepository.getSaldoTotalCuentas();
     }
 
     public void insertCuentaPropia(CuentaPropia cuentapropia) {

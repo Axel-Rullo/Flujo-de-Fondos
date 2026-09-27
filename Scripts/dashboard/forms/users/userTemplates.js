@@ -6,9 +6,15 @@ window.UserTemplates = {
         "#B45309", "#C026D3", "#1D4ED8", "#15803D", "#B91C1C",
         "#7E22CE", "#0F766E", "#D97706", "#DB2777", "#475569"
     ],
+
+    colorIndex: 0,
+
     getRandomColor: function() {
-        return this.avatarColors[Math.floor(Math.random() * this.avatarColors.length)];
+        const color = this.avatarColors[this.colorIndex % this.avatarColors.length];
+        this.colorIndex++;
+        return color;
     },
+
     getAvatar: function(user, size = 40) {
         if (user.photo) {
             return `
@@ -37,6 +43,8 @@ window.UserTemplates = {
     },
 
     renderUsersList: function(users, container, estado) {
+        this.colorIndex = 0;
+        
         const html = users.map(user => {
             const botonAction = estado == 'N' ?
             `<button class="btn-reactive-entity" data-id="${user.id}" title="Activar">

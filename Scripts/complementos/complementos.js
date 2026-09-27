@@ -48,10 +48,7 @@ if (!window.__importeFormatterInit) {
         const cursorPos = input.selectionStart;
         const rawBefore = input.value;
 
-        // Se cuentan dígitos Y el punto decimal (no las comas, que son puro formato
-        // reconstruido en cada tecla). Si solo se contaran dígitos, el cursor nunca
-        // podría quedar "después del punto" cuando no hay decimales aún escritos,
-        // y el Backspace terminaría borrando el dígito de al lado en vez del punto.
+        // Se cuentan dígitos Y el punto decimal
         const digitsBeforeCursor = rawBefore.slice(0, cursorPos).replace(/[^\d.]/g, "").length;
 
         let valor = rawBefore.replace(/[^\d.]/g, "");
@@ -64,9 +61,7 @@ if (!window.__importeFormatterInit) {
         }
 
         let partes = valor.split(".");
-        // Tope de 15 dígitos enteros: por encima de Number.MAX_SAFE_INTEGER (~9×10^15),
-        // Number() pierde precisión y empieza a redondear los últimos dígitos a cero.
-        // Ningún importe real del sistema necesita más que esto.
+        // Tope de 15 dígitos enteros
         let entero = partes[0].replace(/\D/g, "").slice(0, 15);
 
         // Máximo 2 decimales
@@ -76,9 +71,7 @@ if (!window.__importeFormatterInit) {
 
         const tienePunto = valor.includes(".");
 
-        // Si el usuario tipeó "." como primer caracter, entero queda vacío;
-        // mostramos "0" en vez de dejar un "." suelto que después se pierde
-        // silenciosamente en desformatearImporte (parseFloat(".") = NaN).
+        // Si el usuario tipeó "." como primer caracter, entero queda vacío
         let enteroFormateado = entero
             ? Number(entero).toLocaleString("en-US")
             : (tienePunto ? "0" : "");
@@ -86,7 +79,7 @@ if (!window.__importeFormatterInit) {
         const nuevoValor = enteroFormateado + (tienePunto ? "." + decimales : "");
         input.value = nuevoValor;
 
-        // Reposicionar el cursor contando la misma cantidad de dígitos+punto desde el inicio
+        // Reposicionar el cursor contando la misma cantidad de dígitos + punto desde el inicio
         let count = 0;
         let newPos = nuevoValor.length;
         for (let i = 0; i < nuevoValor.length; i++) {
@@ -121,5 +114,25 @@ function formatearImporte(valor) {
     return Number(valor).toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
+    });
+}
+
+// ── COPIAR ALIAS ──────────────────────────
+
+if (!window.__copiarAliasInit) {
+    window.__copiarAliasInit = true;
+
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.btn_copiar');
+        if (!btn) return;
+
+        const alias = btn.closest('.alias_wrap').querySelector('.alias_cliente').textContent;
+
+        try {
+            await navigator.clipboard.writeText(alias);
+        } catch (err) {
+            showAlert("Error al copiar el Alias", "error", 3000, 'center', true);
+            console.error('Error al copiar el alias:', err);
+        }
     });
 }
