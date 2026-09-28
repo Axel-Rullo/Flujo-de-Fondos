@@ -7,6 +7,10 @@ window.ChequeService = {
         return await apiPost('/cheques/terceros/emision', cheque);
     },
 
+    listTotales: async () => {
+        return await apiGet('/cheques/totales');
+    },
+
     listChequesPropios: async (estado) => {
         return await apiPost('/cheques/propios/list', { estado });
     },

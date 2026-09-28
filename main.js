@@ -184,10 +184,10 @@ app.whenReady().then(async () => {
 
     setInterval(() => {
         const idleSeconds = powerMonitor.getSystemIdleTime();
-        if (idleSeconds >= 120 && !yaAvisado) {
+        if (idleSeconds >= 300 && !yaAvisado) {
             yaAvisado = true;
             win.webContents.send('sesion-inactiva');
-        } else if (idleSeconds < 120 && yaAvisado) {
+        } else if (idleSeconds < 300 && yaAvisado) {
             yaAvisado = false;
         }
     }, 1000);

@@ -41,15 +41,17 @@
 
     // ── CHEQUES: EMITIDOS VS A COBRAR ─────
 
-    function renderCheques() {
-        const emitidos = { corrientes: 2000000, diferidos: 3000000 };
-        const aCobrar = { corrientes: 4000000, diferidos: 1000000 };
+    async function renderCheques() {
+        const totales = await window.ChequeService.listTotales();
+        const total = (clasificacion, tipo) => totales.find(t => t.clasificacion === clasificacion && t.tipo === tipo)?.importe ?? 0;
+        const emitidos = { corrientes: total('E', 'C'), diferidos: total('E', 'D') };
+        const aCobrar = { corrientes: total('A', 'C'), diferidos: total('A', 'D') };
 
         renderChequeFila('cheque-bars-corrientes', emitidos.corrientes, aCobrar.corrientes);
         renderChequeFila('cheque-bars-diferidos', emitidos.diferidos, aCobrar.diferidos);
 
-        const totalCorrientes = emitidos.corrientes + aCobrar.corrientes;
-        const totalDiferidos = emitidos.diferidos + aCobrar.diferidos;
+        const totalCorrientes = aCobrar.corrientes - emitidos.corrientes;
+        const totalDiferidos = aCobrar.diferidos - emitidos.diferidos;
         const totalGeneral = totalCorrientes + totalDiferidos;
 
         document.querySelector('.total_corrientes').textContent = formatearImporte(totalCorrientes);
@@ -58,13 +60,14 @@
     }
 
     function renderChequeFila(idContenedor, valorEmitidos, valorACobrar) {
-        const anchoACobrar = valorEmitidos > 0 ? (valorACobrar / valorEmitidos) * 100 : 0;
-        const anchoEmitidos = valorACobrar > 0 ? (valorEmitidos / valorACobrar) * 100 : 0;
+        const maximo = Math.max(valorEmitidos, valorACobrar);
+        const anchoACobrar = maximo > 0 ? (valorACobrar / maximo) * 100 : 0;
+        const anchoEmitidos = maximo > 0 ? (valorEmitidos / maximo) * 100 : 0;
 
         document.getElementById(idContenedor).innerHTML = `
-            <div class="side left"><div class="bar emitidos" style="width:${anchoEmitidos}%">${formatearImporte(valorEmitidos)}</div></div>
+            <div class="side left"><div class="bar emitidos" style="width:${anchoEmitidos}%">- $ ${formatearImporte(valorEmitidos)}</div></div>
             <div class="cheque-center">vs</div>
-            <div class="side right"><div class="bar acobrar" style="width:${anchoACobrar}%">${formatearImporte(valorACobrar)}</div></div>
+            <div class="side right"><div class="bar acobrar" style="width:${anchoACobrar}%">$ ${formatearImporte(valorACobrar)}</div></div>
         `;
     }
 

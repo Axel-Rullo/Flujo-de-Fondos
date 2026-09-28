@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS cheques (
     clasificacion TEXT NOT NULL,      -- 'Emitido' | 'A Cobrar'
     numero TEXT NOT NULL,
     importe DECIMAL(15,2) NOT NULL,
-    tipo TEXT NOT NULL,               -- 'Comun' | 'Diferido'
+    tipo TEXT NOT NULL,               -- 'Corriente' | 'Diferido'
     fecha_emision DATE NOT NULL,
     fecha_pago DATE NOT NULL,
     fecha_destino DATE,

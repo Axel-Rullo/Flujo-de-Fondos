@@ -32,8 +32,15 @@ public class ChequeController {
         return ResponseEntity.ok(Map.of("ok", true));
     }
 
+    // ── RESUMEN ───────────────────────────────────────────────────────
+
+    @GetMapping("/cheques/totales")
+    public List<Cheque> findAllTotales() {
+        return chequeService.findAllTotales();
+    }
+
     // ── LISTADO ──────────────────────────────────────────────────────
- 
+
     @PostMapping("/cheques/propios/list")
     public List<Cheque> listAllPropios(@RequestBody Cheque cheque) {
         return chequeService.listAllPropios(cheque.getEstado());

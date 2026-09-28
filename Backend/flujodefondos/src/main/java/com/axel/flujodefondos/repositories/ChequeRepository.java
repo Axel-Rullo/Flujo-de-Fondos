@@ -22,6 +22,19 @@ public class ChequeRepository {
 
     private final RowMapper<Cheque> chequeMapper = new BeanPropertyRowMapper<>(Cheque.class);
 
+    // ── RESUMEN ───────────────────────────────────────────────────────
+
+    public List<Cheque> findAllTotales() {
+        return jdbcTemplate.query(
+            "SELECT clasificacion, tipo, SUM(importe) AS importe FROM cheques " +
+            "WHERE estado = 'C' AND (uso IS NULL OR uso != 'E') " +
+            "AND strftime('%Y-%m', fecha_destino) = strftime('%Y-%m', 'now', 'localtime') " +
+            "GROUP BY clasificacion, tipo " +
+            "ORDER BY clasificacion, tipo",
+            chequeMapper
+        );
+    }
+
     // ── LISTADO ───────────────────────────────────────────────────────
 
     public List<Cheque> findAllPropios(String estado) {

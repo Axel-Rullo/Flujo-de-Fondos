@@ -23,6 +23,13 @@ public class ChequeService {
         chequeRepository.insertChequeTercero(cheque);
     }
 
+    // ── RESUMEN ───────────────────────────────────────────────────────
+
+    public List<Cheque> findAllTotales() {
+        return chequeRepository.findAllTotales();
+    }
+
+
     // ── LISTADOS ──────────────────────────────────────────────────────
 
     public List<Cheque> listAllPropios(String estado) {
