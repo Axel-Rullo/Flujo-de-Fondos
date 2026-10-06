@@ -1,29 +1,4 @@
-/* ── CONTENEDORES GENERALES + ── */
-
-.scroll_general_data {
-    height: 100%;
-    overflow-y: auto;
-    scrollbar-gutter: stable;
-    box-sizing: border-box;
-}
-
-.scroll_general_data::-webkit-scrollbar {
-    width: 8px;
-}
-
-.scroll_general_data::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.scroll_general_data::-webkit-scrollbar-thumb {
-    background: var(--border-button-color-1);
-    border-radius: 0.5rem;
-}
-
-.scroll_general_data::-webkit-scrollbar-thumb:hover {
-    background: var(--white);
-}
-
+/* ── CONTENEDORES GENERALES ── */
 .general-data,
 .saldo-cuenta-general-data,
 .cheques-general-data {
@@ -59,6 +34,7 @@
     border-radius: 12px;
     padding: 20px;
     width: 100%;
+    border: 1px solid var(--black);
     box-sizing: border-box;
 }
 
@@ -83,7 +59,8 @@
     gap: 6px;
     border-radius: 10px;
     background-color: var(--titlebar-btn-active);
-    border-left: 4px solid var(--c);
+    border: 1px solid var(--black);
+    box-shadow: inset 6px 0 0 var(--c);
     box-sizing: border-box;
 }
 
@@ -125,7 +102,7 @@
 }
 
 .cuenta-row .nombre {
-    flex: 0 0 16%;
+    flex: 0 0 20%;
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -148,17 +125,18 @@
     flex: 1;
     height: 16px;
     border-radius: 4px;
+    border: 1px solid var(--black);
     background-color: var(--titlebar-btn-active);
 }
 
 .cuenta-row .barra {
     height: 100%;
-    border-radius: 4px;
+    border-radius: 3px;
     background-color: var(--emerald);
 }
 
 .cuenta-row .valor {
-    flex: 0 0 16%;
+    flex: 0 0 20%;
     text-align: right;
     color: var(--white);
 }
@@ -217,26 +195,27 @@
     height: 24px;
 }
 
-.side.left { justify-content: flex-end; }
-.side.right { justify-content: flex-start; }
+.side.left { justify-content: flex-end; border: 1px solid var(--black); border-radius: 4px 0 0 4px; background-color: var(--titlebar-btn-active);}
+.side.right { justify-content: flex-start; border: 1px solid var(--black); border-radius: 0 4px 4px 0; background-color: var(--titlebar-btn-active);}
 
 .bar {
     height: 100%;
     display: flex;
     align-items: center;
-    color: var(--black);
+    color: var(--white);
+    white-space: nowrap;
 }
 
 .bar.emitidos {
     background-color: var(--lime);
-    border-radius: 4px 0 0 4px;
+    border-radius: 3px 0 0 3px;
     justify-content: flex-end;
     padding-right: 8px;
 }
 
 .bar.acobrar {
     background-color: var(--sky);
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 3px 3px 0;
     padding-left: 8px;
 }
 

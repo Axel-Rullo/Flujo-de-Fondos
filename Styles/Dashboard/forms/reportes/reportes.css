@@ -1,0 +1,79 @@
+/* ── TÍTULO ───────────────────────────────────────── */
+
+/* Título del modal */
+.report_title {
+    margin: 0 0 1rem 0;
+    padding-bottom: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid var(--white);
+}
+
+/* ── FORMATOS ─────────────────────────────────────── */
+
+/* Distribuye los formatos en tres columnas */
+.new_report {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+/* Botón de cada formato */
+.buttom_report {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background-color: transparent;
+    font-family: inherit;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.buttom_report h2 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Ícono del formato */
+.icon_report {
+    width: 4rem;
+    height: 4rem;
+}
+
+/* Se eleva al pasar el cursor o enfocar con teclado */
+.buttom_report:hover,
+.buttom_report:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px -4px;
+    outline: none;
+}
+
+/* Efecto al presionar */
+.buttom_report:active {
+    transform: scale(0.96);
+}
+
+/* ── COLORES POR FORMATO ──────────────────────────── */
+
+/* El color del botón lo toman el texto, el borde, el ícono y la sombra */
+.buttom_report.pdf {
+    color: var(--red);
+    border-color: var(--red);
+}
+
+.buttom_report.excel {
+    color: var(--green);
+    border-color: var(--green);
+}
+
+.buttom_report.csv {
+    color: var(--blue);
+    border-color: var(--blue);
+}

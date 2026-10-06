@@ -1,143 +1,29 @@
-<style>
-    .report-header {
-        background-color: transparent;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        flex-wrap: wrap;
-        margin: 0.5rem 0;
-        padding: 0 0.75rem;
-    }
-
-    .subtitle {
-        font-size: 1rem;
-        font-weight: bold;
-        width: auto;
-        margin: 0;
-    }
-
-    .date {
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        flex-direction: row;
-        width: auto;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .report-group {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
-        align-items: center;
-        width: auto;
-        padding: 0.50rem 0;
-    }
-
-    .report-group:last-child {
-        margin-right: 1rem;
-    }
-
-    .report-group label {
-        white-space: nowrap;
-        font-weight: bold;
-        font-size: 0.85rem;
-    }
-
-    .report-group input,
-    .report-group select {
-        font-size: 0.85rem;
-        min-width: 9.3rem;
-        padding: 0.50rem;
-    }
-
-    .report-group input:last-child {
-        margin-right: 1rem;
-    }
-
-    .report-group input[type="checkbox"] {
-        min-width: auto;
-        width: 1.1rem;
-        height: 1.1rem;
-        cursor: pointer;
-    }
-</style>
-
-<div>
-    <div class="report-header">
-        <h2 class="subtitle">Reporte Periódico</h2>
-        <div class="date">
-            <div class="report-group">
-                <label for="month">Mes</label>
-                <select id="month" name="month">
-                    <option value="1">Todos</option>
-                    <option value="1">Enero</option>
-                    <option value="2">Febrero</option>
-                    <option value="3">Marzo</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Mayo</option>
-                    <option value="6">Junio</option>
-                    <option value="7">Julio</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
-            </div>
-
-            <div class="report-group">
-                <label for="anio">Año</label>
-                <input type="number" id="anio" name="anio" placeholder="2026">
-            </div>
-        </div>
+<div id="report_panel" class="report_panel">
+    <div class="report_panel_title">
+        <h2>ELIJE EL TIPO DE REPORTE</h2>
+        <p>Seleccioná el período que querés analizar</p>
+    </div>
+    <div class="report_types">
+        <button type="button" class="report_type" data-modal="Views/forms/reportes/tipos/new_report_mensual.html">
+            <h2>REPORTE MENSUAL</h2>
+            <svg><use href="#icon-reporte-mensual" xlink:href="#icon-reporte-mensual"/></svg>
+            <p>Evolución del flujo de fondos en un lapso determinado</p>
+        </button>
+        <button type="button" class="report_type" data-modal="Views/forms/reportes/tipos/new_report_anual.html">
+            <h2>REPORTE ANUAL</h2>
+            <svg><use href="#icon-reporte-anual" xlink:href="#icon-reporte-anual"/></svg>
+            <p>Evolución del flujo de fondos mes a mes</p>
+        </button>
+        <button type="button" id="report_transacciones_internas" class="report_type">
+            <h2>MOVIMIENTOS INTERNOS</h2>
+            <svg><use href="#icon-transferencia" xlink:href="#icon-transferencia"/></svg>
+            <p>Transacciones entre cuentas</p>
+        </button>
+        <button type="button" class="report_type" disabled>
+            <span class="report_type_soon">Próximamente</span>
+            <h2>REPORTE IV</h2>
+            <svg><use href="#icon-reporte-deshabilitado" xlink:href="#icon-reporte-deshabilitado"/></svg>
+        </button>
     </div>
 </div>
-
-<div class="tabla-contenedor">
-    <table class="tabla-flujo">
-        <thead>
-            <tr>
-                <th class="letra" style="width:15%">Conceptos</th>
-                <th style="width:7.1%">Enero</th>
-                <th style="width:7.1%">Febrero</th>
-                <th style="width:7.1%">Marzo</th>
-                <th style="width:7.1%">Abril</th>
-                <th style="width:7.1%">Junio</th>
-                <th style="width:7.1%">Julio</th>
-                <th style="width:7.1%">Agosto</th>
-                <th style="width:7.1%">Septiembre</th>
-                <th style="width:7.1%">Octubre</th>
-                <th style="width:7.1%">Noviembre</th>
-                <th style="width:7.1%">Diciembre</th>
-                <th style="width:7.1%">2026</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td class="letra">Saldo Inicial</td><td>1.000.000</td><td>930.000</td><td>1.010.000</td><td>1.270.000</td><td>1.245.000</td><td>1.220.000</td><td>1.195.000</td><td>1.170.000</td><td>1.145.000</td><td>1.120.000</td><td>1.095.000</td><td>14.400.000</td></tr>
-            <tr><td class="letra">Ventas de Contado</td><td>0</td><td>80.000</td><td>0</td><td>150.000</td><td>0</td><td>90.000</td><td>0</td><td>120.000</td><td>0</td><td>0</td><td>0</td><td>440.000</td></tr>
-            <tr><td class="letra">Ventas en Cta. Cte.</td><td>0</td><td>200.000</td><td>260.000</td><td>0</td><td>180.000</td><td>0</td><td>0</td><td>210.000</td><td>0</td><td>0</td><td>0</td><td>850.000</td></tr>
-            <tr><td class="letra">Ingresos Operativos</td><td>0</td><td>280.000</td><td>260.000</td><td>150.000</td><td>180.000</td><td>90.000</td><td>0</td><td>330.000</td><td>0</td><td>0</td><td>0</td><td>1.290.000</td></tr>
-            <tr><td class="letra">Proveedores</td><td>(50.000)</td><td>(200.000)</td><td>0</td><td>(25.000)</td><td>(80.000)</td><td>0</td><td>(60.000)</td><td>0</td><td>(90.000)</td><td>0</td><td>0</td><td>(505.000)</td></tr>
-            <tr><td class="letra">Sueldos y Cs. Sociales</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(20.000)</td><td>(220.000)</td></tr>
-            <tr><td class="letra">Gastos de Fabricación</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(10.000)</td><td>(110.000)</td></tr>
-            <tr><td class="letra">Gastos de Administración</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(8.000)</td><td>(88.000)</td></tr>
-            <tr><td class="letra">Gastos de Comercialización</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(5.000)</td><td>(55.000)</td></tr>
-            <tr><td class="letra">Impuestos y Tasas</td><td>0</td><td>(15.000)</td><td>0</td><td>(15.000)</td><td>0</td><td>(15.000)</td><td>0</td><td>(15.000)</td><td>0</td><td>(15.000)</td><td>0</td><td>(75.000)</td></tr>
-            <tr><td class="letra">Alquileres</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(30.000)</td><td>(330.000)</td></tr>
-            <tr><td class="letra">Egresos Operativos</td><td>(123.000)</td><td>(288.000)</td><td>(73.000)</td><td>(113.000)</td><td>(153.000)</td><td>(88.000)</td><td>(133.000)</td><td>(88.000)</td><td>(163.000)</td><td>(88.000)</td><td>(73.000)</td><td>(1.383.000)</td></tr>
-            <tr><td class="letra">Flujo de Fondos Operativo</td><td>(123.000)</td><td>(8.000)</td><td>187.000</td><td>37.000</td><td>27.000</td><td>2.000</td><td>(133.000)</td><td>242.000</td><td>(163.000)</td><td>(88.000)</td><td>(73.000)</td><td>(93.000)</td></tr>
-            <tr><td class="letra">Inversión en Bienes de Uso</td><td>0</td><td>0</td><td>(500.000)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>(500.000)</td></tr>
-            <tr><td class="letra">Venta de Bienes de Uso</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>150.000</td><td>0</td><td>0</td><td>0</td><td>150.000</td></tr>
-            <tr><td class="letra">Flujo de Fondos de Inversión</td><td>0</td><td>0</td><td>(500.000)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>150.000</td><td>0</td><td>0</td><td>0</td><td>(350.000)</td></tr>
-            <tr><td class="letra">Préstamos Recibidos</td><td>0</td><td>0</td><td>500.000</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>500.000</td></tr>
-            <tr><td class="letra">Préstamos Cancelados</td><td>0</td><td>0</td><td>0</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(320.000)</td></tr>
-            <tr><td class="letra">Flujo de Fondos de Financiación</td><td>0</td><td>0</td><td>500.000</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>(40.000)</td><td>180.000</td></tr>
-        </tbody>
-        <tfoot>
-            <tr><td class="letra">Flujo de Fondos - Anual</td><td>930.000</td><td>1.010.000</td><td>1.270.000</td><td>1.245.000</td><td>1.220.000</td><td>1.195.000</td><td>1.170.000</td><td>1.145.000</td><td>1.120.000</td><td>1.095.000</td><td>1.070.000</td><td>14.470.000</td></tr>
-        </tfoot>
-    </table>
-</div>
+<div id="report_table"></div>

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +29,14 @@ public class ChequeService {
 
     public List<Cheque> findAllTotales() {
         return chequeRepository.findAllTotales();
+    }
+
+    // ── RESUMEN PRÓXIMOS 7 DÍAS (DESDE MAÑANA) ───────
+
+    public List<Map<String, Object>> resumenProximosDias() {
+        String desde = LocalDate.now().plusDays(1).toString();
+        String hasta = LocalDate.now().plusDays(7).toString();
+        return chequeRepository.resumenProximosDias(desde, hasta);
     }
 
 

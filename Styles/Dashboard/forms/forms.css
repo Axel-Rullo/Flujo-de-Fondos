@@ -27,6 +27,11 @@
     width: 50rem;
 }
 
+/* Si hay cantidad impar de campos, el último ocupa las dos columnas */
+.form-grid.multiple-columns .form-group:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
 /* Divide en grupos: etiqueta y campo */
 .form-group {
     display: flex;
@@ -65,7 +70,8 @@
 
 /* Estilo base de los campos de entrada y selección */
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea {
     background: var(--white);
     border: 2px solid transparent;
     padding: 8px 10px;
@@ -76,14 +82,21 @@
     transition: border-color 0.15s;
 }
 
+/* Campo de texto multilínea: solo se redimensiona en vertical */
+.form-group textarea {
+    resize: vertical;
+}
+
 /* Color del texto de ayuda (placeholder) */
-.form-group input::placeholder {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
     color: var(--color-input);
 }
 
 /* Resalta el campo cuando recibe el foco */
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus {
     border-color: transparent;
     border-bottom-color: var(--button-1);
     box-shadow: inset 0 -2px 0 0 var(--button-1);

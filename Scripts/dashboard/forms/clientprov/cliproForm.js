@@ -19,7 +19,7 @@
             };
 
             if (form.id === 'form_edit_clipro') {
-                clipro.id = Number(form.dataset.id);
+                clipro.id_clipro = Number(form.dataset.id);
             }
 
             try {

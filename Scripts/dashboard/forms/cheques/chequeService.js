@@ -11,6 +11,10 @@ window.ChequeService = {
         return await apiGet('/cheques/totales');
     },
 
+    listResumenSemanal: async () => {
+        return await apiGet('/cheques/resumen_semanal');
+    },
+
     listChequesPropios: async (estado) => {
         return await apiPost('/cheques/propios/list', { estado });
     },

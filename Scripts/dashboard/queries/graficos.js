@@ -3,10 +3,19 @@
     // ── SALDO TOTAL DE LAS CUENTAS ───────
 
     async function mostrarTotales() {
-        const cuentas_saldo_total = document.querySelector('.total_saldos_cuentas');
+        const container = document.querySelector('#general-data');
+        const total_ingreso = container.querySelector('.total_ingreso');
+        const total_egreso = container.querySelector('.total_egreso');
+        const total_flujo_neto = container.querySelector('.total_flujo_neto');
+        const cuentas_saldo_total = container.querySelector('.total_saldos_cuentas');
 
+        const ingresos = 1000000;
+        const egresos = 200000;
         const saldoTotal = await window.CuentaBancoService.cuentas_saldo_total();
 
+        total_ingreso.textContent = formatearImporte(ingresos);
+        total_egreso.textContent = formatearImporte(egresos);
+        total_flujo_neto.textContent = formatearImporte(ingresos - egresos);
         cuentas_saldo_total.textContent = formatearImporte(saldoTotal);
     }
 

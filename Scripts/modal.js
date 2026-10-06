@@ -55,14 +55,14 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-modal]');
     if (!btn) return;
-    
+
     const archivo = btn.dataset.modal;
-    if (!archivo) return; // Si no tiene valor, ignorar
-    
+    if (!archivo) return;
+
     e.preventDefault();
     e.stopPropagation();
-    
-    window.abrirModal(archivo);
+
+    window.abrirModal(archivo, btn.dataset.obligatorio === 'true');
 });
 
 // Botones con data-close-modal — cierra el modal

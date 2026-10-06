@@ -39,11 +39,11 @@ window.CliproTemplates = {
         
         const html = clipros.map(clipro => {
             const botonAction = estado == 'N' ?
-            `<button class="btn-reactive-entity" data-id="${clipro.id}" title="Activar">
+            `<button class="btn-reactive-entity" data-id="${clipro.id_clipro}" title="Activar">
                 <svg width="20" height="20"><use href="#icon-reactive" xlink:href="#icon-reactive"/></svg>
             </button>`
             :
-            `<button class="btn-edit-entity" data-id="${clipro.id}" title="Editar">
+            `<button class="btn-edit-entity" data-id="${clipro.id_clipro}" title="Editar">
                 <svg width="20" height="20"><use href="#icon-edit" xlink:href="#icon-edit"/></svg>
             </button>`
             ;
@@ -57,7 +57,7 @@ window.CliproTemplates = {
                 <span class="range-list">
                     ${clipro.tipo === "C" ? "Cliente" : "Proveedor"}
                 </span>
-                <button class="btn-view-entity" data-id="${clipro.id}" title="Ver">
+                <button class="btn-view-entity" data-id="${clipro.id_clipro}" title="Ver">
                     <svg width="20" height="20"><use href="#icon-view" xlink:href="#icon-view"/></svg>
                 </button>
                 ${botonAction}
@@ -82,7 +82,7 @@ window.CliproTemplates = {
     fillEditForm: function(clipro, container) {
         const form = container.querySelector('#form_edit_clipro');
 
-        form.dataset.id = clipro.id;
+        form.dataset.id = clipro.id_clipro;
 
         const nombre = (clipro.nombre || '').split(' ')[0] || '';
         const apellido = (clipro.nombre || '').split(' ').slice(1).join(' ') || '';

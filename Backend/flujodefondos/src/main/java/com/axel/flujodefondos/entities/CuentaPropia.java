@@ -14,9 +14,21 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CuentaPropia {
+    // Cuenta Propia
     Long id_cuenta;
     String nombre;
-    BigDecimal saldo;
     Long id_banco;
+    BigDecimal saldo;
     String banco;
+
+    // Transacción
+    Long id_transaccion;
+    String fecha;
+    Long id_cuenta_origen;
+    Long id_cuenta_destino;
+    BigDecimal monto;
+    Long id_usuario;
+    String cuenta_origen;
+    String cuenta_destino;
+    String usuario;
 }

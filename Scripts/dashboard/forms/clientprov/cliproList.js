@@ -54,7 +54,7 @@
         container.addEventListener('click', e => {
             const btnView = e.target.closest('.btn-view-entity');
             if (btnView) {
-                const clipro = currentClipros.find(c => c.id == btnView.dataset.id);
+                const clipro = currentClipros.find(c => c.id_clipro == btnView.dataset.id);
                 abrirModal('./Views/forms/clientprov/clipro.html').then(modalContainer => {
                     window.CliproTemplates.fillCliproModal(clipro, modalContainer);
                 });
@@ -62,7 +62,7 @@
 
             const btnEdit = e.target.closest('.btn-edit-entity');
             if (btnEdit) {
-                const clipro = currentClipros.find(c => c.id == btnEdit.dataset.id);
+                const clipro = currentClipros.find(c => c.id_clipro == btnEdit.dataset.id);
                 abrirModal('./Views/forms/clientprov/edit_clipro.html').then(modalContainer => {
                     window.CliproTemplates.fillEditForm(clipro, modalContainer);
                 });

@@ -89,7 +89,8 @@
 #titlebar .tb-btn.bt-clipro-list:hover,
 #titlebar .tb-btn.bt-block-login:hover,
 #titlebar .tb-btn.bt-user-list:hover,
-#titlebar .tb-btn.btn-profile:hover {
+#titlebar .tb-btn.btn-profile:hover,
+#titlebar .tb-btn.bt-reports:hover {
     background-color: var(--button-1);
     color: var(--black);
 }

@@ -5,7 +5,7 @@ window.CliproService = {
     },
 
     reactivateClipro: async (id) => {
-        return await apiPost('/tercero/reactive', { id: Number(id) });
+        return await apiPost('/tercero/reactive', { id_clipro: Number(id) });
     },
 
     newClipro: async (clipro) => {
@@ -17,6 +17,6 @@ window.CliproService = {
     },
 
     deleteClipro: async (id) => {
-        return await apiPost('/tercero/delete', { id: Number(id) });
+        return await apiPost('/tercero/delete', { id_clipro: Number(id) });
     }
 };

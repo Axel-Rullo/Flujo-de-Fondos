@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("null")
 @Repository
@@ -32,6 +33,24 @@ public class ChequeRepository {
             "GROUP BY clasificacion, tipo " +
             "ORDER BY clasificacion, tipo",
             chequeMapper
+        );
+    }
+
+    // ── RESUMEN PRÓXIMOS 7 DÍAS (DESDE MAÑANA) ───────────────────────
+
+    public List<Map<String, Object>> resumenProximosDias(String desde, String hasta) {
+        return jdbcTemplate.queryForList(
+            "SELECT ch.fecha_pago, ch.clasificacion, COUNT(*) AS cantidad, SUM(ch.importe) AS monto " +
+            "FROM cheques ch " +
+
+            // Solo pendientes dentro del rango de fechas
+            "WHERE ch.estado = 'P' AND DATE(ch.fecha_pago, '+30 days') BETWEEN ? AND ? " +
+
+            // Un registro por día y clasificación
+            "GROUP BY ch.fecha_pago, ch.clasificacion " +
+            "ORDER BY ch.fecha_pago",
+            desde,
+            hasta
         );
     }
 
@@ -218,4 +237,6 @@ public class ChequeRepository {
             "A", cheque.getMotivo(), cheque.getFecha_destino(), cheque.getId_cheque()
         );
     }
+
+    // ── RESUMEN ──────────────────────────────────────────────────────
 }

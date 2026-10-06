@@ -55,6 +55,18 @@ INSERT INTO cuentas (id_cuenta, nombre, saldo, id_banco) VALUES
 	(2, 'Banco Principal', 3860000, 6),
 	(3, 'Banco Secundario', 560000, 3);
 
+CREATE TABLE IF NOT EXISTS transacciones_internas (
+    id_transaccion INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha DATE,
+    id_cuenta_origen INTEGER,
+    id_cuenta_destino INTEGER,
+    id_usuario INTEGER,
+    monto DECIMAL(15,2),
+    FOREIGN KEY (id_cuenta_origen) REFERENCES cuentas (id_cuenta),
+    FOREIGN KEY (id_cuenta_destino) REFERENCES cuentas (id_cuenta),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios (id_usuario)
+);
+
 -- Volcando estructura para tabla bancos (limitado a 6 bancos)
 CREATE TABLE IF NOT EXISTS bancos (
   id_banco INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -143,7 +155,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 INSERT INTO usuarios (id_usuario, user, pass, dni, nombre, email, telefono, rango, id_sucursal, photo, estado) VALUES
 
-    (1, 'axel_rullo', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 46996007, 'Axel Rullo', 'axelrullo17@gmail.com', '3417236528', 'Admin', 2, '/Profiles/axel.jpg', 'E'),
+    (1, 'axel_rullo', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 46996007, 'Axel Rullo', 'axelrullo17@gmail.com', '3417236528', 'Admin', 2, NULL, 'E'),
 
     (2, 'mario_saluzzo', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 23425252, 'Mario Saluzzo', 'mario@mail.com', '3415789473', 'Admin', 3, NULL, 'E'),
 
@@ -153,7 +165,7 @@ INSERT INTO usuarios (id_usuario, user, pass, dni, nombre, email, telefono, rang
 
     (5, 'lucas_albarracin', '$argon2id$v=19$m=20000,t=2,p=1$V7UBBmVUGb/n37EOLDxSTg$NXQNgsSTbMxr1hajs66GKr8fJhlr3VhNNYyFdKI2Hgk', 46234782, 'Lucas Albarracin', 'lucas@gmail.com', '348295824', 'Miembro', 3, '/Profiles/Loli.jpg', 'E'),
 
-    (6, 'juan_bernal', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 47345673, 'Juan Cruz Bernal', 'juan@gmail.com', '3417345678', 'Miembro', 3, '/Profiles/Screenshot_20260813-185751-206.png', 'E'),
+    (6, 'juan_bernal', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 47345673, 'Juan Cruz Bernal', 'juan@gmail.com', '3417345678', 'Miembro', 3, NULL, 'E'),
 
     (7, 'martin_menna', '$argon2id$v=19$m=20000,t=2,p=1$Qw3XDzDjMhGDveEyFdActQ$3kUA1jNUVovHUpcW/RFviFkUpXlgMqA/JYCfzwTvBbE', 48456764, 'Martín Menna Castells', 'martin@gmail.com', '3418456789', 'Miembro', 3, NULL, 'E'),
 
@@ -272,6 +284,7 @@ CREATE TABLE IF NOT EXISTS movimientos (
     egreso DECIMAL(15,2),
     saldo DECIMAL(15,2),
     observaciones TEXT,
+    operacion TEXT,
     ch_endosado BOOLEAN NOT NULL DEFAULT FALSE,
     id_usuario INTEGER,
     id_sucursal INTEGER,

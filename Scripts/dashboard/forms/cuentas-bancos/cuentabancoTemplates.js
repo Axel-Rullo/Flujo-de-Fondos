@@ -1,4 +1,4 @@
-const PALETA_ACENTOS = [
+window.PALETA_ACENTOS = window.PALETA_ACENTOS || [
     'hsl(0, 90%, 75%)', 'hsl(14, 90%, 70%)', 'hsl(29, 95%, 65%)', 'hsl(43, 95%, 58%)', 'hsl(58, 90%, 52%)',
     'hsl(72, 80%, 52%)', 'hsl(86, 70%, 52%)', 'hsl(101, 65%, 54%)', 'hsl(115, 65%, 56%)', 'hsl(130, 65%, 56%)',
     'hsl(144, 65%, 55%)', 'hsl(158, 70%, 52%)', 'hsl(173, 75%, 50%)', 'hsl(187, 85%, 55%)', 'hsl(202, 90%, 62%)',
@@ -23,6 +23,31 @@ window.CuentaBancoTemplates = {
         }).join('');
 
         container.innerHTML = html;
+    },
+
+    MostrarTransaccionesInternas: async function(data) {
+            if (this.tablaTransaccionesInternas) {
+                try { await this.tablaTransaccionesInternas.destroy(); } catch (e) {}
+                this.tablaTransaccionesInternas = null;
+            }
+
+            document.getElementById('report_panel').style.display = 'none';
+
+            this.tablaTransaccionesInternas = new Tabulator("#report_table", {
+                index: "id_transaccion",
+                data: data,
+                columnDefaults: {headerSort:false},
+                layout: "fitColumns",
+                columns: [
+                    { title: "FECHA", field: "fecha", widthGrow: 10, hozAlign: "center"},
+                    { title: "MONTO", field: "monto", widthGrow: 20, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", precision: 2}},
+                    { title: "CUENTA ORIGEN", field: "cuenta_origen", widthGrow: 25},
+                    { title: "CUENTA DESTINO", field: "cuenta_destino", widthGrow: 25},
+                    { title: "USUARIO", field: "usuario", widthGrow: 20}
+                ]
+            });
+
+            return this.tablaTransaccionesInternas;
     },
 
     mostrarBancosClipros: async function(bancos, container) {

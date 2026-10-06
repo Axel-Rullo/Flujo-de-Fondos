@@ -18,9 +18,19 @@ public class CuentaBancoController {
 
     private final CuentaBancoService cuentaBancoService;
 
+    private Map<String, Object> error(Exception e) {
+        String mensaje = e.getMessage() != null ? e.getMessage() : "Error inesperado";
+        return Map.of("ok", false, "mensaje", mensaje);
+    }
+
     @GetMapping("/cuentas/list")
     public List<CuentaPropia> findAllCuentasPropias() {
         return cuentaBancoService.findAllCuentasPropias();
+    }
+
+    @GetMapping("/cuentas/list/transacciones_internas")
+    public List<CuentaPropia> findAllTransaccionesInternas() {
+        return cuentaBancoService.findAllTransaccionesInternas();
     }
 
     @GetMapping("/bancos/list/names")
@@ -44,7 +54,17 @@ public class CuentaBancoController {
             cuentaBancoService.insertCuentaPropia(cuentapropia);
             return Map.of("ok", true);
         } catch (RuntimeException e) {
-            return Map.of("ok", false, "mensaje", e.getMessage());
+            return error(e);
+        }
+    }
+
+    @PostMapping("/cuentas/new/transaccion_interna")
+    public Map<String, Object> insertTransaccionInterna(@RequestBody CuentaPropia cuentapropia) {
+        try {
+            cuentaBancoService.insertTransaccionInterna(cuentapropia);
+            return Map.of("ok", true);
+        } catch (RuntimeException e) {
+            return error(e);
         }
     }
 
@@ -54,7 +74,7 @@ public class CuentaBancoController {
             cuentaBancoService.insertBanco(banco.getNombre());
             return Map.of("ok", true);
         } catch (RuntimeException e) {
-            return Map.of("ok", false, "mensaje", e.getMessage());
+            return error(e);
         }
     }
 
@@ -64,7 +84,7 @@ public class CuentaBancoController {
             cuentaBancoService.insertBancoCliPro(bancoclipro);
             return Map.of("ok", true);
         } catch (RuntimeException e) {
-            return Map.of("ok", false, "mensaje", e.getMessage());
+            return error(e);
         }
     }
 }

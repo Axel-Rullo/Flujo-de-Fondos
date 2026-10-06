@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 import java.util.List;
+import java.util.Map;
 import java.math.BigDecimal;
 
 @Service
@@ -20,8 +21,12 @@ public class MovimientoService {
     private final MovimientoRepository movimientoRepository;
     private final CuentaBancoRepository cuentabancoRepository;
 
-    public List<Movimiento> listAll() {
-        return movimientoRepository.findAll();
+    public List<Movimiento> findAllMovimientos() {
+        return movimientoRepository.findAllMovimientos();
+    }
+
+    public List<Movimiento> findAllOperaciones() {
+        return movimientoRepository.findAllOperaciones();
     }
 
     @Transactional
@@ -61,9 +66,10 @@ public class MovimientoService {
             Movimiento mov = new Movimiento();
             mov.setFecha(primerDiaDelMes);
             mov.setId_cuenta(cuenta.getId_cuenta());
-            mov.setId_concepto("1");
+            mov.setId_concepto(null);
             mov.setIngreso(saldoCuenta);
             mov.setObservaciones("Saldo inicial del mes");
+            mov.setOperacion(null);
             mov.setCh_endosado(false);
             mov.setId_usuario(null);
             mov.setId_sucursal(null);
@@ -71,5 +77,13 @@ public class MovimientoService {
 
             movimientoRepository.insert(mov);
         }
+    }
+
+    public List<Map<String, Object>> ReporteAnual(int anio) {
+        return movimientoRepository.ReporteAnual(anio);
+    }
+
+    public List<Map<String, Object>> ReporteMensual(int mes, int anio) {
+        return movimientoRepository.ReporteMensual(mes, anio);
     }
 }

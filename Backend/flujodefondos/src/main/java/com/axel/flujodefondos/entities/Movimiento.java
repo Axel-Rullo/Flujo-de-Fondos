@@ -22,9 +22,12 @@ public class Movimiento {
     BigDecimal egreso;
     BigDecimal saldo;
     String observaciones;
+    String operacion;
     Boolean ch_endosado;
     Long id_usuario;
     Long id_sucursal;
+    String usuario;
+    String sucursal;
     String cuenta;
     String concepto;
 }

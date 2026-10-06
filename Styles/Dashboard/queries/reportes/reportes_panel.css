@@ -1,0 +1,130 @@
+/* ── PANEL ────────────────────────────────────────── */
+
+/* Contenedor principal del panel de reportes */
+.report_panel {
+    background-color: var(--datos-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    height: 100%;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+}
+
+/* Título y subtítulo del panel */
+.report_panel_title {
+    text-align: center;
+}
+
+.report_panel_title h2 {
+    margin: 0 0 0.4rem 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.report_panel_title p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ── TIPOS DE REPORTE ─────────────────────────────── */
+
+/* Distribuye los tipos de reporte en dos columnas */
+.report_types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 60rem;
+}
+
+/* Botón de cada tipo de reporte */
+.report_type {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.5rem 1rem;
+    box-sizing: border-box;
+    background-color: var(--datos-panel-bg);
+    color: var(--white);
+    font-family: inherit;
+    border: solid 3px var(--border-button-color-1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+/* Efecto al pasar el cursor o enfocar con teclado */
+.report_type:hover,
+.report_type:focus-visible {
+    border-color: var(--button-1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px -4px var(--button-1);
+    outline: none;
+}
+
+/* Efecto al presionar */
+.report_type:active {
+    transform: scale(0.98);
+}
+
+.report_type h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.report_type p {
+    margin: 0;
+    max-width: 18rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Ícono del reporte */
+.report_type svg {
+    width: 6rem;
+    height: 6rem;
+    color: var(--white);
+    transition: color 0.15s;
+}
+
+.report_type:hover svg,
+.report_type:hover h2,
+.report_type:focus-visible svg,
+.report_type:focus-visible h2 {
+    color: var(--button-1);
+}
+
+.report_type:hover p,
+.report_type:focus-visible p {
+    color: var(--white);
+}
+
+/* ── REPORTE NO DISPONIBLE ────────────────────────── */
+
+/* Apaga el botón cuando está deshabilitado */
+.report_type:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Etiqueta "Próximamente" */
+.report_type_soon {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 2px 8px;
+    border: 1px solid var(--border-button-color-1);
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}

@@ -10,6 +10,16 @@
         }
     }
 
+    function createTransaccionInterna(form) {
+        return {
+            fecha: getFechaLocal(),
+            id_cuenta_origen: form.querySelector('#cuenta_origen').value,
+            id_cuenta_destino: form.querySelector('#cuenta_destino').value,
+            monto: desformatearImporte(form.querySelector('#saldo_cuenta').value),
+            id_usuario: window.currentUser.id
+        }
+    }
+
     function createBanco(form) {
         return {
             nombre: form.querySelector('#name').value,
@@ -27,7 +37,7 @@
     function initCuentaBancoForms() {
         document.addEventListener('submit', async e => {
             const form = e.target;
-            if (form.id !== 'form_new_cuentapropia' && form.id !== 'form_new_banco' && form.id !== 'form_new_banco_clipro') return;
+            if (form.id !== 'form_new_cuentapropia' && form.id !== 'form_new_banco' && form.id !== 'form_new_banco_clipro' && form.id !== 'form_new_transaccion_interna') return;
 
             e.preventDefault();
 
@@ -54,6 +64,17 @@
                         window.cerrarModal();
                         cargarParcial('Views/queries/cuentas_bancos.html');
                     }
+                } else if ((form.id === 'form_new_transaccion_interna')) {
+                    const cuentabanco = createTransaccionInterna(form);
+                    const res = await window.CuentaBancoService.newTransaccionInterna(cuentabanco);
+                    if (!res.ok) {
+                        showAlert(res.mensaje, 'error', 3000, 'center', true);
+                    } else {
+                        showAlert('Transacción ingresada exitosamente!', 'success', 2000, 'top', false);
+                        form.reset();
+                        window.cerrarModal();
+                        cargarParcial('Views/queries/cuentas_bancos.html');
+                    }
                 } else {
                     const cuentabanco = createBancoCliPro(form);
                     const res = await window.CuentaBancoService.newBancoCliPro(cuentabanco);
@@ -67,8 +88,8 @@
                     }
                 }
             } catch (err) {
-                showAlert('Error al ingresar cuenta / banco / bancoclipro', 'error', 3000, 'center', true);
-                console.error('Error al ingresar cuenta / banco / bancoclipro:', err);
+                showAlert('Error al ingresar cuenta / transaccion / banco / bancoclipro', 'error', 3000, 'center', true);
+                console.error('Error al ingresar cuenta / transaccion / banco / bancoclipro:', err);
             }
         });
     }

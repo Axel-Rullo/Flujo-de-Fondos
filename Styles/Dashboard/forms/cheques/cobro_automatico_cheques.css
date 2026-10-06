@@ -1,0 +1,96 @@
+/* ── SCROLL ───────────────────────────────────────── */
+
+/* Altura del degradado inferior, se apaga al llegar al final del scroll */
+@property --fade-bottom {
+    syntax: "<length>";
+    inherits: false;
+    initial-value: 3rem;
+}
+
+@keyframes fade-bottom-off {
+    from { --fade-bottom: 3rem; }
+    to   { --fade-bottom: 0rem; }
+}
+
+.scroll_cobro_automatico {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem 1rem 1.5rem; /* el padding inferior iguala al degradado, por si no hay soporte de animación */
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    box-sizing: border-box;
+
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade-bottom)), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--fade-bottom)), transparent 100%);
+
+    animation: fade-bottom-off linear both;
+    animation-timeline: scroll(self block);
+    animation-range: calc(100% - 3rem) 100%;
+}
+
+.scroll_cobro_automatico::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll_cobro_automatico::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll_cobro_automatico::-webkit-scrollbar-thumb {
+    background: var(--border-button-color-1);
+    border-radius: 0.5rem;
+}
+
+.scroll_cobro_automatico::-webkit-scrollbar-thumb:hover {
+    background: var(--white);
+}
+
+/* ── CONTENEDOR ───────────────────────────────────── */
+
+.cobros_automaticos_container {
+    display: flex;
+    width: 71.5rem;
+    max-width: 100%;
+    height: 27rem;
+    box-sizing: border-box;
+}
+
+.list_cheques_cobrados {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* ── SIN CHEQUES ──────────────────────────────────── */
+
+.sin_cheques {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+.sin_cheques_icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sin_cheques_icon svg {
+    width: 80px;
+    height: 80px;
+}
+
+.sin_cheques_text {
+    font-size: 1rem;
+    text-align: center;
+}

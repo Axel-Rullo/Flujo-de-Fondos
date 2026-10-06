@@ -1,0 +1,16 @@
+<h2 class="form-title">INGRESE EL AÑO</h2>
+
+<form id="form_report_anual" class="form">
+    <div class="form-grid">
+        <div class="form-group">
+            <label for="año">Año <span>*</span></label>
+            <input type="text" inputmode="numeric" maxlength="4" minlength="4" pattern="\d{4}" 
+            id="año" name="año" placeholder="XXXX..." title="INGRESA UN AÑO DE 4 NÚMEROS" required>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="reset" id="btn-cancel" class="btn btn-cancel" data-close-modal>Cancelar</button>
+        <button type="submit" id="btn-primary" class="btn btn-primary">Aplicar</button>
+    </div>
+</form>

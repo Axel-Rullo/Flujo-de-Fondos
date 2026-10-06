@@ -3,6 +3,10 @@ window.CuentaBancoService = {
         return await apiPost('/cuentas/new/cuentapropia', cuenta);
     },
 
+    newTransaccionInterna: async (transaccion) => {
+        return await apiPost('/cuentas/new/transaccion_interna', transaccion);
+    },
+
     newBanco: async (banco) => {
         return await apiPost('/bancos/new/banco', banco);
     },
@@ -13,6 +17,10 @@ window.CuentaBancoService = {
 
     listCuentas: async () => {
         return await apiGet('/cuentas/list');
+    },
+
+    listTransaccionesInternas: async () => {
+        return await apiGet('/cuentas/list/transacciones_internas');
     },
 
     cuentas_saldo_total: async () => {

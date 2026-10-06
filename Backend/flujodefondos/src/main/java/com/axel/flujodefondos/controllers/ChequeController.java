@@ -39,6 +39,13 @@ public class ChequeController {
         return chequeService.findAllTotales();
     }
 
+    // ── RESUMEN PRÓXIMOS 7 DÍAS (DESDE MAÑANA) ────────────────────────
+
+    @GetMapping("/cheques/resumen_semanal")
+    public List<Map<String, Object>> resumenProximosDias() {
+        return chequeService.resumenProximosDias();
+    }
+
     // ── LISTADO ──────────────────────────────────────────────────────
 
     @PostMapping("/cheques/propios/list")

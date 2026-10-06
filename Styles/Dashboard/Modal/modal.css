@@ -6,8 +6,8 @@
     border-radius: 8px;
     padding: 20px;
     width: auto;
-    max-width: 90%;
-    max-height: 90vh;
+    max-width: 95%;
+    max-height: 95vh;
     overflow-y: auto;
     position: relative;
     box-shadow: 0 10px 40px var(--modal-shadow);

@@ -25,6 +25,10 @@ public class CuentaBancoService {
         return cuentaBancoRepository.findAllCuentasPropias();
     }
 
+    public List<CuentaPropia> findAllTransaccionesInternas() {
+        return cuentaBancoRepository.findAllTransaccionesInternas();
+    }
+
     public List<Banco> findAllBancosNames() {
         return cuentaBancoRepository.findAllBancosNames();
     }
@@ -51,7 +55,7 @@ public class CuentaBancoService {
         Movimiento mov = new Movimiento();
         mov.setFecha(LocalDate.now().toString());
         mov.setId_cuenta(idCuenta);
-        mov.setId_concepto("1");
+        mov.setId_concepto(null);
         mov.setIngreso(saldoCuenta);
         mov.setObservaciones("Saldo inicial de la cuenta");
         mov.setCh_endosado(false);
@@ -60,6 +64,31 @@ public class CuentaBancoService {
         mov.setSaldo(cuentaBancoRepository.getSaldoTotalCuentas());
 
         movimientoRepository.insert(mov);
+    }
+
+    // ── TRANSACCIONES INTERNAS ───────────────────────────────────────
+    @Transactional
+    public void insertTransaccionInterna(CuentaPropia transaccion) {
+        if (transaccion.getId_cuenta_origen().equals(transaccion.getId_cuenta_destino())) {
+            throw new RuntimeException("La cuenta de origen y destino no pueden ser la misma");
+        }
+
+        CuentaPropia origen = cuentaBancoRepository.findById(transaccion.getId_cuenta_origen());
+        CuentaPropia destino = cuentaBancoRepository.findById(transaccion.getId_cuenta_destino());
+
+        if (origen == null || destino == null) {
+            throw new RuntimeException("La cuenta de origen o destino no existe");
+        }
+        if (origen.getSaldo().compareTo(transaccion.getMonto()) < 0) {
+            throw new RuntimeException("Saldo insuficiente en la cuenta de origen");
+        }
+
+        origen.setSaldo(origen.getSaldo().subtract(transaccion.getMonto()));
+        destino.setSaldo(destino.getSaldo().add(transaccion.getMonto()));
+
+        cuentaBancoRepository.updateSaldoCuentaPropia(origen);
+        cuentaBancoRepository.updateSaldoCuentaPropia(destino);
+        cuentaBancoRepository.insertTransaccionInterna(transaccion);
     }
 
     public void insertBanco(String nombre) {

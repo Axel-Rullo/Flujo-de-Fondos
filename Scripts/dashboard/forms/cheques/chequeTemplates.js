@@ -119,7 +119,7 @@ window.ChequeTemplates = {
                 { title: "FECHA COBRO",     field: "fecha_pago",    widthGrow: 11, hozAlign: "center", formatter: this.formatearFechaCobro },
                 { title: "BANCO",           field: "cuenta_propia_emision", widthGrow: 22 },
                 { title: "NÚMERO",          field: "numero",        widthGrow: 18 },
-                { title: "IMPORTE",         field: "importe",       widthGrow: 18, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
+                { title: "IMPORTE",         field: "importe",       widthGrow: 18, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
                 { title: "DESTINO",         field: "clipro_emision",        widthGrow: 25}
             ]
         });
@@ -158,7 +158,7 @@ window.ChequeTemplates = {
                 { title: "CLIENTE",         field: "clipro_emision",  widthGrow: 14},
                 { title: "BANCO",           field: "banco_emision",   widthGrow: 16},
                 { title: "NÚMERO",          field: "numero",          widthGrow: 16},
-                { title: "IMPORTE",         field: "importe",         widthGrow: 14, formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
+                { title: "IMPORTE",         field: "importe",         widthGrow: 14, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
                 { title: "FECHA DESTINO",   field: "fecha_destino",   widthGrow: 12, hozAlign: "center", formatter: (cell) => cell.getValue() || '--'},
                 { title: "DESTINO", field: "clipro_imputar", widthGrow: 14, formatter: (cell) => {
                     const d = cell.getData();
@@ -199,7 +199,7 @@ window.ChequeTemplates = {
             columns: [
                 { title: "FECHA DESTINO",                field: "fecha_destino",            widthGrow: 12, hozAlign: "center"},
                 { title: "NÚMERO",                field: "numero",            widthGrow: 16},
-                { title: "IMPORTE",                field: "importe",            widthGrow: 14},
+                { title: "IMPORTE",                field: "importe",            widthGrow: 14, hozAlign: "right"},
                 { title: "CLIENT/PROV EMISIÓN",                field: "clipro_emision",            widthGrow: 20},
                 { title: "CUENTA EMISIÓN",         field: "cuenta_propia_emision",  widthGrow: 16, formatter: (cell) => { const d = cell.getData(); return d.clase === 'P' ? (d.cuenta_propia_emision || '--') : (d.banco_emision || '--'); } },
                 { title: "USUARIO",                field: "usuario",            widthGrow: 14},

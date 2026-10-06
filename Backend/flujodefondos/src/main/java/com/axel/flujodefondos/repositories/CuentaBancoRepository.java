@@ -40,6 +40,22 @@ public class CuentaBancoRepository {
             cuentaPropiaMapper);
     }
 
+    public List<CuentaPropia> findAllTransaccionesInternas() {
+        return jdbcTemplate.query(
+            """
+            SELECT ti.id_transaccion, ti.fecha, ti.monto,
+                co.nombre AS cuenta_origen,
+                cd.nombre AS cuenta_destino,
+                u.nombre  AS usuario
+            FROM transacciones_internas ti
+            JOIN cuentas co ON co.id_cuenta = ti.id_cuenta_origen
+            JOIN cuentas cd ON cd.id_cuenta = ti.id_cuenta_destino
+            LEFT JOIN usuarios u ON u.id_usuario = ti.id_usuario
+            ORDER BY ti.fecha DESC, ti.id_transaccion DESC
+            """,
+            cuentaPropiaMapper);
+    }
+
     public List<Banco> findAllBancosNames() {
         return jdbcTemplate.query(
             "SELECT id_banco, nombre FROM bancos ORDER BY nombre ASC",
@@ -127,6 +143,13 @@ public class CuentaBancoRepository {
     public void insertCuentaPropia(CuentaPropia cuentapropia) {
         jdbcTemplate.update("INSERT INTO cuentas (nombre, saldo, id_banco) VALUES (?, ?, ?)",
             cuentapropia.getNombre(), cuentapropia.getSaldo(), cuentapropia.getId_banco()
+        );
+    }
+
+    public void insertTransaccionInterna(CuentaPropia cuentapropia) {
+        jdbcTemplate.update("INSERT INTO transacciones_internas (fecha, id_cuenta_origen, id_cuenta_destino, monto, id_usuario) VALUES (?, ?, ?, ?, ?)",
+            cuentapropia.getFecha(), cuentapropia.getId_cuenta_origen(), cuentapropia.getId_cuenta_destino(),
+            cuentapropia.getMonto(), cuentapropia.getId_usuario()
         );
     }
 
