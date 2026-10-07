@@ -43,4 +43,7 @@ public class Cheque {
     String concepto_emision;
     String concepto_imputar;
     String usuario;
+    String busqueda; // Listados: texto a buscar
+    Integer limit; // Listados: cantidad por página
+    Integer offset; // Listados: cantidad ya cargada
 }

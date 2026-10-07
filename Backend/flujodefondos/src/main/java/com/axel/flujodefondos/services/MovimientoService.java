@@ -21,12 +21,12 @@ public class MovimientoService {
     private final MovimientoRepository movimientoRepository;
     private final CuentaBancoRepository cuentabancoRepository;
 
-    public List<Movimiento> findAllMovimientos() {
-        return movimientoRepository.findAllMovimientos();
+    public List<Movimiento> findAllMovimientos(int limit, int offset) {
+        return movimientoRepository.findAllMovimientos(limit, offset);
     }
 
-    public List<Movimiento> findAllOperaciones() {
-        return movimientoRepository.findAllOperaciones();
+    public List<Movimiento> findAllOperaciones(int limit, int offset) {
+        return movimientoRepository.findAllOperaciones(limit, offset);
     }
 
     @Transactional
@@ -34,16 +34,30 @@ public class MovimientoService {
         BigDecimal ingreso = movimiento.getIngreso() != null ? movimiento.getIngreso() : BigDecimal.ZERO;
         BigDecimal egreso = movimiento.getEgreso() != null ? movimiento.getEgreso() : BigDecimal.ZERO;
 
-        boolean esEndosado = Boolean.TRUE.equals(movimiento.getCh_endosado());
+        // Un cheque endosado no impacta en el saldo de ninguna cuenta propia
+        if (!esEndosado(movimiento.getCh_endosado())) {
+            if (movimiento.getId_cuenta() == null || movimiento.getId_cuenta().isBlank()) {
+                throw new IllegalArgumentException("El movimiento no tiene cuenta asignada");
+            }
 
-        if (!esEndosado) {
-            CuentaPropia cuenta = cuentabancoRepository.findById(movimiento.getId_cuenta());
-            cuenta.setSaldo(cuenta.getSaldo().add(ingreso).subtract(egreso));
+            CuentaPropia cuenta = cuentabancoRepository.findById(Long.valueOf(movimiento.getId_cuenta()));
+            if (cuenta == null) {
+                throw new IllegalArgumentException("No existe la cuenta con id " + movimiento.getId_cuenta());
+            }
+
+            BigDecimal saldoActual = cuenta.getSaldo() != null ? cuenta.getSaldo() : BigDecimal.ZERO;
+            cuenta.setSaldo(saldoActual.add(ingreso).subtract(egreso));
             cuentabancoRepository.updateSaldoCuentaPropia(cuenta);
         }
 
         movimiento.setSaldo(cuentabancoRepository.getSaldoTotalCuentas());
         movimientoRepository.insert(movimiento);
+    }
+
+    private boolean esEndosado(String chEndosado) {
+        if (chEndosado == null) return false;
+        String v = chEndosado.trim();
+        return v.equalsIgnoreCase("true") || v.equals("1");
     }
 
     @Transactional
@@ -65,12 +79,12 @@ public class MovimientoService {
 
             Movimiento mov = new Movimiento();
             mov.setFecha(primerDiaDelMes);
-            mov.setId_cuenta(cuenta.getId_cuenta());
+            mov.setId_cuenta(String.valueOf(cuenta.getId_cuenta()));
             mov.setId_concepto(null);
             mov.setIngreso(saldoCuenta);
             mov.setObservaciones("Saldo inicial del mes");
             mov.setOperacion(null);
-            mov.setCh_endosado(false);
+            mov.setCh_endosado(null);
             mov.setId_usuario(null);
             mov.setId_sucursal(null);
             mov.setSaldo(saldoAcumulado);

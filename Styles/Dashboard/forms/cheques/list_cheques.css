@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: space-between;
     background-color: var(--datos-bg);
-    padding: 0.6rem 1rem;
+    padding: 0.625rem 1rem;
 }
 
 .title h2 {

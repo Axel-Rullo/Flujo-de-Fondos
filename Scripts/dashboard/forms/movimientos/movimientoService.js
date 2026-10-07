@@ -1,10 +1,10 @@
 window.movimientoService = {
-    listMovimientos: async () => {
-        return await apiGet('/movimientos/list');
+    listMovimientos: async (limit, offset) => {
+        return await apiGet('/movimientos/list?limit=' + limit + '&offset=' + offset);
     },
 
-    listOperaciones: async () => {
-        return await apiGet('/operaciones/list');
+    listOperaciones: async (limit, offset) => {
+        return await apiGet('/operaciones/list?limit=' + limit + '&offset=' + offset);
     },
     
     newMovimiento: async (movimiento) => {
@@ -19,7 +19,7 @@ window.movimientoService = {
         return await apiPost('/movimientos/reportes/anual', { anio });
     },
 
-        reporteMensual: async (mes, anio) => {
+    reporteMensual: async (mes, anio) => {
         return await apiPost('/movimientos/reportes/mensual', { mes, anio });
     },
 }

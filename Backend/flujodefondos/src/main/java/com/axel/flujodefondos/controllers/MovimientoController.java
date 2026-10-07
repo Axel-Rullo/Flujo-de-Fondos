@@ -19,13 +19,13 @@ public class MovimientoController {
     private final MovimientoService movimientoService;
 
     @GetMapping("/movimientos/list")
-    public List<Movimiento> findAllMovimientos() {
-        return movimientoService.findAllMovimientos();
+    public List<Movimiento> findAllMovimientos(@RequestParam int limit, @RequestParam int offset) {
+        return movimientoService.findAllMovimientos(limit, offset);
     }
 
     @GetMapping("/operaciones/list")
-    public List<Movimiento> findAllOperaciones() {
-        return movimientoService.findAllOperaciones();
+    public List<Movimiento> findAllOperaciones(@RequestParam int limit, @RequestParam int offset) {
+        return movimientoService.findAllOperaciones(limit, offset);
     }
 
     @PostMapping("/movimientos/new")

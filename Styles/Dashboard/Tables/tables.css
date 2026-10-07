@@ -6,10 +6,40 @@
     overflow: visible;
 }
 
+/* Las tablas paginadas scrollean por dentro (renderizado virtual) */
+#lista_movimientos .tabulator-tableholder,
+#auditoria .tabulator-tableholder,
+#tabla-cheques-emitidos .tabulator-tableholder,
+#tabla-cheques-acobrar .tabulator-tableholder,
+#tabla-cheques-historial .tabulator-tableholder {
+    background: transparent;
+    overflow: auto;
+}
+
+/* Scroll de las tablas: mismo estilo que #content, con colores que se vean sobre fondo blanco */
+.tabulator .tabulator-tableholder::-webkit-scrollbar {
+    width: 8px;
+    height: 12px;
+}
+
+.tabulator .tabulator-tableholder::-webkit-scrollbar-track,
+.tabulator .tabulator-tableholder::-webkit-scrollbar-corner {
+    background: var(--white);
+}
+
+.tabulator .tabulator-tableholder::-webkit-scrollbar-thumb {
+    background: var(--black);
+    border-radius: 0.5rem;
+}
+
+.tabulator .tabulator-tableholder::-webkit-scrollbar-thumb:hover {
+    background: var(--tabulator-hover);
+}
+
 /* ── TABULATOR (BASE) ─────────────────────────────── */
 
 .tabulator {
-    background-color: var(--white);
+    background-color: var(--datos-bg);
     border: 1px solid var(--black);
     font-family: 'Inter', sans-serif;
     line-height: 1.25rem;

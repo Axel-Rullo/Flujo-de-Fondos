@@ -1,5 +1,12 @@
 window.movimientoTemplates = {
     
+    // Alto hasta el borde inferior útil de #content, para que la tabla scrollee por dentro
+    alturaTabla: function(selector) {
+        const contenido = document.getElementById('content');
+        const base = contenido.getBoundingClientRect().bottom - parseFloat(getComputedStyle(contenido).paddingBottom);
+        return Math.max(300, Math.floor(base - document.querySelector(selector).getBoundingClientRect().top));
+    },
+
     crearTablaMovimientos: async function(data) {
             if (this.tablaMovimientos) {
                 try { await this.tablaMovimientos.destroy(); } catch (e) {}
@@ -8,11 +15,12 @@ window.movimientoTemplates = {
             this.tablaMovimientos = new Tabulator("#lista_movimientos", {
                 index: "id_movimiento",
                 data: data,
-                columnDefaults: {headerSort:false},
+                height: this.alturaTabla("#lista_movimientos"),
+                columnDefaults: {headerSort:false, resizable:false},
                 layout: "fitColumns",
                 columns: [
                     { title: "FECHA EMISIÓN", field: "fecha", widthGrow: 10, hozAlign: "center"},
-                    { title: "MOVIMIENTO", field: "cuenta", widthGrow: 14},
+                    { title: "MOVIMIENTO", field: "cuenta", widthGrow: 14, formatter: function(cell) {const d = cell.getRow().getData(); return d.cuenta || d.ch_endosado || '';}},
                     { title: "CONCEPTO", field: "concepto", widthGrow: 16, formatter: function(cell) { return cell.getValue() == null ? "Saldo Inicial" : cell.getValue(); }},
                     { title: "INGRESO", field: "ingreso", widthGrow: 12, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
                     { title: "EGRESO", field: "egreso", widthGrow: 12, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
@@ -36,7 +44,8 @@ window.movimientoTemplates = {
             this.tablaAuditoria = new Tabulator("#auditoria", {
                 index: "id_movimiento",
                 data: data,
-                columnDefaults: {headerSort:false},
+                height: this.alturaTabla("#auditoria"),
+                columnDefaults: {headerSort:false, resizable:false},
                 layout: "fitColumns",
                 columns: [
                     { title: "FECHA", field: "fecha", widthGrow: 10, hozAlign: "center"},

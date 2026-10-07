@@ -49,7 +49,11 @@ public class CuentaBancoService {
         cuentaBancoRepository.insertCuentaPropia(cuentapropia);
 
         // ---------- Saldo inicial en movimientos ----------
-        Long idCuenta = cuentaBancoRepository.findCuentaPropia(cuentapropia);
+        Long idCuentaNum = cuentaBancoRepository.findCuentaPropia(cuentapropia);
+        if (idCuentaNum == null) {
+            throw new RuntimeException("No se pudo obtener el id de la cuenta recién creada");
+        }
+        String idCuenta = String.valueOf(idCuentaNum); // Movimiento.id_cuenta es String
         BigDecimal saldoCuenta = cuentapropia.getSaldo() != null ? cuentapropia.getSaldo() : BigDecimal.ZERO;
 
         Movimiento mov = new Movimiento();
@@ -58,7 +62,7 @@ public class CuentaBancoService {
         mov.setId_concepto(null);
         mov.setIngreso(saldoCuenta);
         mov.setObservaciones("Saldo inicial de la cuenta");
-        mov.setCh_endosado(false);
+        mov.setCh_endosado(null);
         mov.setId_usuario(null);
         mov.setId_sucursal(null);
         mov.setSaldo(cuentaBancoRepository.getSaldoTotalCuentas());
@@ -69,12 +73,18 @@ public class CuentaBancoService {
     // ── TRANSACCIONES INTERNAS ───────────────────────────────────────
     @Transactional
     public void insertTransaccionInterna(CuentaPropia transaccion) {
-        if (transaccion.getId_cuenta_origen().equals(transaccion.getId_cuenta_destino())) {
+        Long idOrigen = transaccion.getId_cuenta_origen();
+        Long idDestino = transaccion.getId_cuenta_destino();
+
+        if (idOrigen == null || idDestino == null) {
+            throw new RuntimeException("Debe indicar la cuenta de origen y destino");
+        }
+        if (idOrigen.equals(idDestino)) {
             throw new RuntimeException("La cuenta de origen y destino no pueden ser la misma");
         }
 
-        CuentaPropia origen = cuentaBancoRepository.findById(transaccion.getId_cuenta_origen());
-        CuentaPropia destino = cuentaBancoRepository.findById(transaccion.getId_cuenta_destino());
+        CuentaPropia origen = cuentaBancoRepository.findById(idOrigen);
+        CuentaPropia destino = cuentaBancoRepository.findById(idDestino);
 
         if (origen == null || destino == null) {
             throw new RuntimeException("La cuenta de origen o destino no existe");

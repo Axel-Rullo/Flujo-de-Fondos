@@ -67,7 +67,7 @@ window.ChequeTemplates = {
         if (destinoSection) destinoSection.style.display = '';
 
         container.querySelector('.section-label.destino').textContent = cheque.uso === 'E' ? 'Endosado a' : cheque.uso === 'D' ? 'Depositado en' : 'Destino';
-        container.querySelector('.destino_label').textContent = cheque.uso === 'E' ? 'Tercero' : cheque.uso === 'D' ? 'Cuenta Propia' : 'Destino';
+        container.querySelector('.destino_label').textContent = cheque.uso === 'E' ? 'Tercero' : cheque.uso === 'D' ? 'Cuenta Propia' : 'Sin Definir';
         const destinoVal = cheque.uso === 'E' ? cheque.clipro_imputar : (cheque.uso === 'D' ? cheque.cuenta_propia_imputar : null);
         container.querySelector('.destino.value').textContent = destinoVal || '--';
 
@@ -104,13 +104,12 @@ window.ChequeTemplates = {
             this.tablaEmitidos = null;
         }
         
-        data.sort((a, b) => (sumarDias(a.fecha_pago, 30) || '').localeCompare(sumarDias(b.fecha_pago, 30) || ''));
-        
         const selectorEmitidos = document.querySelector("#tabla-cheques-emitidos") ? "#tabla-cheques-emitidos" : "#tabla-cheques-historial";
         this.tablaEmitidos = new Tabulator(selectorEmitidos, {
             index: "id_cheque",
             data: data,
-            columnDefaults: {headerSort:false},
+            height: this.alturaTabla(selectorEmitidos),
+            columnDefaults: {headerSort:false, resizable:false},
             layout: "fitColumns",
             rowFormatter: this.formatearFilaEstado,
             columns: [
@@ -142,13 +141,12 @@ window.ChequeTemplates = {
             this.tablaACobrar = null;
         }
 
-        data.sort((a, b) => (sumarDias(a.fecha_pago, 30) || '').localeCompare(sumarDias(b.fecha_pago, 30) || ''));
-
         const selectorACobrar = document.querySelector("#tabla-cheques-acobrar") ? "#tabla-cheques-acobrar" : "#tabla-cheques-historial";
         this.tablaACobrar = new Tabulator(selectorACobrar, {
             index: "id_cheque",
             data: data,
-            columnDefaults: {headerSort:false},
+            height: this.alturaTabla(selectorACobrar),
+            columnDefaults: {headerSort:false, resizable:false},
             layout: "fitColumns",
             rowFormatter: this.formatearFilaEstado,
             columns: [
@@ -188,12 +186,11 @@ window.ChequeTemplates = {
             this.tablaRechAnul = null;
         }
 
-        data.sort((a, b) => (sumarDias(a.fecha_pago, 30) || '').localeCompare(sumarDias(b.fecha_pago, 30) || ''));
-
         this.tablaRechAnul = new Tabulator("#tabla-cheques-historial", {
             index: "id_cheque",
             data: data,
-            columnDefaults: {headerSort:false},
+            height: this.alturaTabla("#tabla-cheques-historial"),
+            columnDefaults: {headerSort:false, resizable:false},
             layout: "fitColumns",
             rowFormatter: this.formatearFilaEstado,
             columns: [
@@ -219,6 +216,13 @@ window.ChequeTemplates = {
         return this.tablaRechAnul;
     },
 
+    // Alto hasta el borde inferior útil de #content, para que la tabla scrollee por dentro
+    alturaTabla: function(selector) {
+        const contenido = document.getElementById('content');
+        const base = contenido.getBoundingClientRect().bottom - parseFloat(getComputedStyle(contenido).paddingBottom);
+        return Math.max(300, Math.floor(base - document.querySelector(selector).getBoundingClientRect().top));
+    },
+
     formatearAnio: function(cell) {
         const fecha = sumarDias(cell.getValue(), 30);
         return (fecha || "").substring(0, 4);
@@ -231,7 +235,7 @@ window.ChequeTemplates = {
     formatearFilaEstado: function(row) {
         const cheque = row.getData();
         const fila = row.getElement();
-        const dias = diasHastaVencimiento(sumarDias(cheque.fecha_pago, 30));
+        const dias = cheque.estado === 'P' ? diasHastaVencimiento(sumarDias(cheque.fecha_pago, 30)) : null;
 
         fila.classList.remove('estado-pendiente', 'estado-por-vencer', 'estado-cobrado', 'estado-rechazado', 'estado-anulado');
 

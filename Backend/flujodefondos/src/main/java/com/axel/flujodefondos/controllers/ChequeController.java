@@ -50,24 +50,24 @@ public class ChequeController {
 
     @PostMapping("/cheques/propios/list")
     public List<Cheque> listAllPropios(@RequestBody Cheque cheque) {
-        return chequeService.listAllPropios(cheque.getEstado());
+        return chequeService.listAllPropios(cheque.getEstado(), cheque.getBusqueda(), cheque.getLimit(), cheque.getOffset());
     }
 
     @PostMapping("/cheques/terceros/list")
     public List<Cheque> listAllTerceros(@RequestBody Cheque cheque) {
-        return chequeService.listAllTerceros(cheque.getEstado());
+        return chequeService.listAllTerceros(cheque.getEstado(), cheque.getBusqueda(), cheque.getLimit(), cheque.getOffset());
     }
 
     // ── HISTORIAL ────────────────────────────────────────────────────
 
     @PostMapping("/cheques/propios/bajas")
     public List<Cheque> listBajasPropios(@RequestBody Cheque cheque) {
-        return chequeService.listBajasPropios(cheque.getEstado());
+        return chequeService.listBajasPropios(cheque.getEstado(), cheque.getBusqueda(), cheque.getLimit(), cheque.getOffset());
     }
 
     @PostMapping("/cheques/terceros/bajas")
     public List<Cheque> listBajasTerceros(@RequestBody Cheque cheque) {
-        return chequeService.listBajasTerceros(cheque.getEstado());
+        return chequeService.listBajasTerceros(cheque.getEstado(), cheque.getBusqueda(), cheque.getLimit(), cheque.getOffset());
     }
 
     // ── DETALLE ──────────────────────────────────────────────────────

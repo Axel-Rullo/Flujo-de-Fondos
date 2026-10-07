@@ -23,6 +23,28 @@ public class ChequeRepository {
 
     private final RowMapper<Cheque> chequeMapper = new BeanPropertyRowMapper<>(Cheque.class);
 
+    // ── BÚSQUEDA Y PAGINACIÓN ────────────────────────────────────────
+
+    // Número, importe (con 2 decimales), nombre o DNI del usuario que cargó el cheque
+    private static final String BUSQUEDA =
+        "AND (ch.numero LIKE ? OR printf('%.2f', ch.importe) LIKE ? OR u.nombre LIKE ? OR CAST(u.dni AS TEXT) LIKE ?) ";
+
+    private static final String PAGINA = "LIMIT ? OFFSET ?";
+
+    // Pendientes: primero los que vencen antes. Historial: primero los más recientes
+    private String orden(String estado) {
+        return "P".equals(estado)
+            ? "ORDER BY ch.fecha_pago, ch.id_cheque "
+            : "ORDER BY ch.fecha_destino DESC, ch.id_cheque DESC ";
+    }
+
+    private Object[] parametros(String estado, String busqueda, int limit, int offset) {
+        String texto = busqueda == null ? "" : busqueda.trim();
+        String like = "%" + texto + "%";
+        String likeImporte = "%" + texto.replace(",", "") + "%";
+        return new Object[] { estado, like, likeImporte, like, like, limit, offset };
+    }
+
     // ── RESUMEN ───────────────────────────────────────────────────────
 
     public List<Cheque> findAllTotales() {
@@ -56,7 +78,7 @@ public class ChequeRepository {
 
     // ── LISTADO ───────────────────────────────────────────────────────
 
-    public List<Cheque> findAllPropios(String estado) {
+    public List<Cheque> findAllPropios(String estado, String busqueda, int limit, int offset) {
         return jdbcTemplate.query(
             "SELECT ch.id_cheque, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.estado, " +
             "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision " +
@@ -68,13 +90,17 @@ public class ChequeRepository {
             // Cuenta propia en emisión
             "LEFT JOIN cuentas cb ON ch.id_cuenta_propia_emision = cb.id_cuenta " +
 
-            "WHERE ch.clase = 'P' AND ch.estado = ?",
+            // Usuario (para la búsqueda)
+            "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
+
+            "WHERE ch.clase = 'P' AND ch.estado = ? " +
+            BUSQUEDA + orden(estado) + PAGINA,
             chequeMapper,
-            estado
+            parametros(estado, busqueda, limit, offset)
         );
     }
 
-    public List<Cheque> findAllTerceros(String estado) {
+    public List<Cheque> findAllTerceros(String estado, String busqueda, int limit, int offset) {
         return jdbcTemplate.query(
             "SELECT ch.id_cheque, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.uso, " +
             "cp.nombre AS clipro_emision, cpd.nombre AS clipro_imputar, ce.nombre AS cuenta_propia_imputar, b.nombre AS banco_emision " +
@@ -92,15 +118,19 @@ public class ChequeRepository {
             // Banco del cheque
             "LEFT JOIN bancos b ON ch.id_banco_emision = b.id_banco " +
 
-            "WHERE ch.clase = 'T' AND ch.estado = ?",
+            // Usuario (para la búsqueda)
+            "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
+
+            "WHERE ch.clase = 'T' AND ch.estado = ? " +
+            BUSQUEDA + orden(estado) + PAGINA,
             chequeMapper,
-            estado
+            parametros(estado, busqueda, limit, offset)
         );
     }
 
     // ── HISTORIAL ────────────────────────────────────────────────────
 
-    public List<Cheque> findAllBajasPropios(String estado) {
+    public List<Cheque> findAllBajasPropios(String estado, String busqueda, int limit, int offset) {
         return jdbcTemplate.query(
             "SELECT ch.id_cheque, ch.numero, ch.importe, ch.fecha_destino, ch.estado, ch.motivo, ch.clase, " +
             "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision, u.nombre AS usuario " +
@@ -115,13 +145,14 @@ public class ChequeRepository {
             // Usuario
             "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
 
-            "WHERE ch.clase = 'P' AND ch.estado = ?",
+            "WHERE ch.clase = 'P' AND ch.estado = ? " +
+            BUSQUEDA + orden(estado) + PAGINA,
             chequeMapper,
-            estado
+            parametros(estado, busqueda, limit, offset)
         );
     }
 
-    public List<Cheque> findAllBajasTerceros(String estado) {
+    public List<Cheque> findAllBajasTerceros(String estado, String busqueda, int limit, int offset) {
         return jdbcTemplate.query(
             "SELECT ch.id_cheque, ch.numero, ch.importe, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.motivo, " +
             "cp.nombre AS clipro_emision, b.nombre AS banco_emision, u.nombre AS usuario, ch.clase " +
@@ -136,9 +167,10 @@ public class ChequeRepository {
             // Usuario
             "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
 
-            "WHERE ch.clase = 'T' AND ch.estado = ?",
+            "WHERE ch.clase = 'T' AND ch.estado = ? " +
+            BUSQUEDA + orden(estado) + PAGINA,
             chequeMapper,
-            estado
+            parametros(estado, busqueda, limit, offset)
         );
     }
 
@@ -205,18 +237,18 @@ public class ChequeRepository {
 
     // ── IMPUTACIÓN ───────────────────────────────────────────────────
 
-    public void imputarChequePropio(Cheque cheque) {
-        jdbcTemplate.update(
-            "UPDATE cheques SET fecha_destino = ?, estado = ? WHERE id_cheque = ?",
-            cheque.getFecha_destino(), "C", cheque.getId_cheque()
+    public int imputarChequePropio(Cheque cheque) {
+        return jdbcTemplate.update(
+            "UPDATE cheques SET fecha_destino = ?, estado = ? WHERE id_cheque = ? AND estado = ?",
+            cheque.getFecha_destino(), "C", cheque.getId_cheque(), "P"
         );
     }
 
-    public void imputarChequeTercero(Cheque cheque) {
-        jdbcTemplate.update(
-            "UPDATE cheques SET estado = ?, uso = ?, fecha_destino = ?, id_cuenta_propia_imputar = ?, id_clipro_imputar = ?, id_concepto_imputar = ? WHERE id_cheque = ?",
+    public int imputarChequeTercero(Cheque cheque) {
+        return jdbcTemplate.update(
+            "UPDATE cheques SET estado = ?, uso = ?, fecha_destino = ?, id_cuenta_propia_imputar = ?, id_clipro_imputar = ?, id_concepto_imputar = ? WHERE id_cheque = ? AND estado = ?",
             "C", cheque.getUso(), cheque.getFecha_destino(), cheque.getId_cuenta_propia_imputar(),
-            cheque.getId_clipro_imputar(), cheque.getId_concepto_imputar(), cheque.getId_cheque()
+            cheque.getId_clipro_imputar(), cheque.getId_concepto_imputar(), cheque.getId_cheque(), "P"
         );
     }
 
@@ -238,5 +270,22 @@ public class ChequeRepository {
         );
     }
 
-    // ── RESUMEN ──────────────────────────────────────────────────────
+    // ── DATOS PARA MOVIMIENTOS ───────────────────────────────────────
+
+    public Cheque findImputacionById(Long id) {
+        return jdbcTemplate.queryForObject(
+            "SELECT ch.numero, ch.importe, ch.id_concepto_emision, ch.id_cuenta_propia_emision " +
+            "FROM cheques ch WHERE ch.id_cheque = ?",
+            chequeMapper,
+            id
+        );
+    }
+
+    public String findSucursalByUsuario(String idUsuario) {
+        return jdbcTemplate.queryForObject(
+            "SELECT id_sucursal FROM usuarios WHERE id_usuario = ?",
+            String.class,
+            idUsuario
+        );
+    }
 }

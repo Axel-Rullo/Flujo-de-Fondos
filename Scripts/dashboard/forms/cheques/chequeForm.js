@@ -38,18 +38,21 @@
     function buildImputarChequePropio(form) {
         return {
             id_cheque: idChequeImputar,
-            fecha_destino: form.querySelector('#fecha_destino').value
+            fecha_destino: form.querySelector('#fecha_destino').value,
+            id_usuario: window.currentUser.id
         };
     }
 
     function buildImputarChequeTerceros(form) {
+        const uso = form.querySelector('#uso').value;
         return {
             id_cheque: idChequeImputar,
-            uso: form.querySelector('#uso').value,
+            uso: uso,
             fecha_destino: form.querySelector('#fecha_destino').value,
-            id_cuenta_propia_imputar: form.querySelector('#id_cuenta_propia_imputar').value || null,
-            id_clipro_imputar: form.querySelector('#id_clipro_imputar').value || null,
-            id_concepto_imputar: form.querySelector('#id_concepto_imputar').value || null,
+            id_cuenta_propia_imputar: uso === 'D' ? (form.querySelector('#id_cuenta_propia_imputar').value || null) : null,
+            id_clipro_imputar: uso === 'E' ? (form.querySelector('#id_clipro_imputar').value || null) : null,
+            id_concepto_imputar: uso === 'E' ? (form.querySelector('#id_concepto_imputar').value || null) : null,
+            id_usuario: window.currentUser.id
         };
     }
 
@@ -105,8 +108,8 @@
             try {
                 if (form.id === 'form_new_chequepropio') {
                     cheque = buildChequePropio(form);
-                    if (cheque.fecha_emision > getFechaLocal()) {
-                        showAlert('La Fecha de Emision no puede ser\nuna Fecha posterior a la Fecha Actual', 'warning', 4000, 'center', true);
+                    if (sumarDias(getFechaLocal(), -7) > cheque.fecha_emision || cheque.fecha_emision > getFechaLocal()) {
+                        showAlert('La Fecha de Emision puede ser hoy o 7 días hacia atrás', 'warning', 4000, 'center', true);
                         return;
                     }
                     if (cheque.tipo === 'D' && cheque.fecha_pago <= cheque.fecha_emision) {
@@ -124,8 +127,8 @@
                     }
                 } else if (form.id === 'form_new_chequetercero') {
                     cheque = buildChequeTercero(form);
-                    if (cheque.fecha_emision > getFechaLocal()) {
-                        showAlert('La Fecha de Emision no puede ser\nuna Fecha posterior a la Fecha Actual', 'warning', 4000, 'center', true);
+                    if (sumarDias(getFechaLocal(), -7) > cheque.fecha_emision || cheque.fecha_emision > getFechaLocal()) {
+                        showAlert('La Fecha de Emision puede ser hoy o 7 días hacia atrás', 'warning', 4000, 'center', true);
                         return;
                     }
                     if (cheque.tipo === 'D' && cheque.fecha_pago <= cheque.fecha_emision) {
@@ -143,6 +146,10 @@
                     }
                 } else if (form.id === 'form_imputar_chequepropio') {
                     cheque = buildImputarChequePropio(form);
+                    if (sumarDias(getFechaLocal(), -7) > cheque.fecha_destino || cheque.fecha_destino > getFechaLocal()) {
+                        showAlert('La Fecha de Destino puede ser hoy o 7 días hacia atrás', 'warning', 4000, 'center', true);
+                        return;
+                    }
                     const res = await window.ChequeService.imputarChequePropio(cheque);
                     if (!res.ok) {
                         showAlert(res.mensaje, 'error', 3000, 'center', true);
@@ -170,6 +177,10 @@
                     }
                 } else {
                     cheque = buildImputarChequeTerceros(form);
+                    if (sumarDias(getFechaLocal(), -7) > cheque.fecha_destino || cheque.fecha_destino > getFechaLocal()) {
+                        showAlert('La Fecha de Destino puede ser hoy o 7 días hacia atrás', 'warning', 4000, 'center', true);
+                        return;
+                    }
                     const res = await window.ChequeService.imputarChequeTerceros(cheque);
                     if (!res.ok) {
                         showAlert(res.mensaje, 'error', 3000, 'center', true);

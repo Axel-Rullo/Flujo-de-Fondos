@@ -21,7 +21,7 @@ public class MovimientoRepository {
 
     private final RowMapper<Movimiento> movimientoMapper = new BeanPropertyRowMapper<>(Movimiento.class);
 
-    public List<Movimiento> findAllMovimientos() {
+    public List<Movimiento> findAllMovimientos(int limit, int offset) {
         return jdbcTemplate.query(
             "SELECT m.id_movimiento, m.fecha, " +
             "m.ingreso, m.egreso, m.saldo, m.observaciones, m.ch_endosado, " +
@@ -29,19 +29,23 @@ public class MovimientoRepository {
             "FROM movimientos m " +
             "LEFT JOIN cuentas cu ON cu.id_cuenta = m.id_cuenta " +
             "LEFT JOIN conceptos co ON co.id_concepto = m.id_concepto " +
-            "ORDER BY fecha ASC",
-            movimientoMapper
+            "ORDER BY fecha ASC, m.id_movimiento ASC " +
+            "LIMIT ? OFFSET ?",
+            movimientoMapper,
+            limit, offset
         );
     }
 
-    public List<Movimiento> findAllOperaciones() {
+    public List<Movimiento> findAllOperaciones(int limit, int offset) {
         return jdbcTemplate.query(
             "SELECT m.id_movimiento, m.fecha, m.operacion, u.nombre AS usuario " +
             "FROM movimientos m " +
             "LEFT JOIN usuarios u ON u.id_usuario = m.id_usuario " +
             "WHERE m.operacion IS NOT NULL " +
-            "ORDER BY fecha ASC",
-            movimientoMapper
+            "ORDER BY fecha ASC, m.id_movimiento ASC " +
+            "LIMIT ? OFFSET ?",
+            movimientoMapper,
+            limit, offset
         );
     }
 

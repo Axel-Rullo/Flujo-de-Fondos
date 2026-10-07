@@ -24,9 +24,9 @@
                     const reporte = await window.movimientoService.reporteMensual(mes, anio);
                     await window.movimientoTemplates.crearReporteMensual(reporte, anio, mes);
                 } else {
-                    window.exportFecha = parseInt(form.querySelector('#año').value);
-                    date = parseInt(form.querySelector('#año').value);
-                    const reporte = await window.movimientoService.reporteAnual(date);
+                    const anio = parseInt(form.querySelector('#año').value);
+                    window.exportFecha = anio;
+                    const reporte = await window.movimientoService.reporteAnual(anio);
                     await window.movimientoTemplates.crearReporteAnual(reporte);
                 }
                 form.reset();
@@ -45,7 +45,7 @@
             id_concepto: form.querySelector('#id_concepto_emision').value,
             observaciones: form.querySelector('#observaciones').value,
             operacion: form.querySelector('#operacion').value,
-            ch_endosado: false,
+            ch_endosado: null,
             id_usuario: currentUser.id,
             id_sucursal: currentUser.id_sucursal
         };
