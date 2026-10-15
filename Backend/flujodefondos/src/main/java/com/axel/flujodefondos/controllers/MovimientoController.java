@@ -18,20 +18,37 @@ public class MovimientoController {
     
     private final MovimientoService movimientoService;
 
-    @GetMapping("/movimientos/list")
-    public List<Movimiento> findAllMovimientos(@RequestParam int limit, @RequestParam int offset) {
-        return movimientoService.findAllMovimientos(limit, offset);
+    @PostMapping("/movimientos/list")
+    public List<Movimiento> findAllMovimientos(@RequestBody Map<String, Integer> body) {
+        return movimientoService.findAllMovimientos(body.get("limit"), body.get("offset"));
     }
 
-    @GetMapping("/operaciones/list")
-    public List<Movimiento> findAllOperaciones(@RequestParam int limit, @RequestParam int offset) {
-        return movimientoService.findAllOperaciones(limit, offset);
+    @PostMapping("/operaciones/list")
+    public List<Movimiento> findAllOperaciones(@RequestBody Map<String, Integer> body) {
+        return movimientoService.findAllOperaciones(body.get("limit"), body.get("offset"));
+    }
+
+    @PostMapping("/movimientos/filtro")
+    public List<Movimiento> filtroMovimientos(@RequestBody Map<String, Object> body) {
+        return movimientoService.filtroMovimientos(
+            (String) body.get("desde"), (String) body.get("hasta"),
+            (Integer) body.get("id_concepto"),
+            (Integer) body.get("limit"), (Integer) body.get("offset"));
+    }
+
+    @GetMapping("/movimientos/totales")
+    public Map<String, Object> mostrarTotales() {
+        return movimientoService.mostrarTotales();
     }
 
     @PostMapping("/movimientos/new")
     public ResponseEntity<Map<String, Object>> newMovimiento(@RequestBody Movimiento movimiento) {
-        movimientoService.createMovimiento(movimiento);
-        return ResponseEntity.ok(Map.of("ok", true));
+        try {
+            movimientoService.createMovimiento(movimiento);
+            return ResponseEntity.ok(Map.of("ok", true));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(Map.of("ok", false, "mensaje", e.getMessage()));
+        }
     }
 
     @GetMapping("/movimientos/saldo_inicial")
@@ -46,7 +63,7 @@ public class MovimientoController {
     }
 
     @PostMapping("/movimientos/reportes/mensual")
-        public List<Map<String, Object>> ReporteMensual(@RequestBody Map<String, Integer> body) {
-            return movimientoService.ReporteMensual(body.get("mes"), body.get("anio"));
+    public List<Map<String, Object>> ReporteMensual(@RequestBody Map<String, String> body) {
+        return movimientoService.ReporteMensual(body.get("desde"), body.get("hasta"));
     }
 }

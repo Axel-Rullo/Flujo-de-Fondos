@@ -3,7 +3,7 @@
 
     // ── PAGINACIÓN Y BÚSQUEDA ──
     const TAMANIO_PAGINA = 50;
-    const MAXIMO_CHEQUES = 2000;
+    const MAXIMO_CHEQUES = 5000;
     const UMBRAL_SCROLL = 0.70;
     const DEMORA_BUSQUEDA = 400;
 

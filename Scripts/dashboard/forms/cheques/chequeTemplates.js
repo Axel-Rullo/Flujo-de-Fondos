@@ -4,98 +4,97 @@ window.ChequeTemplates = {
     //////////////////////////////////////////////
 
     fillChequeModal: async function(ch, container) {
-    // ── BOTONES ──
-    const bloqueado = ch.estado !== 'P';
-    const btnAnular = container.querySelector('#btn-anular');
-    const btnRechazar = container.querySelector('#btn-reject');
-    const btnImputar = container.querySelector('#btn-primary');
-    if (btnAnular) btnAnular.style.display = bloqueado ? 'none' : '';
-    if (btnRechazar) btnRechazar.style.display = bloqueado ? 'none' : '';
-    if (btnImputar) btnImputar.style.display = bloqueado ? 'none' : '';
+        // ── BOTONES ──
+        const bloqueado = ch.estado !== 'P';
+        const btnAnular = container.querySelector('#btn-anular');
+        const btnRechazar = container.querySelector('#btn-reject');
+        const btnImputar = container.querySelector('#btn-primary');
 
-    const cheque = await window.ChequeService.getCheque(ch.id_cheque);
-    
-    const view = container.id === 'view_cheque' ? container : container.querySelector('#view_cheque');
-    view.dataset.id = cheque.id_cheque;
-    view.dataset.clase = cheque.clase;
+        const fechaVencimiento = ch.fecha_pago ? sumarDias(ch.fecha_pago, 30) : null;
+        const cobroAutomatico = ch.estado === 'P' && fechaVencimiento && fechaVencimiento <= getFechaLocal();
 
-    // ── ENCABEZADO ──
-    container.querySelector('.number').textContent = 'N° ' + (cheque.numero || '--') + ' (' + cheque.id_cheque + ')';
-    container.querySelector('.type').textContent = (cheque.clase === 'P' ? 'Cheque Propio' : 'Cheque de Terceros') + ' (' + (cheque.tipo === 'C' ? 'Corriente' : 'Diferido') + ')';
-    container.querySelector('.cash').textContent = 'IMPORTE: $ ' + (cheque.importe || '--');
+        if (btnAnular) btnAnular.style.display = (bloqueado || cobroAutomatico) ? 'none' : '';
+        if (btnRechazar) btnRechazar.style.display = (bloqueado || cobroAutomatico) ? 'none' : '';
+        if (btnImputar) btnImputar.style.display = bloqueado ? 'none' : '';
 
-    // ── ESTADO ──
-    const fechaVencimiento = sumarDias(cheque.fecha_pago, 30);
-    const diasParaVencer = diasHastaVencimiento(fechaVencimiento);
-    const porVencer = cheque.estado === 'P' && diasParaVencer !== null && diasParaVencer <= 7;
+        const cheque = await window.ChequeService.getCheque(ch.id_cheque);
+        
+        const view = container.id === 'view_cheque' ? container : container.querySelector('#view_cheque');
+        view.dataset.id = cheque.id_cheque;
+        view.dataset.clase = cheque.clase;
+        if (fechaVencimiento) view.dataset.fecha_cobro = fechaVencimiento;
 
-    const estados = {
-        P: { texto: 'Pendiente', fondo: 'var(--white)',  color: 'var(--black)' },
-        C: { texto: 'Cobrado',   fondo: 'var(--green)',  color: 'var(--white)' },
-        R: { texto: 'Rechazado', fondo: 'var(--red)',    color: 'var(--white)' },
-        A: { texto: 'Anulado',   fondo: 'var(--red)',    color: 'var(--white)' }
-    };
-    const estado = porVencer
-        ? { texto: 'Por Vencer', fondo: 'var(--yellow)', color: 'var(--black)' }
-        : (estados[cheque.estado] || { texto: '--', fondo: '', color: '' });
-    const estadoSection = container.querySelector('.status');
-    estadoSection.textContent = estado.texto;
-    estadoSection.style.backgroundColor = estado.fondo;
-    estadoSection.style.color = estado.color;
+        // ── ENCABEZADO ──
+        container.querySelector('.number').textContent = 'N° ' + (cheque.numero || '--') + ' (' + cheque.id_cheque + ')';
+        container.querySelector('.type').textContent = (cheque.clase === 'P' ? 'Cheque Propio' : 'Cheque de Terceros') + ' (' + (cheque.tipo === 'C' ? 'Corriente' : 'Diferido') + ')';
+        container.querySelector('.cash').textContent = 'IMPORTE: $ ' + (cheque.importe || '--');
 
-    // ── FECHAS ──
-    container.querySelector('.fecha_emision').textContent = cheque.fecha_emision || '--';
-    container.querySelector('.fecha_pago').textContent = cheque.fecha_pago || '--';
-    container.querySelector('.fecha_vencimiento').textContent = fechaVencimiento || '--';
-    container.querySelector('.fecha_destino').textContent = cheque.fecha_destino || '--';
+        // ── ESTADO ──
+        const estados = {
+            P: { texto: 'Pendiente', fondo: 'var(--white)',  color: 'var(--black)' },
+            C: { texto: 'Cobrado',   fondo: 'var(--green)',  color: 'var(--white)' },
+            R: { texto: 'Rechazado', fondo: 'var(--red)',    color: 'var(--white)' },
+            A: { texto: 'Anulado',   fondo: 'var(--red)',    color: 'var(--white)' }
+        };
+        const estado = estados[cheque.estado] || { texto: '--', fondo: '', color: '' };
+        const estadoSection = container.querySelector('.status');
+        estadoSection.textContent = estado.texto;
+        estadoSection.style.backgroundColor = estado.fondo;
+        estadoSection.style.color = estado.color;
 
-    // ── TITULARES Y CUENTAS ──
-    container.querySelector('.clipro_emision').textContent = cheque.clipro_emision || '--';
-    container.querySelector('.otorgado_por').textContent = cheque.usuario || '--';
-    container.querySelector('.cuenta_banco_emision_label').textContent = cheque.clase === 'T' ? 'Banco' : 'Cuenta Propia';
-    container.querySelector('.cuenta_banco_emision').textContent = (cheque.clase === 'T' ? cheque.banco_emision : cheque.cuenta_propia_emision) || '--';
+        // ── FECHAS ──
+        container.querySelector('.fecha_emision').textContent = invertirFecha(cheque.fecha_emision) || '--';
+        container.querySelector('.fecha_pago').textContent = invertirFecha(cheque.fecha_pago) || '--';
+        container.querySelector('.fecha_vencimiento').textContent = invertirFecha(fechaVencimiento) || '--';
+        container.querySelector('.fecha_destino').textContent = invertirFecha(cheque.fecha_destino) || '--';
 
-    container.querySelector('.concepto_emision_label').textContent = cheque.clase === 'P' ? 'Cuenta de Salida' : 'Cuenta de Entrada';
-    container.querySelector('.concepto_emision').textContent = cheque.concepto_emision || '--';
+        // ── TITULARES Y CUENTAS ──
+        container.querySelector('.clipro_emision').textContent = cheque.clipro_emision || '--';
+        container.querySelector('.otorgado_por').textContent = cheque.usuario || '--';
+        container.querySelector('.cuenta_banco_emision_label').textContent = cheque.clase === 'T' ? 'Banco' : 'Cuenta Propia';
+        container.querySelector('.cuenta_banco_emision').textContent = (cheque.clase === 'T' ? cheque.banco_emision : cheque.cuenta_propia_emision) || '--';
 
-    // ── DESTINO Y USO ──
-    const usoSection = container.querySelector('#uso');
-    const destinoSection = container.querySelector('.section-cheque.destino-section');
+        container.querySelector('.concepto_emision_label').textContent = cheque.clase === 'P' ? 'Cuenta de Salida' : 'Cuenta de Entrada';
+        container.querySelector('.concepto_emision').textContent = cheque.concepto_emision || '--';
 
-    if (cheque.clase === 'T') {
-        if (usoSection) usoSection.style.display = '';
-        if (destinoSection) destinoSection.style.display = '';
+        // ── DESTINO Y USO ──
+        const usoSection = container.querySelector('#uso');
+        const destinoSection = container.querySelector('.section-cheque.destino-section');
 
-        container.querySelector('.section-label.destino').textContent = cheque.uso === 'E' ? 'Endosado a' : cheque.uso === 'D' ? 'Depositado en' : 'Destino';
-        container.querySelector('.destino_label').textContent = cheque.uso === 'E' ? 'Tercero' : cheque.uso === 'D' ? 'Cuenta Propia' : 'Sin Definir';
-        const destinoVal = cheque.uso === 'E' ? cheque.clipro_imputar : (cheque.uso === 'D' ? cheque.cuenta_propia_imputar : null);
-        container.querySelector('.destino.value').textContent = destinoVal || '--';
+        if (cheque.clase === 'T') {
+            if (usoSection) usoSection.style.display = '';
+            if (destinoSection) destinoSection.style.display = '';
 
-        const conceptoImputarRow = container.querySelector('.row-concepto-imputar');
-        if (cheque.uso === 'E') {
-            conceptoImputarRow.style.display = '';
-            conceptoImputarRow.querySelector('.label').textContent = 'Cuenta de salida';
-            container.querySelector('.cuenta_concepto_imputar').textContent = cheque.concepto_imputar || '--';
+            container.querySelector('.section-label.destino').textContent = cheque.uso === 'E' ? 'Endosado a' : cheque.uso === 'D' ? 'Depositado en' : 'Destino';
+            container.querySelector('.destino_label').textContent = cheque.uso === 'E' ? 'Tercero' : cheque.uso === 'D' ? 'Cuenta Propia' : 'Sin Definir';
+            const destinoVal = cheque.uso === 'E' ? cheque.clipro_imputar : (cheque.uso === 'D' ? cheque.cuenta_propia_imputar : null);
+            container.querySelector('.destino.value').textContent = destinoVal || '--';
+
+            const conceptoImputarRow = container.querySelector('.row-concepto-imputar');
+            if (cheque.uso === 'E') {
+                conceptoImputarRow.style.display = '';
+                conceptoImputarRow.querySelector('.label').textContent = 'Cuenta de salida';
+                container.querySelector('.cuenta_concepto_imputar').textContent = cheque.concepto_imputar || '--';
+            } else {
+                conceptoImputarRow.style.display = 'none';
+            }
+
+            container.querySelector('.uso').textContent = cheque.uso === 'E' ? 'Endoso' : cheque.uso === 'D' ? 'Depósito' : '--';
         } else {
-            conceptoImputarRow.style.display = 'none';
+            if (usoSection) usoSection.style.display = 'none';
+            if (destinoSection) destinoSection.style.display = 'none';
         }
 
-        container.querySelector('.uso').textContent = cheque.uso === 'E' ? 'Endoso' : cheque.uso === 'D' ? 'Depósito' : '--';
-    } else {
-        if (usoSection) usoSection.style.display = 'none';
-        if (destinoSection) destinoSection.style.display = 'none';
-    }
+        // ── OBSERVACIÓN Y MOTIVO ──
+        container.querySelector('.observacion').textContent = cheque.observacion || '--';
 
-    // ── OBSERVACIÓN Y MOTIVO ──
-    container.querySelector('.observacion').textContent = cheque.observacion || '--';
-
-    const motivoRow = container.querySelector('.row-motivo');
-    if (cheque.estado === 'R' || cheque.estado === 'A') {
-        motivoRow.style.display = '';
-        container.querySelector('.motivo').textContent = cheque.motivo || '--';
-    } else {
-        motivoRow.style.display = 'none';
-    }
+        const motivoRow = container.querySelector('.row-motivo');
+        if (cheque.estado === 'R' || cheque.estado === 'A') {
+            motivoRow.style.display = '';
+            container.querySelector('.motivo').textContent = cheque.motivo || '--';
+        } else {
+            motivoRow.style.display = 'none';
+        }
     },
 
     crearTablaChequesEmitidos: async function(data) {
@@ -114,8 +113,8 @@ window.ChequeTemplates = {
             rowFormatter: this.formatearFilaEstado,
             columns: [
                 { title: "",                field: "tipo",          widthGrow: 1, hozAlign: "center"},
-                { title: "AÑO",             field: "fecha_pago",    widthGrow: 5, hozAlign: "center", formatter: this.formatearAnio},
-                { title: "FECHA COBRO",     field: "fecha_pago",    widthGrow: 11, hozAlign: "center", formatter: this.formatearFechaCobro },
+                { title: "AÑO",             field: "fecha_pago",    widthGrow: 5, hozAlign: "center", formatter: (cell) => this.formatearAnio(cell) || '--'},
+                { title: "FECHA COBRO",     field: "fecha_pago",    widthGrow: 11, hozAlign: "center", formatter: (cell) => invertirFecha(this.formatearFechaCobro(cell)) || '--'},
                 { title: "BANCO",           field: "cuenta_propia_emision", widthGrow: 22 },
                 { title: "NÚMERO",          field: "numero",        widthGrow: 18 },
                 { title: "IMPORTE",         field: "importe",       widthGrow: 18, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
@@ -151,13 +150,13 @@ window.ChequeTemplates = {
             rowFormatter: this.formatearFilaEstado,
             columns: [
                 { title: "",                field: "tipo",            widthGrow: 1, hozAlign: "center"},
-                { title: "AÑO",             field: "fecha_pago",      widthGrow: 5, hozAlign: "center", formatter: this.formatearAnio},
-                { title: "FECHA COBRO",     field: "fecha_pago",      widthGrow: 11, hozAlign: "center", formatter: this.formatearFechaCobro},
+                { title: "AÑO",             field: "fecha_pago",      widthGrow: 5, hozAlign: "center", formatter: (cell) => this.formatearAnio(cell) || '--'},
+                { title: "FECHA COBRO",     field: "fecha_pago",      widthGrow: 11, hozAlign: "center", formatter: (cell) => invertirFecha(this.formatearFechaCobro(cell)) || '--'},
                 { title: "CLIENTE",         field: "clipro_emision",  widthGrow: 14},
                 { title: "BANCO",           field: "banco_emision",   widthGrow: 16},
                 { title: "NÚMERO",          field: "numero",          widthGrow: 16},
                 { title: "IMPORTE",         field: "importe",         widthGrow: 14, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
-                { title: "FECHA DESTINO",   field: "fecha_destino",   widthGrow: 12, hozAlign: "center", formatter: (cell) => cell.getValue() || '--'},
+                { title: "FECHA DESTINO",   field: "fecha_destino",   widthGrow: 12, hozAlign: "center", formatter: (cell) => invertirFecha(cell.getValue()) || '--'},
                 { title: "DESTINO", field: "clipro_imputar", widthGrow: 14, formatter: (cell) => {
                     const d = cell.getData();
                     const valor = d.uso === 'D' ? d.cuenta_propia_imputar : d.clipro_imputar;
@@ -194,7 +193,7 @@ window.ChequeTemplates = {
             layout: "fitColumns",
             rowFormatter: this.formatearFilaEstado,
             columns: [
-                { title: "FECHA DESTINO",                field: "fecha_destino",            widthGrow: 12, hozAlign: "center"},
+                { title: "FECHA DESTINO",                field: "fecha_destino",            widthGrow: 12, hozAlign: "center", formatter: (cell) => invertirFecha((cell.getValue())) || '--'},
                 { title: "NÚMERO",                field: "numero",            widthGrow: 16},
                 { title: "IMPORTE",                field: "importe",            widthGrow: 14, hozAlign: "right"},
                 { title: "CLIENT/PROV EMISIÓN",                field: "clipro_emision",            widthGrow: 20},
@@ -235,7 +234,7 @@ window.ChequeTemplates = {
     formatearFilaEstado: function(row) {
         const cheque = row.getData();
         const fila = row.getElement();
-        const dias = cheque.estado === 'P' ? diasHastaVencimiento(sumarDias(cheque.fecha_pago, 30)) : null;
+        const dias = cheque.estado === 'P' ? diasHastaVencimiento(cheque.fecha_pago) : null;
 
         fila.classList.remove('estado-pendiente', 'estado-por-vencer', 'estado-cobrado', 'estado-rechazado', 'estado-anulado');
 

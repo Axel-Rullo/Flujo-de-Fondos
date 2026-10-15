@@ -1,5 +1,6 @@
 // FECHAS
 
+// Fecha de hoy en formato año-mes-día
 function getFechaLocal() {
     const hoy = new Date();
 
@@ -8,18 +9,21 @@ function getFechaLocal() {
         String(hoy.getDate()).padStart(2, '0');
 }
 
+// Mes actual en formato año-mes
 function getMesAñoLocal() {
     const hoy = new Date();
 
     return hoy.getFullYear() + '-' + String(hoy.getMonth() + 1).padStart(2, '0');
 }
 
+// Año actual
 function getAñoLocal() {
     const hoy = new Date();
 
     return hoy.getFullYear();
 }
 
+// Suma días a una fecha año-mes-día (con negativos resta) y devuelve otra fecha año-mes-día
 function sumarDias(fechaStr, dias) {
     if (!fechaStr) return null;
 
@@ -36,6 +40,7 @@ function sumarDias(fechaStr, dias) {
         String(fecha.getDate()).padStart(2, '0');
 }
 
+// Días que faltan para el vencimiento (fecha + plazo); negativo si ya venció
 function diasHastaVencimiento(fecha, plazoDias = 30) {
     if (!fecha) return null;
 
@@ -48,10 +53,18 @@ function diasHastaVencimiento(fecha, plazoDias = 30) {
     return Math.round((vencimiento - hoy) / (1000 * 60 * 60 * 24));
 }
 
+// Invierte año-mes-día → día/mes/año (ej. "2026-10-10" → "10/10/2026")
+function invertirFecha(fechaStr) {
+    if (!fechaStr) return null;
+
+    return fechaStr.split('T')[0].split('-').reverse().join('/');
+}
+
 // CANTIDAD DE DINERO
 if (!window.__importeFormatterInit) {
     window.__importeFormatterInit = true;
 
+    // Da formato mientras se escribe en los inputs de importe (miles con punto, decimales con coma)
     document.addEventListener("input", function(e) {
         if (!e.target.matches("[id='saldo_cuenta'], [id='importe']")) return;
 
@@ -65,6 +78,7 @@ if (!window.__importeFormatterInit) {
             .replace(/[^\d,]/g, "")
             .length;
 
+        // Quedarse solo con dígitos y coma
         let valor = rawBefore.replace(/[^\d,]/g, "");
 
         // Dejar solamente la primera coma
@@ -75,6 +89,7 @@ if (!window.__importeFormatterInit) {
                 valor.substring(posicionComa + 1).replace(/,/g, "");
         }
 
+        // Separar parte entera y decimales
         let partes = valor.split(",");
 
         // Tope de 15 dígitos enteros
@@ -92,6 +107,7 @@ if (!window.__importeFormatterInit) {
             ? Number(entero).toLocaleString("es-AR")
             : (tieneComa ? "0" : "");
 
+        // Entero con puntos de miles + coma y decimales si los hay
         const nuevoValor =
             enteroFormateado +
             (tieneComa ? "," + decimales : "");
@@ -143,11 +159,13 @@ function formatearImporte(valor) {
 
 
 // ===== Exportar tabla =====
+// Cada botón de exportación y su formato
 const formatos = { btn_pdf: "pdf", btn_excel: "xlsx", btn_csv: "csv" };
 document.addEventListener("click", (e) => {
     const btn = e.target.closest(".buttom_report");
     if (!btn || !formatos[btn.id]) return;
     
+    // Exporta la tabla activa y cierra el modal
     if (window.exportActivo) {
         const { tabla, nombre } = window.exportActivo;
         exportarTabla(tabla, formatos[btn.id], nombre);
@@ -155,23 +173,31 @@ document.addEventListener("click", (e) => {
     }
 });
 
+// Exporta una tabla de Tabulator a pdf, xlsx o csv
 function exportarTabla(tabla, formato, nombre) {
+    // ----- Preparación -----
+    // Título del PDF en mayúsculas y colores del tema (--button-1 para grupos, --datos-bg para subtotales)
     const title = nombre.toUpperCase();
     const root = getComputedStyle(document.documentElement);
     const grupoHex = (root.getPropertyValue('--button-1').trim() || '#2DD4BF').replace('#', '');
     const totalHex = (root.getPropertyValue('--datos-bg').trim() || '#2B3446').replace('#', '');
+    // Pasa un hex a [r, g, b] para jsPDF
     const hex2rgb = h => [parseInt(h.substring(0,2),16), parseInt(h.substring(2,4),16), parseInt(h.substring(4,6),16)];
     const grupoRgb = hex2rgb(grupoHex);
     const totalRgb = hex2rgb(totalHex);
     // Función auxiliar para extraer el texto limpio
     const stripHtml = html => { let t = document.createElement("DIV"); t.innerHTML = html; return t.textContent || t.innerText || ""; };
 
+    // ----- Opciones por formato -----
     const opciones = {
         csv: {},
         xlsx: {
-            sheetName: nombre,
+            // Excel no admite más de 31 caracteres ni / \ ? * [ ] : en el nombre de la pestaña
+            sheetName: nombre.replace(/[\/\\?*\[\]:]/g, '_').slice(0, 31),
+            // Estiliza la hoja de Excel una vez generada
             documentProcessing: function(wb) {
                 const ws = wb.Sheets[wb.SheetNames[0]];
+                // rows[n].t guarda el tipo de la fila n: g = grupo, t = subtotal, tg = total general
                 const rows = {};
                 let maxCol = 1, maxRow = 1;
 
@@ -187,6 +213,36 @@ function exportarTabla(tabla, formato, nombre) {
                     return String(k).trim();
                 });
 
+                // Grupo sin título (SALDO INICIAL): se borran su fila de cabecera y su subtotal
+                if (groupTitles.includes('')) {
+                    let filaGrupo = 0;
+                    for (let ref in ws) {
+                        const m = ref.match(/^A(\d+)$/);
+                        if (m && typeof ws[ref].v === 'string' && ws[ref].v.trim() === '' && (!filaGrupo || +m[1] < filaGrupo)) filaGrupo = +m[1];
+                    }
+
+                    if (filaGrupo) {
+                        // El subtotal viene justo después de las filas de datos del grupo
+                        const quitar = [filaGrupo];
+                        const filaSubtotal = filaGrupo + tabla.getGroups()[groupTitles.indexOf('')].getRows().length + 1;
+                        const celdaSubtotal = ws['A' + filaSubtotal];
+                        if (celdaSubtotal && String(celdaSubtotal.v).includes('TOTAL')) quitar.push(filaSubtotal);
+
+                        // Subir las filas de abajo para tapar los huecos
+                        const subidas = {};
+                        for (let ref in ws) {
+                            const m = ref.match(/^([A-Z]+)(\d+)$/);
+                            if (!m) continue;
+                            const r = +m[2];
+                            const subir = quitar.filter(q => q < r).length;
+                            if (quitar.includes(r)) delete ws[ref];
+                            else if (subir) { subidas[m[1] + (r - subir)] = ws[ref]; delete ws[ref]; }
+                        }
+                        Object.assign(ws, subidas);
+                    }
+                }
+
+                // Medir el tamaño de la hoja y clasificar cada fila según el texto de la columna A
                 for (let ref in ws) {
                     if (ref[0] === '!') continue;
                     const m = ref.match(/^([A-Z]+)(\d+)$/);
@@ -204,17 +260,20 @@ function exportarTabla(tabla, formato, nombre) {
                     }
                 }
 
+                // Los títulos de grupo se fusionan a lo ancho
                 ws['!merges'] = [];
                 for (let r in rows) {
                     if (rows[r].t === 'g') ws['!merges'].push({ s: { r: r - 1, c: 0 }, e: { r: r - 1, c: maxCol - 1 } });
                 }
 
+                // Número de columna → letra (1 → A)
                 const getCol = n => {
                     let s = '';
                     while (n > 0) { let r = (n-1)%26; s = String.fromCharCode(65+r)+s; n = Math.floor((n-1)/26); }
                     return s;
                 };
 
+                // Estilo celda por celda: encabezado y total general en negro, grupos y subtotales con color, negativos en rojo
                 for (let r = 1; r <= maxRow; r++) {
                     const tipo = rows[r] && rows[r].t;
                     for (let c = 1; c <= maxCol; c++) {
@@ -262,6 +321,7 @@ function exportarTabla(tabla, formato, nombre) {
                     }
                 }
                 
+                // Rango final y ancho de columnas
                 ws['!ref'] = `A1:${getCol(maxCol)}${maxRow}`;
 
                 ws["!cols"] = Array.from({length: maxCol}, (_, i) => ({ wch: i === 0 ? 35 : 12 }));
@@ -281,6 +341,7 @@ function exportarTabla(tabla, formato, nombre) {
         const groups = tabla.getGroups();
         const body = [];
 
+        // Cuerpo: por cada grupo, título + filas + subtotal
         if (groups.length > 0) {
             groups.forEach(group => {
                 let k = group.getKey();
@@ -292,10 +353,13 @@ function exportarTabla(tabla, formato, nombre) {
                     groupTitle = stripHtml(String(tabla.options.groupHeader(k, group.getRows().length, groupData, group))).trim();
                 }
 
+                // Grupo sin título (SALDO INICIAL): no lleva fila de grupo ni subtotal
+                const sinTitulo = groupTitle === '';
+
                 // Fila de grupo
                 const groupRow = { _tipo: 'g' };
                 cols.forEach((c, i) => { groupRow[c.dataKey] = i === 0 ? groupTitle : ''; });
-                body.push(groupRow);
+                if (!sinTitulo) body.push(groupRow);
 
                 // Filas de datos
                 group.getRows().forEach(row => {
@@ -318,7 +382,7 @@ function exportarTabla(tabla, formato, nombre) {
                     if (numCount > 0) tieneNumeros = true;
                     subRow[c.dataKey] = numCount > 0 ? Math.round(sum * 100) / 100 : '';
                 });
-                if (tieneNumeros) body.push(subRow);
+                if (tieneNumeros && !sinTitulo) body.push(subRow);
             });
         } else {
             tabla.getRows().forEach(row => {
@@ -358,15 +422,29 @@ function exportarTabla(tabla, formato, nombre) {
             doc.setFont(undefined, 'bold');
             doc.text(title, doc.internal.pageSize.getWidth() / 2, 12, { align: 'center' });
 
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const marginLR = 5;
+            const col0Width = 40;
+            const numDataCols = columnasTabla.length - 1;
+            const dataColWidth = Math.floor((pageWidth - marginLR * 2 - col0Width) / numDataCols * 10) / 10;
+
+            // Construir columnStyles con anchos explícitos para todas las columnas
+            const colStyles = { 0: { halign: 'left', cellWidth: col0Width, fontSize: 7 } };
+            for (let ci = 1; ci <= numDataCols; ci++) {
+                colStyles[ci] = { cellWidth: dataColWidth };
+            }
+
             doc.autoTable({
                 columns: columnasTabla,
                 body: body,
                 startY: 18,
-                margin: { left: 8, right: 8 },
+                tableWidth: 'wrap',
+                margin: { left: marginLR, right: marginLR },
                 theme: 'grid',
-                styles: { fontSize: 7, cellPadding: 1.5, lineWidth: 0.2, lineColor: [0,0,0], textColor: [0,0,0], fontStyle: 'bold', overflow: 'linebreak' },
+                styles: { fontSize: 6, cellPadding: 1, lineWidth: 0.2, lineColor: [0,0,0], textColor: [0,0,0], fontStyle: 'bold', overflow: 'linebreak' },
                 headStyles: { fillColor: [0,0,0], textColor: [255,255,255], halign: 'center', valign: 'middle', fontStyle: 'bold' },
-                columnStyles: { 0: { halign: 'left', cellWidth: 45, fontSize: 8 } },
+                columnStyles: colStyles,
+                // Estilo de cada celda según el tipo de fila (grupo, subtotal, total general)
                 didParseCell: function(data) {
                     const row = data.row.raw || {};
                     const val = data.cell.raw;
@@ -405,6 +483,7 @@ function exportarTabla(tabla, formato, nombre) {
                         data.cell.styles.textColor = [255,0,0];
                     }
                 },
+                // Bordes extra que AutoTable no dibuja bien
                 didDrawCell: function(data) {
                     const isHead = data.section === 'head';
                     const isTg = data.row.raw && data.row.raw._tipo === 'tg';
@@ -434,11 +513,13 @@ function exportarTabla(tabla, formato, nombre) {
         return;
     }
 
+    // CSV y Excel: los genera Tabulator con las opciones de arriba
     tabla.download(formato, nombre + "." + formato, opciones[formato]);
 }
 
 // ── COPIAR ALIAS ──────────────────────────
 
+// Copia el alias del cliente al portapapeles al hacer click en .btn_copiar
 if (!window.__copiarAliasInit) {
     window.__copiarAliasInit = true;
 
@@ -459,6 +540,7 @@ if (!window.__copiarAliasInit) {
 
 // ── TRANSACCIONES INTERNAS ─────────────────
 
+// Abre el historial de transacciones internas al hacer click en el botón
 if (!window.__TransaccionInternaInit) {
     window.__TransaccionInternaInit = true;
 

@@ -9,8 +9,9 @@
         const total_flujo_neto = container.querySelector('.total_flujo_neto');
         const cuentas_saldo_total = container.querySelector('.total_saldos_cuentas');
 
-        const ingresos = 1000000;
-        const egresos = 200000;
+        const totales = await window.movimientoService.mostrarTotales();
+        const ingresos = totales.ingreso;
+        const egresos = totales.egreso;
         const saldoTotal = await window.CuentaBancoService.cuentas_saldo_total();
 
         total_ingreso.textContent = formatearImporte(ingresos);

@@ -15,6 +15,14 @@ window.ChequeService = {
         return await apiGet('/cheques/resumen_semanal');
     },
 
+    listAutomatizados: async () => {
+        return await apiGet('/cheques/automatizados');
+    },
+
+    imputacionAutomaticaChequesPropios: async () => {
+        return await apiPost('/cheques/propios/imputar_vencidos');
+    },
+
     listChequesPropios: async (estado, busqueda = '', limit = 50, offset = 0) => {
         return await apiPost('/cheques/propios/list', { estado, busqueda, limit, offset });
     },

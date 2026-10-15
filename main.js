@@ -2,7 +2,7 @@
 // 📦 IMPORTS
 //////////////////////////////////////////////
 
-const { app, BrowserWindow, Menu, ipcMain, powerMonitor } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, powerMonitor, shell } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 const fs = require('node:fs');
@@ -145,6 +145,12 @@ function createWindow() {
 
     win.on('maximize',   () => win.webContents.send('window-state', 'maximized'));
     win.on('unmaximize', () => win.webContents.send('window-state', 'restored'));
+
+    // Abrir enlaces externos en el navegador del sistema
+    win.webContents.setWindowOpenHandler(({ url }) => {
+        shell.openExternal(url);
+        return { action: "deny" };
+    });
 }
 
 //////////////////////////////////////////////
@@ -165,13 +171,13 @@ ipcMain.handle('window-is-maximized', () => win?.isMaximized() ?? false);
 // 🚀 AUTO UPDATER
 //////////////////////////////////////////////
 
-/*function setupAutoUpdater() {
+function setupAutoUpdater() {
     autoUpdater.checkForUpdatesAndNotify();
 
     autoUpdater.on('update-available',  () => console.log('🔄 Actualización disponible'));
     autoUpdater.on('update-downloaded', () => console.log('✅ Actualización descargada'));
     autoUpdater.on('error', (err)       => console.error('❌ Error en la auto-update:', err));
-}*/
+}
 
 //////////////////////////////////////////////
 // ▶️ INICIO
@@ -180,7 +186,7 @@ ipcMain.handle('window-is-maximized', () => win?.isMaximized() ?? false);
 app.whenReady().then(async () => {
     startJavaBackend();
     createWindow();
-    /*setupAutoUpdater();*/
+    if (app.isPackaged) setupAutoUpdater();
 
     setInterval(() => {
         const idleSeconds = powerMonitor.getSystemIdleTime();

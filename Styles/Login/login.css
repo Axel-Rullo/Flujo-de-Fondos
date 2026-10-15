@@ -1,6 +1,7 @@
 /* Contenedor principal del login */
 .login {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100%;
@@ -11,6 +12,41 @@
 .login-card {
     display: flex;
     flex-direction: column;
+    margin: auto 0;
+}
+
+/* Texto de créditos al pie del login */
+.login p {
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    opacity: 0.85;
+}
+
+/* Enlace del autor en los créditos */
+.login p a {
+    position: relative;
+    color: var(--button-1);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Línea animada debajo del enlace */
+.login p a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+}
+
+/* Efecto al pasar el mouse sobre el enlace del autor */
+.login p a:hover::after {
+    transform: scaleX(1);
 }
 
 /* Contenedor del título y del logo */

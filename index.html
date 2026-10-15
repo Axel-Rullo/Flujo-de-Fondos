@@ -40,6 +40,7 @@
     <link rel="stylesheet" href="./Styles/dashboard/nav/nav.css">
     <link rel="stylesheet" href="./Styles/dashboard/modal/modal.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/forms.css">
+    <link rel="stylesheet" href="./Styles/dashboard/forms/movimientos/movimientos.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/reportes/reportes.css">
     <link rel="stylesheet" href="./Styles/dashboard/queries/reportes/reportes_panel.css">
     <link rel="stylesheet" href="./Styles/dashboard/forms/cheques/resumen_cheque.css">
@@ -370,7 +371,7 @@
                 <button class="tb-btn bt-user-list admin-only" title="Lista de Usuarios" aria-label="Lista de Usuarios" data-modal="./Views/forms/users/users_list.html">
                     <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-entitys" xlink:href="#icon-entitys"/></svg>
                 </button>
-                <button class="tb-btn bt-user-list admin-only" title="Resumen Diario" aria-label="Resumen Diario" data-modal="./Views/forms/cheques/resumen_cheque.html">
+                <button class="tb-btn bt-user-list admin-only" title="Resumen Diario" aria-label="Resumen Diario" data-obligatorio="true" data-modal="./Views/forms/cheques/resumen_cheque.html">
                     <svg width="18" height="18" viewBox="0 0 24 24"><use href="#summary" xlink:href="#summary"/></svg>
                 </button>
                 <button id="btn-profile" class="tb-btn btn-profile" title="Mi perfil" aria-label="Mi perfil"></button>
@@ -434,14 +435,6 @@
 
     <!-- SCRIPTS -->
     <!-- #region -->
-    <script src="router.js"></script>
-    <script src="Scripts/dashboard/bienvenida.js"></script>
-    <script src="./Scripts/api.js"></script>
-    <script src="./Scripts/modal.js"></script>
-    <script src="./Scripts/alerts.js"></script>
-    <script src="./Scripts/dashboard/forms/forms.js"></script>
-    <script src="./Scripts/dashboard/menus/menus.js"></script>
-    <script src="./Scripts/complementos/complementos.js"></script>
     <!-- Tom Select -->
     <script src="./Scripts/libs/tom_select/tom-select.complete.min.js"></script>
     <!-- XLSX (para importaciones/exportaciones con Tabulator) -->
@@ -454,6 +447,60 @@
     <!-- Chart.js -->
     <script src="./Scripts/libs/chart/chart.umd.min.js"></script>
     <script src="./Scripts/libs/chart/datalabels.js"></script>
+
+    <!-- Router -->
+    <script src="router.js"></script>
+
+    <!-- Bienvenida -->
+    <script src="Scripts/dashboard/bienvenida.js"></script>
+
+    <!-- API -->
+    <script src="./Scripts/api.js"></script>
+
+    <!-- Modal -->
+    <script src="./Scripts/modal.js"></script>
+
+    <!-- Alertas -->
+    <script src="./Scripts/alerts.js"></script>
+
+    <!-- Formularios -->
+    <script src="./Scripts/dashboard/forms/forms.js"></script>
+
+    <!-- Menús -->
+    <script src="./Scripts/dashboard/menus/menus.js"></script>
+
+    <!-- Complementos -->
+    <script src="./Scripts/complementos/complementos.js"></script>
+
+    <!-- Users -->
+    <script src="Scripts/dashboard/forms/users/userService.js"></script>
+    <script src="Scripts/dashboard/forms/users/userTemplates.js"></script>
+    <script src="Scripts/dashboard/forms/users/userForm.js"></script>
+
+    <!-- Clipros -->
+    <script src="Scripts/dashboard/forms/clientprov/cliproService.js"></script>
+    <script src="Scripts/dashboard/forms/clientprov/cliproTemplates.js"></script>
+    <script src="Scripts/dashboard/forms/clientprov/cliproForm.js"></script>
+
+    <!-- Cheques -->
+    <script src="Scripts/dashboard/forms/cheques/chequeService.js"></script>
+    <script src="Scripts/dashboard/forms/cheques/chequeForm.js"></script>
+    <script src="Scripts/dashboard/forms/cheques/chequeTemplates.js"></script>
+
+    <!-- Conceptos -->
+    <script src="Scripts/dashboard/forms/conceptos/conceptoService.js"></script>
+    <script src="Scripts/dashboard/forms/conceptos/conceptoForm.js"></script>
+    <script src="Scripts/dashboard/forms/conceptos/conceptoTemplates.js"></script>
+
+    <!-- Cuentas / Bancos -->
+    <script src="Scripts/dashboard/forms/cuentas-bancos/cuentabancoService.js"></script>
+    <script src="Scripts/dashboard/forms/cuentas-bancos/cuentabancoForm.js"></script>
+    <script src="Scripts/dashboard/forms/cuentas-bancos/cuentabancoTemplates.js"></script>
+
+    <!-- Movimientos -->
+    <script src="Scripts/dashboard/forms/movimientos/movimientoService.js"></script>
+    <script src="Scripts/dashboard/forms/movimientos/movimientoForm.js"></script>
+    <script src="Scripts/dashboard/forms/movimientos/movimientoTemplates.js"></script>
     <!-- #endregion -->
 </body>
 </html>

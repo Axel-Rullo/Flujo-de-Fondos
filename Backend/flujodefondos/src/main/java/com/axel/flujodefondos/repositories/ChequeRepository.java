@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +74,41 @@ public class ChequeRepository {
             "ORDER BY ch.fecha_pago",
             desde,
             hasta
+        );
+    }
+
+    // ── AUTOMATIZADOS ────────────────────────────────────────────────
+
+    public List<Cheque> findAllAutomatizados() {
+        return jdbcTemplate.query(
+            "SELECT ch.id_cheque, ch.clase, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.estado, " +
+            "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision, b.nombre AS banco_emision " +
+            "FROM cheques ch " +
+
+            // Titular en emisión
+            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
+
+            // Cuenta propia en emisión
+            "LEFT JOIN cuentas cb ON ch.id_cuenta_propia_emision = cb.id_cuenta " +
+
+            // Banco del cheque
+            "LEFT JOIN bancos b ON ch.id_banco_emision = b.id_banco " +
+
+            // Pendientes que llegaron a la fecha de cobro (fecha_pago + 30 días)
+            "WHERE ch.estado = 'P' AND DATE(ch.fecha_pago, '+30 days') <= DATE('now', 'localtime') " +
+            "ORDER BY DATE(ch.fecha_pago, '+30 days'), ch.id_cheque",
+            chequeMapper
+        );
+    }
+
+    // Propios pendientes que llegaron a la fecha de cobro: la fecha de cobro es la fecha destino
+    public List<Cheque> findPropiosVencidos() {
+        return jdbcTemplate.query(
+            "SELECT ch.id_cheque, ch.id_usuario, DATE(ch.fecha_pago, '+30 days') AS fecha_destino " +
+            "FROM cheques ch " +
+            "WHERE ch.clase = 'P' AND ch.estado = 'P' AND DATE(ch.fecha_pago, '+30 days') <= DATE('now', 'localtime') " +
+            "ORDER BY DATE(ch.fecha_pago, '+30 days'), ch.id_cheque",
+            chequeMapper
         );
     }
 
@@ -235,6 +271,20 @@ public class ChequeRepository {
         );
     }
 
+    public boolean existeChequePropio(String numero) {
+        return jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM cheques WHERE clase = 'P' AND numero = ?",
+            Integer.class, numero
+        ) > 0;
+    }
+
+    public boolean existeChequeTercero(String numero, BigDecimal importe, String idBanco, String idClipro) {
+        return jdbcTemplate.queryForObject(
+            "SELECT COUNT(*) FROM cheques WHERE clase = 'T' AND numero = ? AND importe = ? AND id_banco_emision = ? AND id_clipro_emision = ?",
+            Integer.class, numero, importe, idBanco, idClipro
+        ) > 0;
+    }
+
     // ── IMPUTACIÓN ───────────────────────────────────────────────────
 
     public int imputarChequePropio(Cheque cheque) {
@@ -252,21 +302,39 @@ public class ChequeRepository {
         );
     }
 
+    // ── SALDOS ───────────────────────────────────────────────────────
+
+    // Devuelve 0 si la cuenta no tiene saldo suficiente
+    public int restarSaldo(String idCuenta, BigDecimal importe) {
+        return jdbcTemplate.update(
+            "UPDATE cuentas SET saldo = saldo - ? WHERE id_cuenta = ? AND saldo >= ?",
+            importe, idCuenta, importe
+        );
+    }
+
+    // Devuelve 0 si la cuenta no existe
+    public int sumarSaldo(String idCuenta, BigDecimal importe) {
+        return jdbcTemplate.update(
+            "UPDATE cuentas SET saldo = saldo + ? WHERE id_cuenta = ?",
+            importe, idCuenta
+        );
+    }
+
     // ── RECHAZO ──────────────────────────────────────────────────────
 
-    public void rechazarCheque(Cheque cheque) {
-        jdbcTemplate.update(
-            "UPDATE cheques SET estado = ?, motivo = ?, fecha_destino = ? WHERE id_cheque = ?",
-            "R", cheque.getMotivo(), cheque.getFecha_destino(), cheque.getId_cheque()
+    public int rechazarCheque(Cheque cheque) {
+        return jdbcTemplate.update(
+            "UPDATE cheques SET estado = ?, motivo = ?, fecha_destino = ? WHERE id_cheque = ? AND estado = ?",
+            "R", cheque.getMotivo(), cheque.getFecha_destino(), cheque.getId_cheque(), "P"
         );
     }
 
     // ── ANULACION ────────────────────────────────────────────────────
 
-    public void anularCheque(Cheque cheque) {
-        jdbcTemplate.update(
-            "UPDATE cheques SET estado = ?, motivo = ?, fecha_destino = ? WHERE id_cheque = ?",
-            "A", cheque.getMotivo(), cheque.getFecha_destino(), cheque.getId_cheque()
+    public int anularCheque(Cheque cheque) {
+        return jdbcTemplate.update(
+            "UPDATE cheques SET estado = ?, motivo = ?, fecha_destino = ? WHERE id_cheque = ? AND estado = ?",
+            "A", cheque.getMotivo(), cheque.getFecha_destino(), cheque.getId_cheque(), "P"
         );
     }
 

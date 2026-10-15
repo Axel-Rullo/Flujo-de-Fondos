@@ -46,6 +46,21 @@ public class ChequeController {
         return chequeService.resumenProximosDias();
     }
 
+    // ── AUTOMATIZADOS ────────────────────────────────────────────────
+
+    @GetMapping("/cheques/automatizados")
+    public List<Cheque> listAutomatizados() {
+        return chequeService.listAutomatizados();
+    }
+
+    // ── IMPUTACIÓN AUTOMÁTICA DE CHEQUES PROPIOS ─────────────────────
+
+    @PostMapping("/cheques/propios/imputar_vencidos")
+    public ResponseEntity<Map<String, Object>> imputarChequesPropiosVencidos() {
+        chequeService.imputarChequesPropiosVencidos();
+        return ResponseEntity.ok(Map.of("ok", true));
+    }
+
     // ── LISTADO ──────────────────────────────────────────────────────
 
     @PostMapping("/cheques/propios/list")
@@ -105,5 +120,12 @@ public class ChequeController {
     public ResponseEntity<Map<String, Object>> anularCheque(@RequestBody Cheque cheque) {
         chequeService.anularCheque(cheque);
         return ResponseEntity.ok(Map.of("ok", true));
+    }
+
+    // ── ERRORES ──────────────────────────────────────────────────────
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleError(IllegalStateException e) {
+        return ResponseEntity.ok(Map.of("ok", false, "mensaje", e.getMessage()));
     }
 }

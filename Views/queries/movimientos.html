@@ -1,4 +1,25 @@
 <div class="movimientos_container">
+    <form id="filtros_movimientos" class="movimientos_header">
+        <h2>MOVIMIENTOS</h2>
+
+        <label class="filtro_fecha" for="periodo_desde">
+            <span>Desde</span>
+            <input type="date" id="periodo_desde" required/>
+        </label>
+
+        <label class="filtro_fecha" for="periodo_hasta">
+            <span>Hasta</span>
+            <input type="date" id="periodo_hasta" required/>
+        </label>
+
+        <div class="filtro_concepto">
+            <select id="id_concepto" name="id_concepto" placeholder="Elije un Concepto..." required></select>
+        </div>
+
+        <button type="submit" class="filtros_movimientos">
+            <svg><use href="#icon-search"/></svg>
+        </button>
+    </form>
     <div id="lista_movimientos" class="lista_movimientos"></div>
 </div>
 

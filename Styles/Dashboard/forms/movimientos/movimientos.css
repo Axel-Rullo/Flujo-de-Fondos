@@ -1,0 +1,136 @@
+/* ── MOVIMIENTOS: header en una sola línea ───────── */
+.movimientos_header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--datos-bg);
+    border-bottom: 1px solid var(--titlebar-border);
+}
+
+/* margin-right:auto empuja todo lo demás a la derecha */
+.movimientos_header h2 {
+    margin: 0 auto 0 0;
+    font-size: 1rem;
+    white-space: nowrap;
+    color: var(--white);
+}
+
+/* Inputs y selects: mismo look que .form-group */
+.movimientos_header input,
+.movimientos_header select {
+    height: 34px;
+    padding: 0 10px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--black);
+    background: var(--white);
+    border: 2px solid transparent;
+    border-radius: 0;
+    box-sizing: border-box;
+    outline: none;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+}
+
+.movimientos_header input::placeholder {
+    color: var(--color-input);
+}
+
+.movimientos_header input:focus,
+.movimientos_header select:focus {
+    border-color: transparent;
+    border-bottom-color: var(--button-1);
+    box-shadow: inset 0 -2px 0 0 var(--button-1);
+}
+
+.movimientos_header input:disabled,
+.movimientos_header select:disabled {
+    background-color: var(--white);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Inputs de fecha */
+.movimientos_header input[type="date"] {
+    width: 150px;
+    color-scheme: light;
+}
+
+.movimientos_header input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+
+/* Etiqueta + fecha en la misma línea */
+.filtro_fecha {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+/* Mismo estilo que las etiquetas de forms.css */
+.filtro_fecha span {
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: var(--white);
+}
+
+/* Tom Select: mismo alto que los inputs */
+.movimientos_header .ts-control {
+    height: 34px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Concepto: el contenedor ancla el select oculto de Tom Select */
+.filtro_concepto {
+    position: relative;
+    width: 400px;
+    flex-shrink: 0;
+}
+
+.filtro_concepto .ts-wrapper,
+.filtro_concepto select {
+    width: 100%;
+}
+
+/* Botón: igual que .btn .btn-primary */
+.filtros_movimientos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    flex-shrink: 0;
+    color: var(--black);
+    background: var(--button-1);
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.filtros_movimientos:hover {
+    background: transparent;
+    color: var(--white);
+    border-color: var(--button-1);
+}
+
+.filtros_movimientos:active {
+    transform: scale(0.96);
+}
+
+.filtros_movimientos svg {
+    width: 16px;
+    height: 16px;
+}

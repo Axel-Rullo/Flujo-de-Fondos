@@ -1,6 +1,7 @@
 package com.axel.flujodefondos.repositories;
 
 import com.axel.flujodefondos.entities.Concepto;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,17 +20,12 @@ public class ConceptoRepository {
 
     // ── MAPPERS ──────────────────────────────────────────────────────
 
-    private final RowMapper<Concepto> conceptoMapper = (rs, rowNum) -> new Concepto(
-        rs.getLong("id_concepto"),
-        rs.getString("cod_concepto"),
-        rs.getString("concepto"),
-        rs.getString("clasificacion")
-    );
+    private final RowMapper<Concepto> conceptoMapper = new BeanPropertyRowMapper<>(Concepto.class);
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
     public List<Concepto> findAll() {
-        return jdbcTemplate.query("SELECT id_concepto, cod_concepto, concepto, clasificacion FROM conceptos ORDER BY clasificacion, cod_concepto",
+        return jdbcTemplate.query("SELECT id_concepto AS id, cod_concepto AS codigo, concepto AS nombre, clasificacion, sub_clasificacion FROM conceptos ORDER BY clasificacion, cod_concepto",
         conceptoMapper
         );
     }
@@ -56,8 +52,8 @@ public class ConceptoRepository {
 
     public void insert(Concepto concepto) {
         jdbcTemplate.update(
-                "INSERT INTO conceptos (cod_concepto, concepto, clasificacion) VALUES (?, ?, ?)",
-                concepto.getCodigo(), concepto.getNombre(), concepto.getClasificacion()
+                "INSERT INTO conceptos (cod_concepto, concepto, clasificacion, sub_clasificacion) VALUES (?, ?, ?, ?)",
+                concepto.getCodigo(), concepto.getNombre(), concepto.getClasificacion(), concepto.getSub_clasificacion()
         );
     }
 

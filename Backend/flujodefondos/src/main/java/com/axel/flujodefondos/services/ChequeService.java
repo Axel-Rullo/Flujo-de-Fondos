@@ -2,13 +2,13 @@ package com.axel.flujodefondos.services;
 
 import com.axel.flujodefondos.entities.Cheque;
 import com.axel.flujodefondos.entities.Movimiento;
-import com.axel.flujodefondos.entities.CuentaPropia;
 import com.axel.flujodefondos.repositories.ChequeRepository;
-import com.axel.flujodefondos.repositories.MovimientoRepository;
 import com.axel.flujodefondos.repositories.CuentaBancoRepository;
+import com.axel.flujodefondos.repositories.MovimientoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -21,14 +21,19 @@ public class ChequeService {
     private final ChequeRepository chequeRepository;
     private final MovimientoRepository movimientoRepository;
     private final CuentaBancoRepository cuentaBancoRepository;
+    private final TransactionTemplate transactionTemplate;
 
     // ── ALTA ─────────────────────────────────────────────────────────
 
     public void createChequePropio(Cheque cheque) {
+        validarAlta(cheque);
+        if (chequeRepository.existeChequePropio(cheque.getNumero())) throw new IllegalStateException("Ya existe un cheque propio con ese número");
         chequeRepository.insertChequePropio(cheque);
     }
 
     public void createChequeTercero(Cheque cheque) {
+        validarAlta(cheque);
+        if (chequeRepository.existeChequeTercero(cheque.getNumero(), cheque.getImporte(), cheque.getId_banco_emision(), cheque.getId_clipro_emision())) throw new IllegalStateException("Ya existe un cheque de terceros con\nel mismo número, importe, banco y emisor");
         chequeRepository.insertChequeTercero(cheque);
     }
 
@@ -44,6 +49,12 @@ public class ChequeService {
         String desde = LocalDate.now().plusDays(1).toString();
         String hasta = LocalDate.now().plusDays(7).toString();
         return chequeRepository.resumenProximosDias(desde, hasta);
+    }
+
+    // ── AUTOMATIZADOS ─────────────────────────────────────────────────
+
+    public List<Cheque> listAutomatizados() {
+        return chequeRepository.findAllAutomatizados();
     }
 
 
@@ -80,28 +91,37 @@ public class ChequeService {
         if (chequeRepository.imputarChequePropio(cheque) == 0) throw new IllegalStateException("El cheque no está pendiente");
 
         Cheque data = chequeRepository.findImputacionById(cheque.getId_cheque());
-        CuentaPropia origen = cuentaBancoRepository.findById(Long.valueOf(data.getId_cuenta_propia_emision()));
-        if (origen.getSaldo().compareTo(data.getImporte()) < 0) throw new IllegalStateException("El saldo de la cuenta seleccionada es menor al del monto requerido");
-
-        origen.setSaldo(origen.getSaldo().subtract(data.getImporte()));
-        cuentaBancoRepository.updateSaldoCuentaPropia(origen);
+        if (chequeRepository.restarSaldo(data.getId_cuenta_propia_emision(), data.getImporte()) == 0) throw new IllegalStateException("El saldo de la cuenta seleccionada es menor al del monto requerido");
 
         insertMovimientos(cheque, true);
     }
 
     @Transactional
     public void imputarChequeTercero(Cheque cheque) {
+        boolean deposito = "D".equals(cheque.getUso());
+        boolean endoso = "E".equals(cheque.getUso());
+
         if (chequeRepository.imputarChequeTercero(cheque) == 0) throw new IllegalStateException("El cheque no está pendiente");
 
-        if ("D".equals(cheque.getUso())) {
+        if (deposito) {
             Cheque data = chequeRepository.findImputacionById(cheque.getId_cheque());
-            CuentaPropia destino = cuentaBancoRepository.findById(Long.valueOf(cheque.getId_cuenta_propia_imputar()));
-
-            destino.setSaldo(destino.getSaldo().add(data.getImporte()));
-            cuentaBancoRepository.updateSaldoCuentaPropia(destino);
+            if (chequeRepository.sumarSaldo(cheque.getId_cuenta_propia_imputar(), data.getImporte()) == 0) throw new IllegalStateException("La cuenta de depósito no existe");
         }
 
         insertMovimientos(cheque, false);
+    }
+
+    // ── IMPUTACIÓN AUTOMÁTICA ────────────────────────────────────────
+
+    // Cobra los cheques propios que ya llegaron a su fecha de cobro (fecha_pago + 30 días)
+    public void imputarChequesPropiosVencidos() {
+        for (Cheque cheque : chequeRepository.findPropiosVencidos()) {
+            try {
+                transactionTemplate.executeWithoutResult(status -> imputarChequePropio(cheque));
+            } catch (IllegalStateException e) {
+                // Sin saldo suficiente: queda pendiente para salida manual
+            }
+        }
     }
 
     // ── MOVIMIENTOS ──────────────────────────────────────────────────
@@ -117,7 +137,8 @@ public class ChequeService {
         movimiento.setId_usuario(cheque.getId_usuario());
         movimiento.setId_sucursal(chequeRepository.findSucursalByUsuario(cheque.getId_usuario()));
         movimiento.setObservaciones((propio ? "Cheque Propio" : "Cheque de Terceros") + " N° " + original.getNumero());
-        movimiento.setOperacion(propio ? "Cheque Propio" : "Cheque de Terceros" + (endoso ? " Endosado" : " Depositado" + " " + cheque.getNumero()));
+        String tipoOperacion = propio ? "Cheque Propio" : "Cheque de Terceros" + (endoso ? " Endosado" : " Depositado");
+        movimiento.setOperacion(tipoOperacion + " " + original.getNumero());
         movimiento.setId_concepto(original.getId_concepto_emision());
 
         // Cheque propio: salida de la cuenta del cheque
@@ -133,6 +154,7 @@ public class ChequeService {
             else movimiento.setId_cuenta(cheque.getId_cuenta_propia_imputar());
         }
 
+        movimiento.setSaldo(cuentaBancoRepository.getSaldoTotalCuentas());
         movimientoRepository.insert(movimiento);
 
         // Endoso: segundo movimiento, la salida con el concepto elegido al imputar
@@ -147,12 +169,22 @@ public class ChequeService {
     // ── RECHAZO ──────────────────────────────────────────────────────
 
     public void rechazarCheque(Cheque cheque) {
-        chequeRepository.rechazarCheque(cheque);
+        if (chequeRepository.rechazarCheque(cheque) == 0) throw new IllegalStateException("El cheque no está pendiente");
     }
 
     // ── ANULACION ────────────────────────────────────────────────────
 
     public void anularCheque(Cheque cheque) {
-        chequeRepository.anularCheque(cheque);
+        if (chequeRepository.anularCheque(cheque) == 0) throw new IllegalStateException("El cheque no está pendiente");
+    }
+
+    // ── VALIDACIONES ─────────────────────────────────────────────────
+
+    private void validarAlta(Cheque cheque) {
+        if (cheque.getImporte() == null || cheque.getImporte().signum() <= 0) throw new IllegalStateException("El importe debe ser mayor a 0");
+    }
+
+    private boolean vacio(String texto) {
+        return texto == null || texto.isBlank();
     }
 }

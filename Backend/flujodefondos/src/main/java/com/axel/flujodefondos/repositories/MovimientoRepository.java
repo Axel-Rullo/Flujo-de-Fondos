@@ -29,6 +29,7 @@ public class MovimientoRepository {
             "FROM movimientos m " +
             "LEFT JOIN cuentas cu ON cu.id_cuenta = m.id_cuenta " +
             "LEFT JOIN conceptos co ON co.id_concepto = m.id_concepto " +
+            "WHERE strftime('%Y-%m', m.fecha) = strftime('%Y-%m', 'now', 'localtime') " +
             "ORDER BY fecha ASC, m.id_movimiento ASC " +
             "LIMIT ? OFFSET ?",
             movimientoMapper,
@@ -42,10 +43,40 @@ public class MovimientoRepository {
             "FROM movimientos m " +
             "LEFT JOIN usuarios u ON u.id_usuario = m.id_usuario " +
             "WHERE m.operacion IS NOT NULL " +
+            "AND strftime('%Y-%m', m.fecha) = strftime('%Y-%m', 'now', 'localtime') " +
             "ORDER BY fecha ASC, m.id_movimiento ASC " +
             "LIMIT ? OFFSET ?",
             movimientoMapper,
             limit, offset
+        );
+    }
+
+    public List<Movimiento> filtroMovimientos(String desde, String hasta, Integer id_concepto, int limit, int offset) {
+        return jdbcTemplate.query(
+            "SELECT m.id_movimiento, m.fecha, " +
+            "m.ingreso, m.egreso, m.saldo, m.observaciones, m.ch_endosado, " +
+            "cu.nombre AS cuenta, co.concepto AS concepto " +
+            "FROM movimientos m " +
+            "LEFT JOIN cuentas cu ON cu.id_cuenta = m.id_cuenta " +
+            "LEFT JOIN conceptos co ON co.id_concepto = m.id_concepto " +
+            "WHERE (? IS NULL OR date(m.fecha) >= ?) " +
+            "AND (? IS NULL OR date(m.fecha) <= ?) " +
+            "AND (? IS NULL OR m.id_concepto = ?) " +
+            "ORDER BY m.fecha ASC, m.id_movimiento ASC " +
+            "LIMIT ? OFFSET ?",
+            movimientoMapper,
+            desde, desde,
+            hasta, hasta,
+            id_concepto, id_concepto,
+            limit, offset
+        );
+    }
+
+    public Map<String, Object> mostrarTotales() {
+        return jdbcTemplate.queryForMap(
+            "SELECT COALESCE(SUM(m.ingreso), 0) AS ingreso, COALESCE(SUM(m.egreso), 0) AS egreso " +
+            "FROM movimientos m " +
+            "WHERE m.fecha = strftime('%Y-%m-%d', 'now', 'localtime') AND m.id_cuenta IS NOT NULL"
         );
     }
 
@@ -68,9 +99,10 @@ public class MovimientoRepository {
     }
 
     public List<Map<String, Object>> ReporteAnual(int anio) {
-        return jdbcTemplate.queryForList("""
+        List<Map<String, Object>> result = jdbcTemplate.queryForList("""
             SELECT
-            c.concepto AS concepto, c.clasificacion,
+            c.concepto AS concepto,
+            CASE WHEN c.clasificacion = 1 AND c.sub_clasificacion = 'E' THEN 1.5 ELSE c.clasificacion END AS clasificacion,
             SUM(CASE WHEN strftime('%m', m.fecha) = '01' THEN COALESCE(m.ingreso, 0) - COALESCE(m.egreso, 0) ELSE 0 END) AS ene,
             SUM(CASE WHEN strftime('%m', m.fecha) = '02' THEN COALESCE(m.ingreso, 0) - COALESCE(m.egreso, 0) ELSE 0 END) AS feb,
             SUM(CASE WHEN strftime('%m', m.fecha) = '03' THEN COALESCE(m.ingreso, 0) - COALESCE(m.egreso, 0) ELSE 0 END) AS mar,
@@ -86,23 +118,53 @@ public class MovimientoRepository {
             FROM conceptos c
             LEFT JOIN movimientos m ON m.id_concepto = c.id_concepto
             AND CAST(strftime('%Y', m.fecha) AS INTEGER) = ?
-            GROUP BY c.id_concepto, c.concepto, c.clasificacion
+            GROUP BY c.id_concepto, c.concepto, c.clasificacion, c.sub_clasificacion
             ORDER BY c.concepto
             """, anio);
+
+        String[] meses = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
+        List<Map<String, Object>> filas = new java.util.ArrayList<>(result);
+
+        // Saldo Inicial (una fila con el saldo de cada mes + total anual)
+        Map<String, Object> saldoInicial = new java.util.HashMap<>();
+        saldoInicial.put("concepto", "SALDO INICIAL");
+        saldoInicial.put("clasificacion", 0);
+
+        List<Map<String, Object>> saldosDB = jdbcTemplate.queryForList(
+            "SELECT CAST(strftime('%m', fecha) AS INTEGER) AS mes, SUM(ingreso) AS total " +
+            "FROM movimientos WHERE id_concepto IS NULL AND CAST(strftime('%Y', fecha) AS INTEGER) = ? GROUP BY mes", anio);
+
+        for (String mes : meses) saldoInicial.put(mes, java.math.BigDecimal.ZERO);
+        for (Map<String, Object> row : saldosDB)
+            if (row.get("total") != null)
+                saldoInicial.put(meses[((Number) row.get("mes")).intValue() - 1], new java.math.BigDecimal(row.get("total").toString()));
+
+        List<java.math.BigDecimal> saldoDiciembre = jdbcTemplate.query(
+            "SELECT saldo FROM movimientos WHERE fecha < ? ORDER BY fecha DESC, id_movimiento DESC LIMIT 1",
+            (rs, rowNum) -> rs.getBigDecimal("saldo"), String.format("%04d-01-01", anio + 1));
+        saldoInicial.put("total_anual", saldoDiciembre.isEmpty() || saldoDiciembre.get(0) == null ? java.math.BigDecimal.ZERO : saldoDiciembre.get(0));
+
+        filas.add(0, saldoInicial);
+        return filas;
     }
 
-    public List<Map<String, Object>> ReporteMensual(int mes, int anio) {
-        return jdbcTemplate.queryForList("""
+    public List<Map<String, Object>> ReporteMensual(String desde, String hasta) {
+        List<Map<String, Object>> result = jdbcTemplate.queryForList("""
             SELECT
-            c.concepto AS concepto, c.clasificacion,
-            CAST(strftime('%d', m.fecha) AS INTEGER) AS dia,
+            c.concepto AS concepto,
+            CASE WHEN c.clasificacion = 1 AND c.sub_clasificacion = 'E' THEN 1.5 ELSE c.clasificacion END AS clasificacion,
+            strftime('%Y-%m-%d', m.fecha) AS fecha_mov,
+            SUM(COALESCE(m.ingreso, 0)) AS ingreso,
+            SUM(COALESCE(m.egreso, 0)) AS egreso,
             SUM(COALESCE(m.ingreso, 0) - COALESCE(m.egreso, 0)) AS neto
             FROM conceptos c
             LEFT JOIN movimientos m ON m.id_concepto = c.id_concepto
-            AND CAST(strftime('%Y', m.fecha) AS INTEGER) = ?
-            AND CAST(strftime('%m', m.fecha) AS INTEGER) = ?
-            GROUP BY c.id_concepto, c.concepto, c.clasificacion, dia
-            ORDER BY c.concepto, dia
-            """, anio, mes);
+            AND date(m.fecha) >= date(?) AND date(m.fecha) <= date(?)
+            GROUP BY c.id_concepto, c.concepto, c.clasificacion, c.sub_clasificacion, fecha_mov
+            ORDER BY c.concepto, fecha_mov
+            """, desde, hasta
+        );
+
+        return result;
     }
 }

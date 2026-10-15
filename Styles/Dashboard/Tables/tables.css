@@ -1,22 +1,42 @@
-/* ── SCROLL HORIZONTAL ────────────────────────────── */
+/* ============================================================
+   tables.css — Estilos Tabulator
+   Índice: 1 Scroll · 2 Base · 3 Encabezado · 4 Cuerpo
+           5 Estados de fila · 6 Grupos · 7 Totales y pie
+   ============================================================ */
 
-/* El scroll horizontal lo maneja #content, no la tabla */
-.tabulator,
-.tabulator .tabulator-tableholder {
-    overflow: visible;
-}
+/* ── 1. SCROLL ────────────────────────────────────── */
 
-/* Las tablas paginadas scrollean por dentro (renderizado virtual) */
+/* Listas: scrollean por dentro (Tabulator) */
 #lista_movimientos .tabulator-tableholder,
 #auditoria .tabulator-tableholder,
 #tabla-cheques-emitidos .tabulator-tableholder,
 #tabla-cheques-acobrar .tabulator-tableholder,
 #tabla-cheques-historial .tabulator-tableholder {
     background: transparent;
-    overflow: auto;
+    overflow: auto !important;
 }
 
-/* Scroll de las tablas: mismo estilo que #content, con colores que se vean sobre fondo blanco */
+/* Reportes: NO scrollean por Tabulator, scrollea #content (vertical y horizontal).
+   Lo que hay entre la tabla y #content va en overflow visible para que el sticky funcione. */
+#report_table,
+#report_table .tabulator-tableholder {
+    overflow: visible !important;
+}
+
+/* .tabulator-table es inline-block: sin esto deja un hueco de línea (unos 5px)
+   debajo de la última fila, antes del total general */
+#report_table .tabulator-table {
+    vertical-align: top;
+}
+
+/* Encabezado fijo arriba al scrollear #content en vertical */
+#report_table .tabulator-header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+/* Barra de scroll (listas) */
 .tabulator .tabulator-tableholder::-webkit-scrollbar {
     width: 8px;
     height: 12px;
@@ -36,7 +56,7 @@
     background: var(--tabulator-hover);
 }
 
-/* ── TABULATOR (BASE) ─────────────────────────────── */
+/* ── 2. BASE ──────────────────────────────────────── */
 
 .tabulator {
     background-color: var(--datos-bg);
@@ -48,16 +68,17 @@
     font-synthesis: none;
 }
 
+.tabulator,
+.tabulator * {
+    box-sizing: border-box;
+}
+
 .tabulator .tabulator-tableholder .tabulator-table,
 .tabulator .tabulator-header .tabulator-header-contents {
     min-width: 100%;
 }
 
-.tabulator, .tabulator * {
-    box-sizing: border-box;
-}
-
-/* ── ENCABEZADO (fila negra, bordes blancos) ──────── */
+/* ── 3. ENCABEZADO (fila negra, bordes blancos) ───── */
 
 .tabulator .tabulator-header {
     background-color: var(--black);
@@ -87,11 +108,10 @@
     color: var(--white);
     font-size: 0.875rem;
     font-weight: bold;
-    line-height: 1.25rem;
     text-align: center;
 }
 
-/* ── CUERPO ───────────────────────────────────────── */
+/* ── 4. CUERPO ────────────────────────────────────── */
 
 .tabulator .tabulator-row {
     background-color: var(--white);
@@ -102,10 +122,7 @@
 }
 
 .tabulator .tabulator-cell {
-    font-size: 0.8125rem;
-    font-weight: 700;
     padding: 0.1875rem 0.25rem;
-    line-height: 1.25rem;
     text-align: left;
     border-right: none;
     border-bottom: 1px solid var(--black);
@@ -120,7 +137,7 @@
     border-left: 1px solid var(--black);
 }
 
-/* ── FILAS POR ESTADO ─────────────────────────────── */
+/* ── 5. ESTADOS DE FILA (tablas de cheques) ───────── */
 
 .tabulator-row.estado-cobrado {
     background-color: var(--green);
@@ -138,10 +155,7 @@
     color: var(--black);
 }
 
-.tabulator-row.estado-pendiente {
-    background-color: var(--white);
-    color: var(--black);
-}
+/* estado-pendiente usa los colores base de fila (blanco / negro) */
 
 .tabulator-row.estado-cobrado:hover,
 .tabulator-row.estado-rechazado:hover,
@@ -151,7 +165,7 @@
     box-shadow: inset 0 0 0 100vmax rgba(0, 0, 0, 0.08);
 }
 
-/* ── GRUPOS ───────────────────────────────────────── */
+/* ── 6. GRUPOS ────────────────────────────────────── */
 
 /* Barra de título de cada grupo (la que se contrae al hacer clic) */
 .tabulator .tabulator-row.tabulator-group {
@@ -160,7 +174,6 @@
     color: var(--black);
     font-size: 0.875rem;
     font-weight: bold;
-    line-height: 1.25rem;
     text-align: left;
     border-top: 1px solid var(--black);
     border-right: none;
@@ -170,6 +183,12 @@
 
 .tabulator .tabulator-row.tabulator-group:hover {
     box-shadow: inset 0 0 0 100vmax rgba(0, 0, 0, 0.08);
+}
+
+/* Grupo sin barra de título (saldo inicial del reporte anual).
+   Se oculta con CSS y no con JS para que Tabulator no cuente su alto al calcular la tabla. */
+.tabulator .tabulator-row.tabulator-group:has(.grupo-oculto) {
+    display: none;
 }
 
 /* Flecha fija a la izquierda de la pantalla al scrollear */
@@ -201,18 +220,21 @@
     border-top-color: var(--black);
 }
 
-/* Cantidad de filas del grupo */
+/* Cantidad de filas del grupo (solo con el groupHeader por defecto de Tabulator) */
 .tabulator .tabulator-group span {
     margin-left: 0.5rem;
     color: inherit;
 }
 
-/* ── TOTALES DE GRUPO (borde negro) ───────────────── */
+/* ── 7. TOTALES Y PIE ─────────────────────────────── */
 
 .tabulator .tabulator-row.tabulator-calcs {
     color: var(--white);
 }
 
+/* 7a. Totales DE GRUPO (dentro del tableholder).
+   Solo aplican con columnCalcs: "group" o "both". Los reportes anual y mensual
+   usan "table", así que acá no hacen nada; borrar si las tablas de cheques tampoco los usan. */
 .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.tabulator-calcs {
     background: var(--datos-bg) !important;
     border: none !important;
@@ -233,8 +255,7 @@
     background-color: var(--tabulator-hover);
 }
 
-/* ── PIE (última fila negra, bordes blancos) ──────── */
-
+/* 7b. Pie con el total general (fila negra, bordes blancos) */
 .tabulator .tabulator-footer {
     background-color: var(--black);
     border-top: none;
@@ -261,4 +282,29 @@
 
 .tabulator .tabulator-footer .tabulator-calcs .tabulator-cell:hover {
     background-color: var(--tabulator-hover);
+}
+
+/* Reportes: sin el relleno que Tabulator le pone por defecto al pie,
+   para que el total general quede pegado al último subtotal */
+#report_table .tabulator-footer,
+#report_table .tabulator-footer .tabulator-footer-contents {
+    margin: 0;
+    padding: 0;
+    min-height: 0;
+}
+
+#report_table .tabulator-footer .tabulator-calcs-holder {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#report_table .tabulator-footer .tabulator-calcs-holder .tabulator-row {
+    vertical-align: top;
+}
+
+/* Total general sin posición absoluta (columnCalcs "table"): evita huecos al fondo */
+.tabulator .tabulator-calcs-bottom {
+    position: static !important;
+    bottom: auto !important;
 }

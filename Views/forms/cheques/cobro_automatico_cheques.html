@@ -7,13 +7,15 @@
                 <div class="sin_cheques_icon">
                     <svg viewBox="0 0 24 24"><use href="#icon-cheque" xlink:href="#icon-cheque"/></svg>
                 </div>
-                <span id="sin_cheques_text" class="sin_cheques_text">No se cobraron Cheques automáticamente hoy</span>
+                <span id="sin_cheques_text" class="sin_cheques_text">No hay Cheques cobrados automáticamente</span>
             </div>
+            <div id="tabla-cheques-automaticos"></div>
         </div>
     </div>
 </div>
 
 <div class="form-actions">
-    <button type="button" class="btn btn-primary" data-modal="Views/forms/cheques/resumen_cheque.html">Atras</button>
-    <button type="button" class="btn btn-cancel" data-close-modal>Finalizar</button>
+    <button type="button" class="btn btn-primary" data-obligatorio="true" data-modal="Views/forms/cheques/resumen_cheque.html">Atras</button>
+    <button type="button" id="finalizar_resumen" class="btn btn-cancel" data-close-modal>Finalizar</button>
 </div>
+<script src="Scripts/dashboard/forms/cheques/cobro_automatico.js"></script>

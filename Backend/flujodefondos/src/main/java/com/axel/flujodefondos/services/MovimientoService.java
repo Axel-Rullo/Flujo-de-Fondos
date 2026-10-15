@@ -29,10 +29,22 @@ public class MovimientoService {
         return movimientoRepository.findAllOperaciones(limit, offset);
     }
 
+    public List<Movimiento> filtroMovimientos(String desde, String hasta, Integer id_concepto, int limit, int offset) {
+        return movimientoRepository.filtroMovimientos(desde, hasta, id_concepto, limit, offset);
+    }
+
+    public Map<String, Object> mostrarTotales() {
+        return movimientoRepository.mostrarTotales();
+    }
+
     @Transactional
     public void createMovimiento(Movimiento movimiento) {
         BigDecimal ingreso = movimiento.getIngreso() != null ? movimiento.getIngreso() : BigDecimal.ZERO;
         BigDecimal egreso = movimiento.getEgreso() != null ? movimiento.getEgreso() : BigDecimal.ZERO;
+
+        if (ingreso.signum() < 0 || egreso.signum() < 0 || (ingreso.signum() == 0 && egreso.signum() == 0)) {
+            throw new IllegalStateException("El importe debe ser mayor a 0");
+        }
 
         // Un cheque endosado no impacta en el saldo de ninguna cuenta propia
         if (!esEndosado(movimiento.getCh_endosado())) {
@@ -46,7 +58,9 @@ public class MovimientoService {
             }
 
             BigDecimal saldoActual = cuenta.getSaldo() != null ? cuenta.getSaldo() : BigDecimal.ZERO;
-            cuenta.setSaldo(saldoActual.add(ingreso).subtract(egreso));
+            BigDecimal nuevoSaldo = saldoActual.add(ingreso).subtract(egreso);
+            if (nuevoSaldo.signum() < 0) throw new IllegalStateException("El saldo de la cuenta seleccionada es menor al del monto requerido");
+            cuenta.setSaldo(nuevoSaldo);
             cuentabancoRepository.updateSaldoCuentaPropia(cuenta);
         }
 
@@ -97,7 +111,7 @@ public class MovimientoService {
         return movimientoRepository.ReporteAnual(anio);
     }
 
-    public List<Map<String, Object>> ReporteMensual(int mes, int anio) {
-        return movimientoRepository.ReporteMensual(mes, anio);
+    public List<Map<String, Object>> ReporteMensual(String desde, String hasta) {
+        return movimientoRepository.ReporteMensual(desde, hasta);
     }
 }

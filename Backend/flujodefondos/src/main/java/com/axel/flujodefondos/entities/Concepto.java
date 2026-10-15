@@ -16,4 +16,5 @@ public class Concepto {
     String codigo;
     String nombre;
     String clasificacion;
+    String sub_clasificacion;
 }

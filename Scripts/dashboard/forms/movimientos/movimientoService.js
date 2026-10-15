@@ -1,10 +1,18 @@
 window.movimientoService = {
     listMovimientos: async (limit, offset) => {
-        return await apiGet('/movimientos/list?limit=' + limit + '&offset=' + offset);
+        return await apiPost('/movimientos/list', { limit, offset });
+    },
+
+    filtroPeriodico: async (desde, hasta, id_concepto, limit, offset) => {
+        return await apiPost('/movimientos/filtro', { desde, hasta, id_concepto, limit, offset });
     },
 
     listOperaciones: async (limit, offset) => {
-        return await apiGet('/operaciones/list?limit=' + limit + '&offset=' + offset);
+        return await apiPost('/operaciones/list', { limit, offset });
+    },
+
+    mostrarTotales: async () => {
+        return await apiGet('/movimientos/totales');
     },
     
     newMovimiento: async (movimiento) => {
@@ -19,7 +27,7 @@ window.movimientoService = {
         return await apiPost('/movimientos/reportes/anual', { anio });
     },
 
-    reporteMensual: async (mes, anio) => {
-        return await apiPost('/movimientos/reportes/mensual', { mes, anio });
+    reporteMensual: async (desde, hasta) => {
+        return await apiPost('/movimientos/reportes/mensual', { desde, hasta });
     },
 }

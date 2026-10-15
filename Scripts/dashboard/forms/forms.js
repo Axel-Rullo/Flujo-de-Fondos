@@ -12,7 +12,7 @@ function ajustarColumnas(container) {
 //////////////////////////////////////////////
 
 document.addEventListener('change', e => {
-    if (e.target.id !== 'tipo' && e.target.id !== 'uso' && e.target.id !== 'type_cuenta') return;
+    if (e.target.id !== 'tipo' && e.target.id !== 'uso' && e.target.id !== 'type_cuenta' && e.target.id !== 'clasificacion') return;
     const form = e.target.closest('form');
     if (e.target.id === 'tipo') {
         form.querySelector('#fecha_pago').disabled = e.target.value !== 'D';
@@ -20,6 +20,8 @@ document.addEventListener('change', e => {
         toggleTomSelect(form.querySelector('#id_cuenta_propia_imputar'), e.target.value === 'D');
         toggleTomSelect(form.querySelector('#id_clipro_imputar'), e.target.value === 'E');
         toggleTomSelect(form.querySelector('#id_concepto_imputar'), e.target.value === 'E');
+    } else if (e.target.id === 'clasificacion') {
+        toggleTomSelect(form.querySelector('#sub_clasificacion'), e.target.value === '1');
     } else {
         toggleTomSelect(form.querySelector('#id_banco'), e.target.value === 'B');
     }
@@ -80,7 +82,7 @@ async function loadSucursales(container) {
 
 async function loadConceptos(container) {
     try {
-        const selects = container.querySelectorAll('#id_concepto_emision, #id_concepto_imputar');
+        const selects = container.querySelectorAll('#id_concepto_emision, #id_concepto_imputar, #id_concepto');
         if (!selects.length) return;
 
         const conceptos = await apiGet('/concepto/list');

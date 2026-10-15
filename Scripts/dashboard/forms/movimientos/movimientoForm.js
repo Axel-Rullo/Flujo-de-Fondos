@@ -10,20 +10,16 @@
             const form = e.target.closest('#form_report_anual, #form_report_mensual');
             if (!form) return;
 
-            e.preventDefault()
+            e.preventDefault();
 
             try {
                 if (form.id === 'form_report_mensual') {
-                    /*
-                    const fecha_desde = form.querySelector('#desde').value;
-                    const fecha_hasta = form.querySelector('#hasta').value;
-                    const reporte = await window.movimientoService.reporteMensual(fecha_hasta, fecha_hasta);
-                    await window.movimientoTemplates.crearReporteMensual(reporte, fecha_desde, fecha_hasta);
-                    */
-                    const [anio, mes] = form.querySelector('#mes_año').value.split('-').map(Number);
-                    const reporte = await window.movimientoService.reporteMensual(mes, anio);
-                    await window.movimientoTemplates.crearReporteMensual(reporte, anio, mes);
-                } else {
+                    const desde = form.querySelector('#desde').value;
+                    const hasta = form.querySelector('#hasta').value;
+                    window.exportFecha = desde + ' ' + hasta;
+                    const reporte = await window.movimientoService.reporteMensual(desde, hasta);
+                    await window.movimientoTemplates.crearReporteMensual(reporte, desde, hasta);
+                } else if (form.id === 'form_report_anual') {
                     const anio = parseInt(form.querySelector('#año').value);
                     window.exportFecha = anio;
                     const reporte = await window.movimientoService.reporteAnual(anio);
@@ -32,12 +28,13 @@
                 form.reset();
                 window.cerrarModal();
             } catch (err) {
-                showAlert("Error al generar el reporte Anual/Mensual", "error", 3000, 'center', true);
+                showAlert('Error al generar el reporte Anual/Mensual', 'error', 3000, 'center', true);
                 console.error('Error al generar el reporte anual/mensual:', err);
             }
         });
     }
 
+    // ==================== NUEVO MOVIMIENTO ====================
     function buildMovimiento(form) {
         const movimiento = {
             fecha: form.querySelector('#fecha_emision').value,
@@ -70,15 +67,13 @@
                 const movimiento = buildMovimiento(form);
                 const res = await window.movimientoService.newMovimiento(movimiento);
                 if (!res.ok) {
-                    showAlert('Error al ingresar el Movimiento', 'error', 3000, 'center', true);
-                    console.log(res.mensaje);
+                    showAlert(res.mensaje, 'error', 3000, 'center', true);
                 } else {
                     showAlert('¡Movimiento ingresado exitosamente!', 'success', 2000, 'top', false);
                     form.reset();
                     window.cerrarModal();
                     cargarParcial('Views/queries/movimientos.html')
                 }
-
             } catch (err) {
                 showAlert('Error al ingresar el Movimiento', 'error', 3000, 'center', true);
                 console.error('Error al ingresar el movimiento:', err);

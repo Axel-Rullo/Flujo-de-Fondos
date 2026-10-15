@@ -44,6 +44,7 @@ svg {
 
 /* Área de contenido de cada vista, con el scroll general */
 #content {
+    background-color: var(--datos-bg);
     height: 100%;
     min-height: 0;
     overflow-y: auto;
@@ -67,6 +68,10 @@ svg {
 
 #content::-webkit-scrollbar-thumb:hover {
     background: var(--white);
+}
+
+#content::-webkit-scrollbar-corner {
+    background: var(--datos-bg);
 }
 
 /* ── TRANSICIÓN ENTRE VISTAS ─────────────────────────────────── */

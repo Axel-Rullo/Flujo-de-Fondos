@@ -3,6 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<!-- Parent: Spring Boot gestiona las versiones de las dependencias y los plugins -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -10,14 +11,17 @@
 		<relativePath/>
 	</parent>
 
+	<!-- Datos del proyecto -->
 	<groupId>com.axel</groupId>
 	<artifactId>flujodefondos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>flujodefondos</name>
 	<description/>
 
+	<!-- Versión de Java y de Lombok (la usan la dependencia y el procesador de anotaciones) -->
 	<properties>
 		<java.version>25</java.version>
+		<lombok.version>1.18.48</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -51,7 +55,6 @@
 		<dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.46</version>
             <optional>true</optional>
         </dependency>
 
@@ -92,8 +95,11 @@
 	</dependencies>
 
 	<build>
+        <!-- Nombre del JAR generado: flujodefondos.jar -->
         <finalName>flujodefondos</finalName>
 		<plugins>
+
+			<!-- Compilador: Lombok como procesador de anotaciones -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -107,10 +113,15 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
+			<!-- Spring Boot: ejecuta con mvn spring-boot:run y empaqueta el JAR ejecutable -->
 			<plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!-- Desarrollo (mvn spring-boot:run): permite que sqlite-jdbc cargue su librería nativa sin aviso -->
+                    <jvmArguments>--enable-native-access=ALL-UNNAMED</jvmArguments>
+                    <!-- Lombok solo se usa al compilar, no va dentro del JAR -->
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
@@ -119,6 +130,20 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+			<!-- JAR: deja el permiso de acceso nativo en el manifest (java -jar, Java 22+) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
