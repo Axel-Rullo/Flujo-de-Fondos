@@ -164,8 +164,8 @@ CREATE TABLE IF NOT EXISTS movimientos (
 -- INSERT bancos
 -- ---------------------------------------------------------------------
 INSERT INTO bancos (id_banco, nombre) VALUES
-    (1, 'Banco de la Nación Argentina'),
-    (2, 'Banco Provincia de Santa Fe'),
+    (1, 'Banco Nación'),
+    (2, 'Banco Santa Fe'),
     (3, 'Banco Galicia'),
     (4, 'Banco Macro'),
     (5, 'Banco Santander'),
