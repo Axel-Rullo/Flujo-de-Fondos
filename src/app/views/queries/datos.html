@@ -1,0 +1,69 @@
+<div class="scroll_general_data">
+    <div id="general-data" class="general-data">
+        <h1 class="title-general-data">DATOS GENERALES</h1>
+        <div class="flujo-panel">
+            <h2 class="subtitle-panel-general">FLUJO DEL DÍA</h2>
+            <div class="flujo-rows">
+                <div class="divisor-row">
+                    <div class="group ingresos">
+                        <span class="label">Ingresos</span>
+                        <span class="total_ingreso value">0</span>
+                    </div>
+                    <div class="group egresos">
+                        <span class="label">Egresos</span>
+                        <span class="total_egreso value">0</span>
+                    </div>
+                    <div class="group flujo-neto">
+                        <span class="label">Flujo Neto</span>
+                        <span class="total_flujo_neto value">0</span>
+                    </div>
+                    <div class="group saldo-total">
+                        <span class="label">Saldo Total</span>
+                        <span class="total_saldos_cuentas value">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="saldo-cuenta-general-data">
+        <div class="saldo-cuenta-panel">
+            <h1 class="title-general-data">SALDO POR CUENTA</h1>
+            <div class="cuentas-lista" id="cuentas-lista"></div>
+        </div>
+    </div>
+
+    <div class="cheques-general-data">
+        <div class="cheques-panel">
+            <h1 class="title-general-data">CHEQUES</h1>
+            <div class="cheque-header">
+                <span class="col-emitidos">Emitidos</span>
+                <span class="cheque-center"></span>
+                <span class="col-acobrar">A cobrar</span>
+            </div>
+            <div class="cheque-row">
+                <div class="cheque-label">Corrientes</div>
+                <div class="cheque-bars" id="cheque-bars-corrientes"></div>
+            </div>
+            <div class="cheque-row cheque-row--last">
+                <div class="cheque-label">Diferidos</div>
+                <div class="cheque-bars" id="cheque-bars-diferidos"></div>
+            </div>
+            <div class="divisor-row cheque-totales">
+                <div class="group total-corrientes">
+                    <span class="label">Total Corrientes</span>
+                    <span class="total_corrientes value">0</span>
+                </div>
+                <div class="group total-diferidos">
+                    <span class="label">Total Diferidos</span>
+                    <span class="total_diferidos value">0</span>
+                </div>
+                <div class="group total-general">
+                    <span class="label">Total General</span>
+                    <span class="total_general value">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="scripts/dashboard/queries/graficos.js"></script>

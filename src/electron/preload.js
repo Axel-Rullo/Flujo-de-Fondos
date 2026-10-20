@@ -1,0 +1,31 @@
+const { contextBridge, ipcRenderer } = require('electron');
+const fs   = require('fs');
+const path = require('path');
+
+contextBridge.exposeInMainWorld('electronAPI', {
+    version: process.versions.electron,
+
+    onSesionInactiva: (callback) => ipcRenderer.on('sesion-inactiva', callback),
+
+    readView: async (relativePath) => {
+        const appDir = path.join(__dirname, '..', 'app');
+        const safePath = path.resolve(appDir, relativePath);
+        const rel = path.relative(appDir, safePath);
+        if (rel.startsWith('..') || path.isAbsolute(rel)) throw new Error('Access denied');
+        return fs.promises.readFile(safePath, 'utf8');
+    },
+
+    minimizeWindow:      () => ipcRenderer.send('window-minimize'),
+    maximizeWindow:      () => ipcRenderer.send('window-maximize'),
+    closeWindow:         () => ipcRenderer.send('window-close'),
+    isMaximized:         () => ipcRenderer.invoke('window-is-maximized'),
+
+    onWindowStateChange: (callback) => {
+        const handler = (_event, state) => callback(state);
+        ipcRenderer.on('window-state', handler);
+        return () => ipcRenderer.off('window-state', handler);
+    },
+
+    onBackendReady: (callback) => ipcRenderer.once('backend-ready', callback),
+    onBackendError: (callback) => ipcRenderer.once('backend-error', callback)
+});

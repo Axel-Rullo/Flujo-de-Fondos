@@ -1,0 +1,29 @@
+<div id="report_panel" class="report_panel">
+    <div class="report_panel_title">
+        <h2>ELIJE EL TIPO DE REPORTE</h2>
+        <p>Seleccioná el período que querés analizar</p>
+    </div>
+    <div class="report_types">
+        <button type="button" class="report_type" data-modal="views/forms/reports/types/new_report_mensual.html">
+            <h2>REPORTE PERIÓDICO</h2>
+            <svg><use href="#icon-reporte-mensual" xlink:href="#icon-reporte-mensual"/></svg>
+            <p>Evolución del flujo de fondos por día</p>
+        </button>
+        <button type="button" class="report_type" data-modal="views/forms/reports/types/new_report_anual.html">
+            <h2>REPORTE ANUAL</h2>
+            <svg><use href="#icon-reporte-anual" xlink:href="#icon-reporte-anual"/></svg>
+            <p>Evolución del flujo de fondos mes a mes</p>
+        </button>
+        <button type="button" id="report_transacciones_internas" class="report_type">
+            <h2>MOVIMIENTOS INTERNOS</h2>
+            <svg><use href="#icon-transferencia" xlink:href="#icon-transferencia"/></svg>
+            <p>Transacciones entre cuentas</p>
+        </button>
+        <button type="button" class="report_type" disabled>
+            <span class="report_type_soon">Próximamente</span>
+            <h2>REPORTE IV</h2>
+            <svg><use href="#icon-reporte-deshabilitado" xlink:href="#icon-reporte-deshabilitado"/></svg>
+        </button>
+    </div>
+</div>
+<div id="report_table"></div>
