@@ -2,7 +2,7 @@ package com.axel.flujodefondos.repositories;
 
 import com.axel.flujodefondos.entities.User;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,34 +20,14 @@ public class UserRepository {
 
     // ── MAPPERS ──────────────────────────────────────────────────────
 
-    private final RowMapper<User> loginMapper = (rs, rowNum) -> new User(
-        rs.getLong("id_usuario"),
-        rs.getString("user"),
-        rs.getString("pass"),
-        null, null, null, null, null, null, null, null, null
-    );
-
-    private final RowMapper<User> userMapper = (rs, rowNum) -> new User(
-        rs.getLong("id_usuario"),
-        rs.getString("user"),
-        null,
-        rs.getString("dni"),
-        rs.getString("nombre"),
-        rs.getString("email"),
-        rs.getString("telefono"),
-        rs.getString("rango"),
-        rs.getString("id_sucursal"),
-        rs.getString("photo"),
-        null,
-        rs.getString("sucursal_nombre")
-    );
+    private final BeanPropertyRowMapper<User> userMapper = new BeanPropertyRowMapper<>(User.class);
 
     // ── LOGIN ────────────────────────────────────────────────────────
 
     public Optional<User> findByUsuario(String userOption) {
         return jdbcTemplate.query(
-                "SELECT id_usuario, user, pass FROM usuarios WHERE user = ? OR dni = ?",
-                loginMapper,
+                "SELECT id_usuario AS id, user AS usuario, pass AS password FROM usuarios WHERE user = ? OR dni = ?",
+                userMapper,
                 userOption, userOption
         ).stream().findFirst();
     }
@@ -55,7 +35,7 @@ public class UserRepository {
     // ── USUARIO ───────────────────────────────────────────────────────
     public Optional<User> findById(String id) {
         return jdbcTemplate.query(
-                "SELECT u.id_usuario, u.user, u.dni, u.nombre, u.email, u.telefono, u.rango, u.id_sucursal, u.photo, s.nombre AS sucursal_nombre FROM usuarios u JOIN sucursales s ON u.id_sucursal = s.id_sucursal WHERE u.id_usuario = ?",
+                "SELECT u.id_usuario AS id, u.user AS usuario, u.dni, u.nombre, u.email, u.telefono, u.rango, u.id_sucursal, u.photo, s.nombre AS sucursal_nombre FROM usuarios u JOIN sucursales s ON u.id_sucursal = s.id_sucursal WHERE u.id_usuario = ?",
                 userMapper,
                 id
         ).stream().findFirst();
@@ -63,18 +43,13 @@ public class UserRepository {
 
     // ── LISTADO DE USUARIOS ───────────────────────────────────────────
 
-    public List<User> findAllActive() {
-    return jdbcTemplate.query(
-            "SELECT u.id_usuario, u.user, u.dni, u.nombre, u.email, u.telefono, u.rango, u.id_sucursal, u.photo, s.nombre AS sucursal_nombre FROM usuarios u JOIN sucursales s ON u.id_sucursal = s.id_sucursal WHERE u.estado = 'E' ORDER BY u.rango, u.nombre ASC",
-            userMapper
-    );
-    }
-
-    public List<User> findAllInactive() {
-    return jdbcTemplate.query(
-            "SELECT u.id_usuario, u.user, u.dni, u.nombre, u.email, u.telefono, u.rango, u.id_sucursal, u.photo, s.nombre AS sucursal_nombre FROM usuarios u JOIN sucursales s ON u.id_sucursal = s.id_sucursal WHERE u.estado = 'N' ORDER BY u.rango, u.nombre ASC",
-            userMapper
-    );
+    public List<User> findAll(String estado, String busqueda, int limit, int offset) {
+        String like = "%" + busqueda + "%";
+        return jdbcTemplate.query(
+                "SELECT u.id_usuario AS id, u.user AS usuario, u.dni, u.nombre, u.email, u.telefono, u.rango, u.id_sucursal, u.photo, s.nombre AS sucursal_nombre FROM usuarios u JOIN sucursales s ON u.id_sucursal = s.id_sucursal WHERE u.estado = ? AND (u.nombre LIKE ? OR u.user LIKE ? OR u.dni LIKE ?) ORDER BY u.rango, u.nombre ASC, u.id_usuario ASC LIMIT ? OFFSET ?",
+                userMapper,
+                estado, like, like, like, limit, offset
+        );
     }
 
     // ── ALTA ─────────────────────────────────────────────────────────

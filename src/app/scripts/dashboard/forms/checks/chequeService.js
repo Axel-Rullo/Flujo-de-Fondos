@@ -2,7 +2,7 @@ window.ChequeService = {
     newChequePropio: async (cheque) => {
         return await apiPost('/cheques/propios/emision', cheque);
     },
-    
+
     newChequeTercero: async (cheque) => {
         return await apiPost('/cheques/terceros/emision', cheque);
     },
@@ -23,20 +23,12 @@ window.ChequeService = {
         return await apiPost('/cheques/propios/imputar_vencidos');
     },
 
-    listChequesPropios: async (estado, busqueda = '', limit = 50, offset = 0) => {
-        return await apiPost('/cheques/propios/list', { estado, busqueda, limit, offset });
-    },
-    
-    listChequesTerceros: async (estado, busqueda = '', limit = 50, offset = 0) => {
-        return await apiPost('/cheques/terceros/list', { estado, busqueda, limit, offset });
+    listCartera: async (busqueda = '', limit = 50, offset = 0) => {
+        return await apiPost('/cheques/cartera', { busqueda, limit, offset });
     },
 
-    listBajasPropios: async (estado, busqueda = '', limit = 50, offset = 0) => {
-        return await apiPost('/cheques/propios/bajas', { estado, busqueda, limit, offset });
-    },
-
-    listBajasTerceros: async (estado, busqueda = '', limit = 50, offset = 0) => {
-        return await apiPost('/cheques/terceros/bajas', { estado, busqueda, limit, offset });
+    listHistorial: async (estado, busqueda = '', limit = 50, offset = 0) => {
+        return await apiPost('/cheques/historial', { estado, busqueda, limit, offset });
     },
 
     getCheque: async (id) => {

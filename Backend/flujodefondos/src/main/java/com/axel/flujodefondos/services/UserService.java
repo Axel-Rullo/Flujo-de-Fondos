@@ -35,12 +35,8 @@ public class UserService {
 
     // ── LISTADOS ──────────────────────────────────────────────────────
 
-    public List<User> listAllActive() {
-        return userRepository.findAllActive();
-    }
-
-    public List<User> listAllInactive() {
-        return userRepository.findAllInactive();
+    public List<User> listUsers(String estado, String busqueda, int limit, int offset) {
+        return userRepository.findAll(estado, busqueda, limit, offset);
     }
 
     // ── ALTA ─────────────────────────────────────────────────────────

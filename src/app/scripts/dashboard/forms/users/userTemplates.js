@@ -42,9 +42,9 @@ window.UserTemplates = {
         `;
     },
 
-    renderUsersList: function(users, container, estado) {
-        this.colorIndex = 0;
-        
+    renderUsersList: function(users, container, estado, append = false) {
+        if (!append) this.colorIndex = 0;
+
         const html = users.map(user => {
             const botonAction = estado == 'N' ?
             `<button class="btn-reactive-entity" data-id="${user.id}" title="Activar">
@@ -72,7 +72,8 @@ window.UserTemplates = {
         `;
         }).join('');
 
-        container.innerHTML = html;
+        if (append) container.insertAdjacentHTML('beforeend', html);
+        else container.innerHTML = html;
     },
 
     fillUserModal: function(user, container) {

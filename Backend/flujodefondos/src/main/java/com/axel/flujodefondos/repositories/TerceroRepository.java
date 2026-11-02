@@ -22,7 +22,7 @@ public class TerceroRepository {
 
     private final RowMapper<Tercero> tercerosNamesMapper = (rs, rowNum) -> new Tercero(
         rs.getLong("id_clipro"),
-        rs.getString("nombre"),
+        rs.getString("razon_social"),
         null,
         null,
         null,
@@ -33,7 +33,7 @@ public class TerceroRepository {
 
     private final RowMapper<Tercero> terceroMapper = (rs, rowNum) -> new Tercero(
         rs.getLong("id_clipro"),
-        rs.getString("nombre"),
+        rs.getString("razon_social"),
         rs.getString("dni_cuit"),
         rs.getString("telefono"),
         rs.getString("email"),
@@ -43,10 +43,10 @@ public class TerceroRepository {
     );
 
     // ── TERCERO ───────────────────────────────────────────────────────
-    
+
     public Optional<Tercero> findById(Long id) {
         return jdbcTemplate.query(
-                "SELECT id_clipro, nombre, dni_cuit, telefono, email, localidad, tipo FROM clientes_proveedores WHERE id_clipro = ?",
+                "SELECT id_clipro, razon_social, dni_cuit, telefono, email, localidad, tipo FROM clientes_proveedores WHERE id_clipro = ?",
                 terceroMapper,
                 id
         ).stream().findFirst();
@@ -56,22 +56,19 @@ public class TerceroRepository {
 
     public List<Tercero> findAllTercerosNames() {
         return jdbcTemplate.query(
-                "SELECT id_clipro, nombre, tipo FROM clientes_proveedores WHERE estado='E' ORDER BY nombre ASC",
+                "SELECT id_clipro, razon_social, tipo FROM clientes_proveedores WHERE estado='E' ORDER BY razon_social ASC",
                 tercerosNamesMapper
         );
     }
 
-    public List<Tercero> findAllActive() {
+    public List<Tercero> findAll(String estado, String search, int limit, int offset) {
+        String like = "%" + search + "%";
         return jdbcTemplate.query(
-                "SELECT id_clipro, nombre, dni_cuit, telefono, email, localidad, tipo FROM clientes_proveedores WHERE estado='E' ORDER BY nombre ASC",
-                terceroMapper
-        );
-    }
-
-    public List<Tercero> findAllInactive() {
-        return jdbcTemplate.query(
-                "SELECT id_clipro, nombre, dni_cuit, telefono, email, localidad, tipo FROM clientes_proveedores WHERE estado='N' ORDER BY nombre ASC",
-                terceroMapper
+                "SELECT id_clipro, razon_social, dni_cuit, telefono, email, localidad, tipo FROM clientes_proveedores " +
+                "WHERE estado = ? AND (razon_social LIKE ? OR dni_cuit LIKE ?) " +
+                "ORDER BY razon_social ASC, id_clipro ASC LIMIT ? OFFSET ?",
+                terceroMapper,
+                estado, like, like, limit, offset
         );
     }
 
@@ -79,8 +76,8 @@ public class TerceroRepository {
 
     public void insert(Tercero tercero) {
         jdbcTemplate.update(
-                "INSERT INTO clientes_proveedores (nombre, dni_cuit, telefono, email, localidad, tipo) VALUES (?, ?, ?, ?, ?, ?)",
-                tercero.getNombre(), tercero.getDni_cuit(), tercero.getTelefono(),
+                "INSERT INTO clientes_proveedores (razon_social, dni_cuit, telefono, email, localidad, tipo) VALUES (?, ?, ?, ?, ?, ?)",
+                tercero.getRazon_social(), tercero.getDni_cuit(), tercero.getTelefono(),
                 tercero.getEmail(), tercero.getLocalidad(), tercero.getTipo()
         );
     }
@@ -89,8 +86,8 @@ public class TerceroRepository {
 
     public void update(Tercero tercero) {
         jdbcTemplate.update(
-                "UPDATE clientes_proveedores SET nombre = ?, dni_cuit = ?, telefono = ?, email = ?, localidad = ?, tipo = ? WHERE id_clipro = ?",
-                tercero.getNombre(), tercero.getDni_cuit(), tercero.getTelefono(),
+                "UPDATE clientes_proveedores SET razon_social = ?, dni_cuit = ?, telefono = ?, email = ?, localidad = ?, tipo = ? WHERE id_clipro = ?",
+                tercero.getRazon_social(), tercero.getDni_cuit(), tercero.getTelefono(),
                 tercero.getEmail(), tercero.getLocalidad(), tercero.getTipo(),
                 tercero.getId_clipro()
         );
@@ -98,11 +95,11 @@ public class TerceroRepository {
 
     // ── VERIFICAR DUPLICADO ──────────────────────────────────────────
 
-    public boolean existsByDni(String dniCuit) {
+    public boolean existsByDni(String dniCuit, long idExcluir) {
         Integer count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM clientes_proveedores WHERE dni_cuit = ?",
+                "SELECT COUNT(*) FROM clientes_proveedores WHERE dni_cuit = ? AND id_clipro <> ?",
                 Integer.class,
-                dniCuit
+                dniCuit, idExcluir
         );
         return count != null && count > 0;
     }

@@ -1,7 +1,17 @@
 (function() {
     const icons = { E: 'icon-entitys', N: 'icon-entity-x' };
+    // ── PAGINACIÓN Y BÚSQUEDA ──
+    const TAMANIO_PAGINA = 50;
+    const MAXIMO_USUARIOS = 500;
+    const UMBRAL_SCROLL = 0.70;
+    const DEMORA_BUSQUEDA = 400;
+
     let currentUsers = [];
     let currentEstado = 'E';
+    let textoBusqueda = '';
+    let hayMas = true;
+    let cargando = false;
+    let idConsulta = 0;
 
     function initStatusSelect() {
         const select = document.querySelector('#user_status');
@@ -15,41 +25,86 @@
                 item: (data) => `<div class="status-icon-${data.value}" title="${data.title}"><svg width="22" height="22"><use href="#${icons[data.value]}" xlink:href="#${icons[data.value]}"/></svg></div>`
             }
         });
-        ts.setValue('E', true); 
+        ts.setValue('E', true);
 
         ts.on('change', (value) => { renderUserList(value); ts.blur(); });
     }
 
-    async function renderUserList(estado = 'E') {
+    // ── CARGA DE USUARIOS ──
+
+    // Vuelve a la primera página (cambio de estado o de búsqueda)
+    function renderUserList(estado = currentEstado) {
         const container = document.querySelector('.entity-container');
         if (!container) return;
 
-        try {
-            const users = await window.UserService.getUsers(estado);
-            users.forEach(user => user.color = window.UserTemplates.getRandomColor());
-            currentUsers = users;
-            currentEstado = estado;
-            window.UserTemplates.renderUsersList(currentUsers, container, estado);
-        } catch (err) {
-            showAlert("Error al cargar la lista de Usuarios", "error", 3000, 'center', true);
-            console.error('Error al cargar lista de usuarios:', err);
-        }
+        currentEstado = estado;
+        currentUsers = [];
+        hayMas = true;
+        cargando = false;
+        idConsulta++;
+        container.scrollTop = 0;
+
+        loadUsers();
     }
 
-    function initSearch(container) {
+    // Trae la página siguiente y la agrega a la lista
+    async function loadUsers() {
+        const container = document.querySelector('.entity-container');
+        if (!container || cargando || !hayMas) return;
+
+        const consultaActual = idConsulta;
+        cargando = true;
+
+        try {
+            const users = await window.UserService.getUsers(currentEstado, textoBusqueda, TAMANIO_PAGINA, currentUsers.length);
+            if (consultaActual !== idConsulta) return;
+
+            users.forEach(user => user.color = window.UserTemplates.getRandomColor());
+            window.UserTemplates.renderUsersList(users, container, currentEstado, currentUsers.length > 0);
+
+            currentUsers = currentUsers.concat(users);
+            hayMas = users.length === TAMANIO_PAGINA && currentUsers.length < MAXIMO_USUARIOS;
+        } catch (err) {
+            hayMas = false;
+            showAlert("Error al cargar la lista de Usuarios", "error", 3000, 'center', true);
+            console.error('Error al cargar lista de usuarios:', err);
+        } finally {
+            if (consultaActual === idConsulta) cargando = false;
+        }
+
+        if (consultaActual === idConsulta) checkScroll();
+    }
+
+    // ── SCROLL INFINITO ──
+
+    // Si se pasó del umbral, pide la página siguiente (también rellena la lista si quedó corta)
+    function checkScroll() {
+        const container = document.querySelector('.entity-container');
+        if (!container) return;
+
+        if ((container.scrollTop + container.clientHeight) / container.scrollHeight >= UMBRAL_SCROLL) loadUsers();
+    }
+
+    function initScroll(container) {
+        container.addEventListener('scroll', checkScroll);
+    }
+
+    // ── BUSCADOR ──
+    function initSearch() {
         const input = document.querySelector('.search-input');
         if (!input) return;
 
+        let temporizador;
         input.addEventListener('input', () => {
-            const texto = input.value.trim().toLowerCase();
-            const filtrados = currentUsers.filter(user =>
-                user.nombre.toLowerCase().includes(texto) ||
-                user.usuario.toLowerCase().includes(texto) ||
-                user.dni.toLowerCase().includes(texto)
-            );
-            window.UserTemplates.renderUsersList(filtrados, container, currentEstado);
+            clearTimeout(temporizador);
+            temporizador = setTimeout(() => {
+                textoBusqueda = input.value.trim();
+                renderUserList(currentEstado);
+            }, DEMORA_BUSQUEDA);
         });
     }
+
+    // ── ACCIONES ──
 
     function initActions(container) {
         container.addEventListener('click', e => {
@@ -104,7 +159,8 @@
 
         renderUserList('E');
         initStatusSelect();
-        initSearch(container);
+        initScroll(container);
+        initSearch();
         initActions(container);
     }
 

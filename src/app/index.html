@@ -57,8 +57,8 @@
     <!-- ICONOS -->
     <svg xmlns="http://www.w3.org/2000/svg" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
         <symbol id="summary" viewBox="0 0 32 32">
-            <path fill="currentColor" d="M19 10h7v2h-7zm0 5h7v2h-7zm0 5h7v2h-7zM6 10h7v2H6zm0 5h7v2H6zm0 5h7v2H6z" />
-            <path fill="currentColor" d="M28 5H4a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M4 7h11v18H4Zm13 18V7h11v18Z" />
+        <path fill="currentColor" d="M19 10h7v2h-7zm0 5h7v2h-7zm0 5h7v2h-7zM6 10h7v2H6zm0 5h7v2H6zm0 5h7v2H6z" />
+        <path fill="currentColor" d="M28 5H4a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h24a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2M4 7h11v18H4Zm13 18V7h11v18Z" />
         </symbol>
 
         <symbol id="icono-cheque-cobrado" viewBox="0 0 48 48">
@@ -336,36 +336,29 @@
             </div>
             <aside class="accordion">
                 <div class="menu-group">
-                    <button data-target="sub-conceptos">CONCEPTOS <span class="chevron"></span></button>
-                    <div id="sub-conceptos" class="submenu">
-                        <a data-modal="views/forms/concepts/new_concepto.html" href="#">NUEVO CONCEPTO</a>
-                    </div>
+                    <button data-modal="views/forms/concepts/new_concepto.html">+ NUEVO CONCEPTO</button>
                 </div>
 
                 <div class="menu-group">
-                    <button data-target="sub-cheques">CHEQUES <span class="chevron"></span></button>
-                    <div id="sub-cheques" class="submenu">
-                        <a data-modal="views/forms/checks/new/nuevo_cheque_propio.html" href="#">NUEVO CHEQUE PROPIO</a>
-                        <a data-modal="views/forms/checks/new/nuevo_cheque_terceros.html" href="#">NUEVO CHEQUE DE TERCEROS</a>
-                    </div>
+                    <button data-modal="views/forms/checks/new/nuevo_cheque_propio.html">+ NUEVO CHEQUE PROPIO</button>
                 </div>
 
                 <div class="menu-group">
-                    <button data-target="sub-movimientos">MOVIMIENTOS <span class="chevron"></span></button>
-                    <div id="sub-movimientos" class="submenu">
-                        <a data-modal="views/forms/transactions/nuevo_movimiento.html" href="#">NUEVO MOVIMIENTO</a>
-                    </div>
+                    <button data-modal="views/forms/checks/new/nuevo_cheque_terceros.html">+ NUEVO CHEQUE DE TERCEROS</button>
+                </div>
+
+                <div class="menu-group">
+                    <button data-modal="views/forms/transactions/nuevo_movimiento.html">+ NUEVO MOVIMIENTO</button>
                 </div>
             </aside>
         </header>
-
         <!-- Controles de ventana -->
         <div class="tb-controls">
             <div class="tb-account-controls">
                 <button class="tb-btn bt-reports" data-modal="views/forms/reports/formato_report.html" data-obligatorio="true" title="Reportes" aria-label="Reportes">
                     <svg width="18" height="18" viewBox="0 0 24 24"><use href="#file-export" xlink:href="#file-export"/></svg>
                 </button>
-                <button class="tb-btn bt-clipro-list admin-only" data-modal="views/forms/clients/clipro_list.html" title="Clientes/Proveedores" aria-label="Clientes/Proveedores">
+                <button class="tb-btn bt-clipro-list admin-only" data-modal="views/forms/clients/tercero_list.html" title="Clientes/Proveedores" aria-label="Clientes/Proveedores">
                     <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-clientes" xlink:href="#icon-clientes"/></svg>
                 </button>
                 <button class="tb-btn bt-user-list admin-only" title="Lista de Usuarios" aria-label="Lista de Usuarios" data-modal="views/forms/users/users_list.html">
@@ -477,10 +470,10 @@
     <script src="./scripts/dashboard/forms/users/userTemplates.js"></script>
     <script src="./scripts/dashboard/forms/users/userForm.js"></script>
 
-    <!-- Clipros -->
-    <script src="./scripts/dashboard/forms/clients/cliproService.js"></script>
-    <script src="./scripts/dashboard/forms/clients/cliproTemplates.js"></script>
-    <script src="./scripts/dashboard/forms/clients/cliproForm.js"></script>
+    <!-- Terceros -->
+    <script src="./scripts/dashboard/forms/clients/terceroService.js"></script>
+    <script src="./scripts/dashboard/forms/clients/terceroTemplates.js"></script>
+    <script src="./scripts/dashboard/forms/clients/terceroForm.js"></script>
 
     <!-- Cheques -->
     <script src="./scripts/dashboard/forms/checks/chequeService.js"></script>

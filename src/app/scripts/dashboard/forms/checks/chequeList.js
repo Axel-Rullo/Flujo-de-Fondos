@@ -1,5 +1,12 @@
 (function() {
     const iconos = { C: 'icono-cheque-cobrado', R: 'icono-cheque-rechazado', A: 'icono-cheque-anulado' };
+    const titulos = {
+        P: 'CARTERA DE CHEQUES',
+        T: 'HISTORIAL DE CHEQUES',
+        C: 'HISTORIAL DE CHEQUES COBRADOS',
+        R: 'HISTORIAL DE CHEQUES RECHAZADOS',
+        A: 'HISTORIAL DE CHEQUES ANULADOS'
+    };
 
     // ── PAGINACIÓN Y BÚSQUEDA ──
     const TAMANIO_PAGINA = 50;
@@ -8,17 +15,22 @@
     const DEMORA_BUSQUEDA = 400;
 
     let tabla = null;
-    let clase = 'P';
-    let estado = 'P';
+    let estado = 'P'; // P = Cartera. En el historial: T (Todos), C, R o A
     let cantidadCargada = 0;
     let hayMas = true;
     let cargando = false;
     let idConsulta = 0;
     let textoBusqueda = '';
 
-    function selectHistorialCheques() {
+    // ── FILTRO DE ESTADO (SOLO HISTORIAL) ──
+    function iconoEstado(valor) {
+        if (valor === 'T') return '<svg width="22" height="22" viewBox="0 0 24 24"><use href="#icon-cheque" xlink:href="#icon-cheque"/></svg>';
+        return `<svg width="28" height="28"><use href="#${iconos[valor]}" xlink:href="#${iconos[valor]}"/></svg>`;
+    }
+
+    function initFiltro() {
         const selectEstado = document.querySelector('#type-cheque');
-        if (!selectEstado) return renderChequeList();
+        if (!selectEstado) return;
 
         const tsEstado = new TomSelect(selectEstado, {
             wrapperClass: 'ts-wrapper clase_cheque',
@@ -26,117 +38,65 @@
             dropdownClass: 'ts-dropdown status-dropdown-cheque',
             controlInput: null,
             render: {
-                option: (datos) => `<div class="status-icon-${datos.value}" title="${datos.title}"><svg width="28" height="28"><use href="#${iconos[datos.value]}" xlink:href="#${iconos[datos.value]}"/></svg></div>`,
-                item: (datos) => `<div class="status-icon-${datos.value}" title="${datos.title}"><svg width="28" height="28"><use href="#${iconos[datos.value]}" xlink:href="#${iconos[datos.value]}"/></svg></div>`
+                option: (datos) => `<div class="status-icon-${datos.value}" title="${datos.title}">${iconoEstado(datos.value)}</div>`,
+                item: (datos) => `<div class="status-icon-${datos.value}" title="${datos.title}">${iconoEstado(datos.value)}</div>`
             }
         });
-        tsEstado.setValue('C', true);
+        tsEstado.setValue('T', true);
 
-        tsEstado.on('change', () => { renderChequeList(); tsEstado.blur(); });
-
-        const selectClase = document.querySelector('#clase-cheque');
-
-        const tsClase = new TomSelect(selectClase, {
-            wrapperClass: 'ts-wrapper clase_cheque',
-            dropdownParent: 'body',
-            dropdownClass: 'ts-dropdown status-dropdown-cheque',
-            controlInput: null
-        });
-        tsClase.setValue('P', true);
-
-        tsClase.on('change', () => { renderChequeList(); tsClase.blur(); });
-
-        renderChequeList();
+        tsEstado.on('change', () => { resetCheques(); tsEstado.blur(); });
     }
 
-    // ── CONSULTA SEGÚN LA PANTALLA ──
-    function fetchCheques(desde) {
-        const servicio = window.ChequeService;
-        const propio = clase === 'P';
+    // ── CARGA DE CHEQUES ──
 
-        if (estado === 'R' || estado === 'A') {
-            return propio
-                ? servicio.listBajasPropios(estado, textoBusqueda, TAMANIO_PAGINA, desde)
-                : servicio.listBajasTerceros(estado, textoBusqueda, TAMANIO_PAGINA, desde);
-        }
-        return propio
-            ? servicio.listChequesPropios(estado, textoBusqueda, TAMANIO_PAGINA, desde)
-            : servicio.listChequesTerceros(estado, textoBusqueda, TAMANIO_PAGINA, desde);
-    }
+    // Vuelve a la primera página (cambio de estado o de búsqueda)
+    function resetCheques() {
+        estado = document.querySelector('#type-cheque')?.value || 'P';
+        document.querySelector('.lista_cheques').textContent = titulos[estado];
 
-    function createTable(cheques) {
-        const plantillas = window.ChequeTemplates;
-
-        if (estado === 'R' || estado === 'A') return plantillas.crearTablaChequesRechAnul(cheques);
-        return clase === 'P'
-            ? plantillas.crearTablaChequesEmitidos(cheques)
-            : plantillas.crearTablaChequesACobrar(cheques);
-    }
-
-    // ── PRIMERA PÁGINA ──
-    async function renderChequeList() {
-        const contenedor = document.querySelector('.cheques-container');
-        if (!contenedor) return;
-
-        const titulos = { C: 'HISTORIAL DE CHEQUES COBRADOS', R: 'HISTORIAL DE CHEQUES RECHAZADOS', A: 'HISTORIAL DE CHEQUES ANULADOS' };
-        let titulo;
-
-        if (contenedor.querySelector('#tabla-cheques-emitidos')) {
-            clase = 'P'; estado = 'P'; titulo = 'CHEQUES EMITIDOS';
-        } else if (contenedor.querySelector('#tabla-cheques-acobrar')) {
-            clase = 'T'; estado = 'P'; titulo = 'CHEQUES A COBRAR';
-        } else if (contenedor.querySelector('#tabla-cheques-historial')) {
-            clase = document.querySelector('#clase-cheque').value;
-            estado = document.querySelector('#type-cheque').value;
-            titulo = titulos[estado];
-        } else {
-            return;
-        }
-
-        const elementoTitulo = contenedor.querySelector('.lista_cheques');
-        if (elementoTitulo) elementoTitulo.textContent = titulo;
-
-        const consultaActual = ++idConsulta;
         tabla = null;
         cantidadCargada = 0;
         hayMas = true;
-        cargando = true;
+        cargando = false;
+        idConsulta++;
 
-        try {
-            const cheques = await fetchCheques(0);
-            if (consultaActual !== idConsulta) return;
-
-            const tablaNueva = await createTable(cheques);
-            if (consultaActual !== idConsulta) return;
-
-            tabla = tablaNueva;
-            tabla.on('tableBuilt', initScroll);
-            updatePagination(cheques.length);
-        } catch (err) {
-            showAlert('Error al cargar la lista de Cheques', 'error', 3000, 'center', true);
-            console.error('Error al cargar lista de cheques:', err);
-        } finally {
-            if (consultaActual === idConsulta) cargando = false;
-        }
+        loadCheques();
     }
 
-    // ── PÁGINAS SIGUIENTES ──
-    async function loadMoreCheques() {
-        if (cargando || !hayMas || !tabla) return;
+    // Trae la página siguiente; si todavía no hay tabla, la crea con la primera
+    async function loadCheques() {
+        if (cargando || !hayMas) return;
 
         const consultaActual = idConsulta;
         cargando = true;
 
         try {
-            const cheques = await fetchCheques(cantidadCargada);
+            const cheques = estado === 'P'
+                ? await window.ChequeService.listCartera(textoBusqueda, TAMANIO_PAGINA, cantidadCargada)
+                : await window.ChequeService.listHistorial(estado, textoBusqueda, TAMANIO_PAGINA, cantidadCargada);
             if (consultaActual !== idConsulta) return;
 
-            await tabla.addData(cheques);
-            updatePagination(cheques.length);
+            if (tabla) {
+                await tabla.addData(cheques);
+            } else {
+                const plantillas = window.ChequeTemplates;
+                const tablaNueva = await (estado === 'P' ? plantillas.crearTablaCartera(cheques) : plantillas.crearTablaHistorial(cheques));
+                if (consultaActual !== idConsulta) return;
+
+                tabla = tablaNueva;
+                tabla.on('tableBuilt', initScroll);
+            }
+
+            cantidadCargada += cheques.length;
+            hayMas = cheques.length === TAMANIO_PAGINA && cantidadCargada < MAXIMO_CHEQUES;
+
+            if (cheques.length === TAMANIO_PAGINA && !hayMas) {
+                showAlert('Se alcanzó el límite de ' + MAXIMO_CHEQUES + ' cheques.\nUsá el buscador para acotar los resultados.', 'info', 4000, 'top', false);
+            }
         } catch (err) {
             hayMas = false;
-            showAlert('Error al cargar más Cheques', 'error', 3000, 'center', true);
-            console.error('Error al cargar más cheques:', err);
+            showAlert('Error al cargar los Cheques', 'error', 3000, 'center', true);
+            console.error('Error al cargar cheques:', err);
         } finally {
             if (consultaActual === idConsulta) cargando = false;
         }
@@ -144,21 +104,14 @@
         if (consultaActual === idConsulta) checkScroll();
     }
 
-    function updatePagination(cantidad) {
-        cantidadCargada += cantidad;
-        hayMas = cantidad === TAMANIO_PAGINA && cantidadCargada < MAXIMO_CHEQUES;
-
-        if (cantidad === TAMANIO_PAGINA && cantidadCargada >= MAXIMO_CHEQUES) {
-            showAlert('Se alcanzó el límite de ' + MAXIMO_CHEQUES + ' cheques.\nUsá el buscador para acotar los resultados.', 'info', 4000, 'top', false);
-        }
-    }
-
     // ── SCROLL INFINITO ──
+
+    // Si se pasó del umbral, pide la página siguiente (también rellena la tabla si quedó corta)
     function checkScroll() {
         const contenido = tabla && tabla.element.querySelector('.tabulator-tableholder');
         if (!contenido) return;
 
-        if ((contenido.scrollTop + contenido.clientHeight) / contenido.scrollHeight >= UMBRAL_SCROLL) loadMoreCheques();
+        if ((contenido.scrollTop + contenido.clientHeight) / contenido.scrollHeight >= UMBRAL_SCROLL) loadCheques();
     }
 
     // El scroll es de la propia tabla: el listener se crea con cada tabla nueva
@@ -177,11 +130,12 @@
             clearTimeout(temporizador);
             temporizador = setTimeout(() => {
                 textoBusqueda = buscador.value.trim();
-                renderChequeList();
+                resetCheques();
             }, DEMORA_BUSQUEDA);
         });
     }
 
     initSearch();
-    selectHistorialCheques();
+    initFiltro();
+    resetCheques();
 })();

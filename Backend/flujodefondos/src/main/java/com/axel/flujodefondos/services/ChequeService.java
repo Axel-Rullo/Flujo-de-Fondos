@@ -58,24 +58,16 @@ public class ChequeService {
     }
 
 
-    // ── LISTADOS ──────────────────────────────────────────────────────
+    // ── CARTERA ───────────────────────────────────────────────────────
 
-    public List<Cheque> listAllPropios(String estado, String busqueda, int limit, int offset) {
-        return chequeRepository.findAllPropios(estado, busqueda, limit, offset);
-    }
-
-    public List<Cheque> listAllTerceros(String estado, String busqueda, int limit, int offset) {
-        return chequeRepository.findAllTerceros(estado, busqueda, limit, offset);
+    public List<Cheque> listCartera(String busqueda, int limit, int offset) {
+        return chequeRepository.findAllCartera(busqueda, limit, offset);
     }
 
     // ── HISTORIAL ────────────────────────────────────────────────────
 
-    public List<Cheque> listBajasPropios(String estado, String busqueda, int limit, int offset) {
-        return chequeRepository.findAllBajasPropios(estado, busqueda, limit, offset);
-    }
-
-    public List<Cheque> listBajasTerceros(String estado, String busqueda, int limit, int offset) {
-        return chequeRepository.findAllBajasTerceros(estado, busqueda, limit, offset);
+    public List<Cheque> listHistorial(String estado, String busqueda, int limit, int offset) {
+        return chequeRepository.findAllHistorial(estado, busqueda, limit, offset);
     }
 
     // ── DETALLE ──────────────────────────────────────────────────────

@@ -214,6 +214,28 @@
     pointer-events: none;
 }
 
+/* ── CAMPO CON SELECT INTEGRADO ───────────────────── */
+
+/* Input con un select a la derecha, dentro del mismo campo */
+.input-select {
+    display: flex;
+}
+
+/* El input ocupa todo el espacio que deja el select */
+.input-select input {
+    flex: 1;
+    min-width: 0;
+}
+
+/* El select se adapta a su contenido y se separa del input con una línea */
+.input-select select {
+    flex: 0 0 auto;
+    border: 2px solid transparent;
+    border-left: 1px solid var(--gray);
+    font-weight: bold;
+    cursor: pointer;
+}
+
 /* ── TOM SELECT ───────────────────────────────────── */
 
 /* Campo principal generado por Tom Select */

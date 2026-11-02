@@ -22,7 +22,7 @@
                 { title: "CLASE",         field: "clase",          widthGrow: 10, hozAlign: "center", formatter: (cell) => cell.getValue() === 'P' ? 'Propio' : 'Tercero' },
                 { title: "FECHA COBRO",   field: "fecha_pago",     widthGrow: 14, hozAlign: "center", formatter: (cell) => sumarDias(cell.getValue(), 30) || '--' },
                 { title: "NÚMERO",        field: "numero",         widthGrow: 16 },
-                { title: "IMPORTE",       field: "importe",        widthGrow: 16, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
+                { title: "IMPORTE",       field: "importe",        widthGrow: 16, hozAlign: "right", formatter: (cell) => '$ ' + formatearImporte(cell.getValue()) },
                 { title: "CLIENTE/PROV",  field: "clipro_emision", widthGrow: 24 },
                 { title: "CUENTA/BANCO",  field: "cuenta_propia_emision", widthGrow: 20, formatter: (cell) => { const d = cell.getData(); return d.clase === 'P' ? (d.cuenta_propia_emision || '--') : (d.banco_emision || '--'); } }
             ]

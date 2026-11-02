@@ -19,22 +19,24 @@ public class TerceroService {
         return terceroRepository.findAllTercerosNames();
     }
 
-    public List<Tercero> listAllActive() {
-        return terceroRepository.findAllActive();
+    public List<Tercero> listTerceros(String estado, String search, int limit, int offset) {
+        return terceroRepository.findAll(estado, search, limit, offset);
     }
 
-    public List<Tercero> listAllInactive() {
-        return terceroRepository.findAllInactive();
+    // ── VALIDACIÓN ───────────────────────────────────────────────────
+
+    // Devuelve el mensaje de error, o null si el DNI/CUIT no está repetido
+    private String validateDni(Tercero tercero, long idExcluir) {
+        if (terceroRepository.existsByDni(tercero.getDni_cuit(), idExcluir)) return "El DNI/CUIT ingresado ya existe";
+        return null;
     }
 
     // ── ALTA ─────────────────────────────────────────────────────────
 
-    public boolean createTercero(Tercero tercero) {
-        if (tercero.getDni_cuit() != null && !tercero.getDni_cuit().isEmpty() && terceroRepository.existsByDni(tercero.getDni_cuit())) {
-            return false;
-        }
-        terceroRepository.insert(tercero);
-        return true;
+    public String createTercero(Tercero tercero) {
+        String error = validateDni(tercero, 0);
+        if (error == null) terceroRepository.insert(tercero);
+        return error;
     }
 
     public void reactiveTercero(Long id) {
@@ -43,8 +45,10 @@ public class TerceroService {
 
     // ── EDICIÓN ──────────────────────────────────────────────────────
 
-    public void updateTercero(Tercero tercero) {
-        terceroRepository.update(tercero);
+    public String updateTercero(Tercero tercero) {
+        String error = validateDni(tercero, tercero.getId_clipro());
+        if (error == null) terceroRepository.update(tercero);
+        return error;
     }
 
     // ── BAJA ─────────────────────────────────────────────────────────

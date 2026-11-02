@@ -21,53 +21,47 @@ let yaAvisado = false;
 const userDataPath = app.getPath('userData');
 const dbDir = path.join(userDataPath, 'database');
 
-// Profiles vive en userData (escribible siempre, incluso instalado en Program Files).
-// Si empaquetás una carpeta Profiles con imágenes por defecto vía extraResources,
-// esta la copia una sola vez a userData la primera vez que corre la app.
-const profilesDir = path.join(userDataPath, 'Profiles');
-
-function seedProfilesIfNeeded() {
-    if (fs.existsSync(profilesDir)) return;
-
-    fs.mkdirSync(profilesDir, { recursive: true });
-
-    if (app.isPackaged) {
-        const seedDir = path.join(process.resourcesPath, 'Profiles');
-        if (fs.existsSync(seedDir)) {
-            fs.cpSync(seedDir, profilesDir, { recursive: true });
-        }
-    }
-}
-
 //////////////////////////////////////////////
 // ☕ BACKEND JAVA
 //////////////////////////////////////////////
 
 let javaServer;
+let javaExitInfo = null; // Guarda el motivo si Java muere antes de que waitForBackend escuche
 
 function startJavaBackend() {
     if (app.isPackaged) {
-        // Producción: JAR precompilado con JRE embebido
         const jarPath = path.join(process.resourcesPath, 'Backend', 'flujodefondos.jar');
         const javaExe = path.join(process.resourcesPath, 'Backend', 'jre', 'bin', 'java.exe');
 
+        // Validar que los archivos existan antes de intentar spawn
+        if (!fs.existsSync(javaExe)) {
+            javaExitInfo = 'No se encontró java.exe en: ' + javaExe;
+            console.error(javaExitInfo);
+            return;
+        }
+        if (!fs.existsSync(jarPath)) {
+            javaExitInfo = 'No se encontró flujodefondos.jar en: ' + jarPath;
+            console.error(javaExitInfo);
+            return;
+        }
+
         if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
-        seedProfilesIfNeeded();
 
         javaServer = spawn(javaExe, [
             '-jar', jarPath,
             `--app.storage.base-path=${userDataPath}`
         ], {
-            cwd: userDataPath // Ejecutar Java desde AppData para evitar errores de permisos
+            cwd: userDataPath
         });
 
         javaServer.stdout.on('data',  (data) => console.log('JAVA: ' + data));
         javaServer.stderr.on('data',  (data) => console.error('JAVA ERROR: ' + data));
-        javaServer.on('close', (code) => console.log('Servidor Java cerrado con codigo ' + code));
-        javaServer.on('error', (err) => console.error('Error al iniciar el proceso Java: ' + err.message));
+
+        // Guardar motivo de cierre para que waitForBackend lo detecte aunque ya haya pasado
+        javaServer.on('exit',  (code) => { javaExitInfo = 'Servidor Java cerrado con código ' + code; console.log(javaExitInfo); });
+        javaServer.on('error', (err)  => { javaExitInfo = err.message; console.error('Error al iniciar el proceso Java: ' + err.message); });
     } else {
-        // Desarrollo: Ejecutar el backend manualmente desde tu IDE/terminal
-        console.log('Modo Desarrollo: Asegúrate de tener el backend de Spring Boot corriendo manualmente en el puerto 8080.');
+        console.log('Modo Desarrollo: Asegurate de tener el backend de Spring Boot corriendo manualmente en el puerto 8080.');
     }
 }
 
@@ -75,21 +69,39 @@ function waitForBackend(url = 'http://127.0.0.1:8080', timeout = 90000) {
     return new Promise((resolve, reject) => {
         const start = Date.now();
         let timer = null;
+        let done = false;
+
+        function finish(fn, arg) {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            fn(arg);
+        }
+
+        // Si Java ya murió antes de que lleguemos acá, rechazar de una
+        if (javaExitInfo) {
+            return reject(new Error(javaExitInfo));
+        }
+
+        // Si no hay javaServer (archivos faltantes), rechazar
+        if (!javaServer && app.isPackaged) {
+            return reject(new Error(javaExitInfo || 'No se pudo iniciar el proceso Java'));
+        }
 
         if (javaServer) {
-            javaServer.once('exit', (code) => reject(new Error('Servidor Java cerrado con código ' + code)));
-            javaServer.once('error', (err) => reject(new Error(err.message)));
+            javaServer.once('exit',  (code) => finish(reject, new Error('Servidor Java cerrado con código ' + code)));
+            javaServer.once('error', (err)  => finish(reject, new Error(err.message)));
         }
 
         function check() {
-            const req = http.get(url, () => {
-                clearTimeout(timer);
-                resolve();
-            });
+            if (done) return;
+
+            const req = http.get(url, () => finish(resolve));
 
             req.on('error', () => {
+                if (done) return;
                 if (Date.now() - start > timeout) {
-                    reject(new Error('Backend no respondió a tiempo'));
+                    finish(reject, new Error('Backend no respondió a tiempo'));
                 } else {
                     timer = setTimeout(check, 300);
                 }

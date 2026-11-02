@@ -11,19 +11,19 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/concepto")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ConceptoController {
 
     private final ConceptoService conceptoService;
 
-    @GetMapping("/concepto/list")
+    @GetMapping("/list")
     public List<Concepto> findAll() {
         return conceptoService.findAll();
     }
 
-    @PostMapping("/concepto/new")
+    @PostMapping("/new")
     public ResponseEntity<Map<String, Object>> newConcepto(@RequestBody Concepto concepto) {
         try {
             conceptoService.insert(concepto);
@@ -33,7 +33,7 @@ public class ConceptoController {
         }
     }
 
-    @PostMapping("/concepto/edit")
+    @PostMapping("/edit")
     public ResponseEntity<Map<String, Object>> editConcepto(@RequestBody Concepto concepto) {
         conceptoService.update(concepto);
         return ResponseEntity.ok(Map.of("ok", true));

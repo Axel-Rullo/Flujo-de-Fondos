@@ -82,7 +82,7 @@ public class ChequeRepository {
     public List<Cheque> findAllAutomatizados() {
         return jdbcTemplate.query(
             "SELECT ch.id_cheque, ch.clase, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.estado, " +
-            "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision, b.nombre AS banco_emision " +
+            "cp.razon_social AS clipro_emision, cb.nombre AS cuenta_propia_emision, b.nombre AS banco_emision " +
             "FROM cheques ch " +
 
             // Titular en emisión
@@ -112,12 +112,12 @@ public class ChequeRepository {
         );
     }
 
-    // ── LISTADO ───────────────────────────────────────────────────────
+    // ── CARTERA ───────────────────────────────────────────────────────
 
-    public List<Cheque> findAllPropios(String estado, String busqueda, int limit, int offset) {
+    public List<Cheque> findAllCartera(String busqueda, int limit, int offset) {
         return jdbcTemplate.query(
-            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.estado, " +
-            "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision " +
+            "SELECT ch.id_cheque, ch.clase, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.estado, " +
+            "cp.razon_social AS clipro_emision, cb.nombre AS cuenta_propia_emision, b.nombre AS banco_emision " +
             "FROM cheques ch " +
 
             // Titular en emisión
@@ -126,50 +126,26 @@ public class ChequeRepository {
             // Cuenta propia en emisión
             "LEFT JOIN cuentas cb ON ch.id_cuenta_propia_emision = cb.id_cuenta " +
 
-            // Usuario (para la búsqueda)
-            "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
-
-            "WHERE ch.clase = 'P' AND ch.estado = ? " +
-            BUSQUEDA + orden(estado) + PAGINA,
-            chequeMapper,
-            parametros(estado, busqueda, limit, offset)
-        );
-    }
-
-    public List<Cheque> findAllTerceros(String estado, String busqueda, int limit, int offset) {
-        return jdbcTemplate.query(
-            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.tipo, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.uso, " +
-            "cp.nombre AS clipro_emision, cpd.nombre AS clipro_imputar, ce.nombre AS cuenta_propia_imputar, b.nombre AS banco_emision " +
-            "FROM cheques ch " +
-
-            // Titular en emisión
-            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
-
-            // Titular en imputación
-            "LEFT JOIN clientes_proveedores cpd ON ch.id_clipro_imputar = cpd.id_clipro " +
-
-            // Cuenta propia en imputación (depósito)
-            "LEFT JOIN cuentas ce ON ch.id_cuenta_propia_imputar = ce.id_cuenta " +
-
             // Banco del cheque
             "LEFT JOIN bancos b ON ch.id_banco_emision = b.id_banco " +
 
             // Usuario (para la búsqueda)
             "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
 
-            "WHERE ch.clase = 'T' AND ch.estado = ? " +
-            BUSQUEDA + orden(estado) + PAGINA,
+            "WHERE ch.estado = ? " +
+            BUSQUEDA + orden("P") + PAGINA,
             chequeMapper,
-            parametros(estado, busqueda, limit, offset)
+            parametros("P", busqueda, limit, offset)
         );
     }
 
     // ── HISTORIAL ────────────────────────────────────────────────────
 
-    public List<Cheque> findAllBajasPropios(String estado, String busqueda, int limit, int offset) {
+    // estado "T" = Todos: el LIKE '%' no filtra por estado
+    public List<Cheque> findAllHistorial(String estado, String busqueda, int limit, int offset) {
         return jdbcTemplate.query(
-            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.fecha_destino, ch.estado, ch.motivo, ch.clase, " +
-            "cp.nombre AS clipro_emision, cb.nombre AS cuenta_propia_emision, u.nombre AS usuario " +
+            "SELECT ch.id_cheque, ch.clase, ch.numero, ch.importe, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.motivo, " +
+            "cp.razon_social AS clipro_emision, cb.nombre AS cuenta_propia_emision, b.nombre AS banco_emision, u.nombre AS usuario " +
             "FROM cheques ch " +
 
             // Titular en emisión
@@ -178,35 +154,16 @@ public class ChequeRepository {
             // Cuenta propia en emisión
             "LEFT JOIN cuentas cb ON ch.id_cuenta_propia_emision = cb.id_cuenta " +
 
-            // Usuario
-            "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
-
-            "WHERE ch.clase = 'P' AND ch.estado = ? " +
-            BUSQUEDA + orden(estado) + PAGINA,
-            chequeMapper,
-            parametros(estado, busqueda, limit, offset)
-        );
-    }
-
-    public List<Cheque> findAllBajasTerceros(String estado, String busqueda, int limit, int offset) {
-        return jdbcTemplate.query(
-            "SELECT ch.id_cheque, ch.numero, ch.importe, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.motivo, " +
-            "cp.nombre AS clipro_emision, b.nombre AS banco_emision, u.nombre AS usuario, ch.clase " +
-            "FROM cheques ch " +
-
-            // Titular en emisión
-            "LEFT JOIN clientes_proveedores cp ON ch.id_clipro_emision = cp.id_clipro " +
-
             // Banco del cheque
             "LEFT JOIN bancos b ON ch.id_banco_emision = b.id_banco " +
 
             // Usuario
             "LEFT JOIN usuarios u ON u.id_usuario = ch.id_usuario " +
 
-            "WHERE ch.clase = 'T' AND ch.estado = ? " +
+            "WHERE ch.estado != 'P' AND ch.estado LIKE ? " +
             BUSQUEDA + orden(estado) + PAGINA,
             chequeMapper,
-            parametros(estado, busqueda, limit, offset)
+            parametros("T".equals(estado) ? "%" : estado, busqueda, limit, offset)
         );
     }
 
@@ -216,7 +173,7 @@ public class ChequeRepository {
         return jdbcTemplate.queryForObject(
             "SELECT ch.id_cheque, ch.clase, ch.clasificacion, ch.numero, ch.importe, ch.tipo, " +
             "ch.fecha_emision, ch.fecha_pago, ch.fecha_destino, ch.estado, ch.observacion, ch.motivo, ch.uso, " +
-            "cp.nombre AS clipro_emision, cpd.nombre AS clipro_imputar, b.nombre AS banco_emision, " +
+            "cp.razon_social AS clipro_emision, cpd.razon_social AS clipro_imputar, b.nombre AS banco_emision, " +
             "cb.nombre AS cuenta_propia_emision, ce.nombre AS cuenta_propia_imputar, " +
             "cce.concepto AS concepto_emision, ccs.concepto AS concepto_imputar, u.nombre AS usuario " +
             "FROM cheques ch " +
@@ -257,7 +214,7 @@ public class ChequeRepository {
         jdbcTemplate.update(
             "INSERT INTO cheques (clase, clasificacion, numero, importe, tipo, fecha_emision, fecha_pago, estado, observacion, id_clipro_emision, id_cuenta_propia_emision, id_concepto_emision, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             "P", "E", cheque.getNumero(), cheque.getImporte(), cheque.getTipo(), cheque.getFecha_emision(),
-            cheque.getFecha_pago(), "P", cheque.getObservacion(), cheque.getId_clipro_emision(), 
+            cheque.getFecha_pago(), "P", cheque.getObservacion(), cheque.getId_clipro_emision(),
             cheque.getId_cuenta_propia_emision(), cheque.getId_concepto_emision(), cheque.getId_usuario()
         );
     }
@@ -265,7 +222,7 @@ public class ChequeRepository {
     public void insertChequeTercero(Cheque cheque) {
         jdbcTemplate.update(
             "INSERT INTO cheques (clase, clasificacion, numero, id_banco_emision, importe, tipo, fecha_emision, fecha_pago, estado, observacion, id_clipro_emision, id_concepto_emision, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            "T", "A", cheque.getNumero(), cheque.getId_banco_emision(), cheque.getImporte(), cheque.getTipo(), 
+            "T", "A", cheque.getNumero(), cheque.getId_banco_emision(), cheque.getImporte(), cheque.getTipo(),
             cheque.getFecha_emision(), cheque.getFecha_pago(), "P", cheque.getObservacion(),
             cheque.getId_clipro_emision(), cheque.getId_concepto_emision(), cheque.getId_usuario()
         );

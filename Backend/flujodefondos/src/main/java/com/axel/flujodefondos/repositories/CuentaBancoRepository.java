@@ -36,7 +36,7 @@ public class CuentaBancoRepository {
 
     public List<CuentaPropia> findAllCuentasPropias() {
         return jdbcTemplate.query(
-            "SELECT c.id_cuenta, c.nombre, c.saldo, b.nombre AS banco FROM cuentas c LEFT JOIN bancos b ON b.id_banco = c.id_banco ORDER BY c.nombre ASC", 
+            "SELECT c.id_cuenta, c.nombre, c.saldo, b.nombre AS banco FROM cuentas c LEFT JOIN bancos b ON b.id_banco = c.id_banco ORDER BY c.nombre ASC",
             cuentaPropiaMapper);
     }
 
@@ -71,15 +71,15 @@ public class CuentaBancoRepository {
 
         List<Object[]> filas = jdbcTemplate.query(
             """
-            SELECT bc.id_banco, cp.id_clipro, cp.nombre, bc.alias
+            SELECT bc.id_banco, cp.id_clipro, cp.razon_social, bc.alias
             FROM bancos_clientprov bc
             JOIN clientes_proveedores cp ON cp.id_clipro = bc.id_clipro
-            ORDER BY cp.nombre ASC
+            ORDER BY cp.razon_social ASC
             """,
             (rs, rowNum) -> {
                 Tercero t = new Tercero();
                 t.setId_clipro(rs.getLong("id_clipro"));
-                t.setNombre(rs.getString("nombre"));
+                t.setRazon_social(rs.getString("razon_social"));
                 t.setAlias(rs.getString("alias"));
                 return new Object[] { rs.getLong("id_banco"), t };
             }

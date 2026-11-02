@@ -3,7 +3,7 @@
     window.__chequeFormsInit = true;
 
     let idChequeImputar = null;  // id del cheque que se está imputando
-    let chequeAccion = null;     // cheque sobre el que se rechaza/anula: { id, clase, accion }
+    let chequeAccion = null;     // cheque sobre el que se rechaza/anula: { id, accion }
     let chequeAutomatico = null; // Solo tiene valor cuando el cheque se abrió desde la lista de cobro automático
 
     // ── ARMADO DE DATOS ──────────────────────────────────────────────
@@ -24,7 +24,7 @@
         };
     }
 
-    // Alta de cheque de terceros 
+    // Alta de cheque de terceros
     function buildChequeTercero(form) {
         return {
             tipo: form.querySelector('#tipo').value,
@@ -131,7 +131,6 @@
 
                 chequeAccion = {
                     id: Number(view.dataset.id),
-                    clase: view.dataset.clase,  // P = propio, otro = terceros
                     accion: e.target.id === 'btn-reject' ? 'R' : 'A'
                 };
 
@@ -176,9 +175,9 @@
                 // Alta de cheque propio
                 if (form.id === 'form_new_chequepropio') {
                     cheque = buildChequePropio(form);
-                    // La emisión puede ser hoy o hasta 7 días atrás
-                    if (sumarDias(getFechaLocal(), -7) > cheque.fecha_emision || cheque.fecha_emision > getFechaLocal()) {
-                        showAlert('La Fecha de Emision puede ser hoy o 7 días hacia atrás', 'warning', 4000, 'center', true);
+                    // La emisión puede ser hoy o hasta 360 días atrás
+                    if (sumarDias(getFechaLocal(), -360) > cheque.fecha_emision || cheque.fecha_emision > getFechaLocal()) {
+                        showAlert('La Fecha de Emision puede ser hoy o 360 días hacia atrás', 'warning', 4000, 'center', true);
                         return;
                     }
                     // En un diferido el pago tiene que ser posterior a la emisión
@@ -193,14 +192,15 @@
                         showAlert('¡Cheque ingresado exitosamente!', 'success', 2000, 'top', false);
                         form.reset();
                         window.cerrarModal();
-                        cargarParcial('views/queries/ch_emitidos.html')
+                        cargarParcial('views/queries/cartera_ch.html')
                     }
 
                 // Alta de cheque de terceros (mismas validaciones que el propio)
                 } else if (form.id === 'form_new_chequetercero') {
                     cheque = buildChequeTercero(form);
-                    if (sumarDias(getFechaLocal(), -7) > cheque.fecha_emision || cheque.fecha_emision > getFechaLocal()) {
-                        showAlert('La Fecha de Emision puede ser hoy o 7 días hacia atrás', 'warning', 4000, 'center', true);
+                    // La emisión puede ser hoy o hasta 360 días atrás
+                    if (sumarDias(getFechaLocal(), -360) > cheque.fecha_emision || cheque.fecha_emision > getFechaLocal()) {
+                        showAlert('La Fecha de Emision puede ser hoy o 360 días hacia atrás', 'warning', 4000, 'center', true);
                         return;
                     }
                     if (cheque.tipo === 'D' && cheque.fecha_pago <= cheque.fecha_emision) {
@@ -214,7 +214,7 @@
                         showAlert('¡Cheque ingresado exitosamente!', 'success', 2000, 'top', false);
                         form.reset();
                         window.cerrarModal();
-                        cargarParcial('views/queries/ch_a_cobrar.html')
+                        cargarParcial('views/queries/cartera_ch.html')
                     }
 
                 // Imputar cheque propio (siempre manual)
@@ -238,7 +238,7 @@
                         form.reset();
                         window.cerrarModal(); // cierra el modal de imputación (el de arriba)
                         window.cerrarModal(); // cierra el view_cheque que quedó debajo en el stack
-                        cargarParcial('views/queries/ch_emitidos.html')
+                        cargarParcial('views/queries/cartera_ch.html')
                     }
 
                 // Rechazar o anular (propio o terceros)
@@ -270,7 +270,7 @@
                         } else {
                             window.cerrarModal(); // cierra el modal de rechazo/anulación (el de arriba)
                             window.cerrarModal(); // cierra el view_cheque que quedó debajo en el stack
-                            cargarParcial(chequeAccion.clase === 'P' ? 'views/queries/ch_emitidos.html' : 'views/queries/ch_a_cobrar.html')
+                            cargarParcial('views/queries/cartera_ch.html')
                         }
                     }
 
@@ -297,7 +297,7 @@
                         } else {
                             window.cerrarModal(); // cierra el modal de imputación (el de arriba)
                             window.cerrarModal(); // cierra el view_cheque que quedó debajo en el stack
-                            cargarParcial('views/queries/ch_a_cobrar.html')
+                            cargarParcial('views/queries/cartera_ch.html')
                         }
                     }
                 }

@@ -7,6 +7,72 @@ function ajustarColumnas(container) {
     container.classList.toggle('multiple-columns', grupos.length >= 6);
 }
 
+// ---------------------------------------------------------------------
+// Bloquear días puntuales en campos date (todos los años)
+// ---------------------------------------------------------------------
+const DIAS_BLOQUEADOS = ['11-23', '12-08', '12-25']; // MM-DD
+
+document.addEventListener('change', e => {
+    if (e.target.id !== 'fecha_pago' && e.target.id !== 'fecha_destino') return;
+
+    if (DIAS_BLOQUEADOS.includes(e.target.value.slice(5))) {
+        e.target.value = '';
+        showAlert('Ese día no está habilitado', 'warning', 3000, 'center', true);
+    }
+});
+
+//////////////////////////////////////////////
+// 🪪 DNI / CUIT
+//////////////////////////////////////////////
+
+// DNI: solo dígitos (máx. 8) | CUIT: 11 dígitos con formato XX-XXXXXXXX-X
+function formatearDocumento(valor, tipo) {
+    const digitos = valor.replace(/\D/g, "").slice(0, tipo === "CUIT" ? 11 : 8);
+    if (tipo !== "CUIT") return digitos;
+
+    return digitos.slice(0, 2) +
+        (digitos.length > 2 ? "-" + digitos.slice(2, 10) : "") +
+        (digitos.length > 10 ? "-" + digitos.slice(10) : "");
+}
+
+// Devuelve el mensaje de error, o null si el largo es válido
+function validarDocumento(valor, tipo) {
+    const largo = valor.replace(/\D/g, "").length;
+
+    if (tipo === "CUIT") {
+        return largo === 11 ? null : "El CUIT debe tener 11 dígitos";
+    }
+    return largo >= 7 && largo <= 8 ? null : "El DNI debe tener entre 7 y 8 dígitos";
+}
+
+function aplicarDocumento(input) {
+    const tipo = input.form.querySelector("[data-documento-tipo]").value;
+    const digitosAntes = input.value.slice(0, input.selectionStart).replace(/\D/g, "").length;
+
+    input.value = formatearDocumento(input.value, tipo);
+    input.placeholder = tipo + "...";
+
+    // Reposicionar el cursor después del mismo dígito que tenía antes de formatear
+    let count = 0;
+    let newPos = 0;
+    while (newPos < input.value.length && count < digitosAntes) {
+        if (/\d/.test(input.value[newPos])) count++;
+        newPos++;
+    }
+    input.setSelectionRange(newPos, newPos);
+}
+
+// Uso: input con data-documento + select (DNI/CUIT) con data-documento-tipo, dentro del mismo form
+document.addEventListener('input', e => {
+    if (e.target.matches('[data-documento]')) aplicarDocumento(e.target);
+});
+
+document.addEventListener('change', e => {
+    if (!e.target.matches('[data-documento-tipo]')) return;
+    const input = e.target.form.querySelector('[data-documento]');
+    if (input) aplicarDocumento(input);
+});
+
 //////////////////////////////////////////////
 // 📐 CHEQUES
 //////////////////////////////////////////////
@@ -140,7 +206,7 @@ async function loadTerceros(container) {
                 dropdownParent: 'body',
                 options: terceros.map(t => ({
                     value: t.id_clipro,
-                    text: t.nombre + ' (' + t.tipo + ')',
+                    text: t.razon_social + ' (' + t.tipo + ')',
                     id: t.id_clipro
                 })),
                 labelField: 'text',

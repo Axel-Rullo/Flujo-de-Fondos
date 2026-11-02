@@ -5,17 +5,17 @@
 
         <div class="form-group">
             <label for="name">Nombre <span>*</span></label>
-            <input type="text" id="name" name="name" maxlength="100" placeholder="Nombre..." required>
+            <input type="text" id="name" name="name" maxlength="100" title="Solo letras" placeholder="Nombre..." required>
         </div>
 
         <div class="form-group">
             <label for="lastname">Apellido <span>*</span></label>
-            <input type="text" id="lastname" name="lastname" maxlength="100" placeholder="Apellido..." required>
+            <input type="text" id="lastname" name="lastname" maxlength="100" title="Solo letras" placeholder="Apellido..." required>
         </div>
 
         <div class="form-group">
             <label for="username">Usuario <span>*<small> (MÍNIMO 8)</small></span></label>
-            <input type="text" id="username" name="username" maxlength="100" placeholder="Usuario... (minimo 8 caracteres)" minlength="8" required>
+            <input type="text" id="username" name="username" maxlength="100" pattern="[A-Za-z0-9_.]+" title="Solo letras, números, _ y ." placeholder="Usuario... (minimo 8 caracteres)" minlength="8" required>
         </div>
 
         <div class="form-group">
@@ -25,7 +25,7 @@
 
         <div class="form-group">
             <label for="dni">DNI <span>*</span></label>
-            <input type="text" id="dni" name="dni" maxlength="25" placeholder="DNI..." required>
+            <input type="text" id="dni" name="dni" minlength="7" maxlength="8" inputmode="numeric" pattern="\d{7,8}" title="El DNI debe tener entre 7 y 8 dígitos" placeholder="DNI..." required>
         </div>
 
         <div class="form-group">
@@ -38,12 +38,12 @@
 
         <div class="form-group">
             <label for="phone_number">Telefono <span>*</span></label>
-            <input type="text" id="phone_number" name="phone_number" maxlength="100" placeholder="Telefono..." required>
+            <input type="text" id="phone_number" name="phone_number" minlength="10" maxlength="15" inputmode="numeric" pattern="\d{10,15}" title="El teléfono debe tener entre 10 y 15 dígitos" placeholder="Telefono..." required>
         </div>
 
         <div class="form-group">
-            <label for="email">Email <span>*</span></label>
-            <input type="text" id="email" name="email" maxlength="100" placeholder="Email..." required>
+            <label for="email">Correo Electrónico <span>*</span></label>
+            <input type="email" id="email" name="email" maxlength="100" pattern="[^@\s.]+(\.[^@\s.]+)*@[^@\s.]+(\.[^@\s.]+)*\.[A-Za-z]{2,}" title="Ingresá un correo electrónico válido" placeholder="Correo Electrónico..." required>
         </div>
 
         <div class="form-group">

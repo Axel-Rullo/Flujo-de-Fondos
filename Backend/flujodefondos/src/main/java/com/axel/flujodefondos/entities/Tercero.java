@@ -13,7 +13,7 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Tercero {
     Long id_clipro;
-    String nombre;
+    String razon_social;
     String dni_cuit;
     String telefono;
     String email;

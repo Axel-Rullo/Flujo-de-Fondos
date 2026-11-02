@@ -26,6 +26,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return () => ipcRenderer.off('window-state', handler);
     },
 
-    onBackendReady: (callback) => ipcRenderer.once('backend-ready', callback),
-    onBackendError: (callback) => ipcRenderer.once('backend-error', callback)
+    // Usar 'on' en vez de 'once' para que sobrevivan reloads (F5 / Ctrl+R)
+    onBackendReady: (callback) => ipcRenderer.on('backend-ready', callback),
+    onBackendError: (callback) => ipcRenderer.on('backend-error', callback)
 });

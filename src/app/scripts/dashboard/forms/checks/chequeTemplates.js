@@ -1,6 +1,6 @@
 window.ChequeTemplates = {
     //////////////////////////////////////////////
-    // 📊 TABLA - CHEQUES PROPIOS
+    // 🔍 VISOR DE CHEQUE
     //////////////////////////////////////////////
 
     fillChequeModal: async function(ch, container) {
@@ -18,7 +18,7 @@ window.ChequeTemplates = {
         if (btnImputar) btnImputar.style.display = bloqueado ? 'none' : '';
 
         const cheque = await window.ChequeService.getCheque(ch.id_cheque);
-        
+
         const view = container.id === 'view_cheque' ? container : container.querySelector('#view_cheque');
         view.dataset.id = cheque.id_cheque;
         view.dataset.clase = cheque.clase;
@@ -27,7 +27,7 @@ window.ChequeTemplates = {
         // ── ENCABEZADO ──
         container.querySelector('.number').textContent = 'N° ' + (cheque.numero || '--') + ' (' + cheque.id_cheque + ')';
         container.querySelector('.type').textContent = (cheque.clase === 'P' ? 'Cheque Propio' : 'Cheque de Terceros') + ' (' + (cheque.tipo === 'C' ? 'Corriente' : 'Diferido') + ')';
-        container.querySelector('.cash').textContent = 'IMPORTE: $ ' + (cheque.importe || '--');
+        container.querySelector('.cash').textContent = 'IMPORTE: $ ' + (formatearImporte(cheque.importe) || '--');
 
         // ── ESTADO ──
         const estados = {
@@ -97,95 +97,51 @@ window.ChequeTemplates = {
         }
     },
 
-    crearTablaChequesEmitidos: async function(data) {
-        if (this.tablaEmitidos) {
-            try { await this.tablaEmitidos.destroy(); } catch (e) {}
-            this.tablaEmitidos = null;
+    //////////////////////////////////////////////
+    // 📊 TABLA - CARTERA
+    //////////////////////////////////////////////
+
+    crearTablaCartera: async function(data) {
+        if (this.tablaCartera) {
+            try { await this.tablaCartera.destroy(); } catch (e) {}
+            this.tablaCartera = null;
         }
-        
-        const selectorEmitidos = document.querySelector("#tabla-cheques-emitidos") ? "#tabla-cheques-emitidos" : "#tabla-cheques-historial";
-        this.tablaEmitidos = new Tabulator(selectorEmitidos, {
+
+        this.tablaCartera = new Tabulator("#tabla-cheques-cartera", {
             index: "id_cheque",
             data: data,
-            height: this.alturaTabla(selectorEmitidos),
+            height: this.alturaTabla("#tabla-cheques-cartera"),
             columnDefaults: {headerSort:false, resizable:false},
             layout: "fitColumns",
             rowFormatter: this.formatearFilaEstado,
             columns: [
-                { title: "",                field: "tipo",          widthGrow: 1, hozAlign: "center"},
-                { title: "AÑO",             field: "fecha_pago",    widthGrow: 5, hozAlign: "center", formatter: (cell) => this.formatearAnio(cell) || '--'},
-                { title: "FECHA COBRO",     field: "fecha_pago",    widthGrow: 11, hozAlign: "center", formatter: (cell) => invertirFecha(this.formatearFechaCobro(cell)) || '--'},
-                { title: "BANCO",           field: "cuenta_propia_emision", widthGrow: 22 },
-                { title: "NÚMERO",          field: "numero",        widthGrow: 18 },
-                { title: "IMPORTE",         field: "importe",       widthGrow: 18, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2} },
-                { title: "DESTINO",         field: "clipro_emision",        widthGrow: 25}
+                { title: "",             field: "tipo",                   widthGrow: 1,  hozAlign: "center"},
+                { title: "AÑO",          field: "fecha_pago",             widthGrow: 5,  hozAlign: "center", formatter: (cell) => this.formatearAnio(cell) || '--'},
+                { title: "FECHA COBRO",  field: "fecha_pago",             widthGrow: 11, hozAlign: "center", formatter: (cell) => invertirFecha(this.formatearFechaCobro(cell)) || '--'},
+                { title: "CLASE",        field: "clase",                  widthGrow: 9,  hozAlign: "center", formatter: this.formatearClase},
+                { title: "CLIENTE/PROV", field: "clipro_emision",         widthGrow: 22},
+                { title: "CUENTA/BANCO", field: "cuenta_propia_emision",  widthGrow: 20, formatter: this.formatearCuentaBanco},
+                { title: "NÚMERO",       field: "numero",                 widthGrow: 16},
+                { title: "IMPORTE",      field: "importe",                widthGrow: 16, hozAlign: "right", formatter: (cell) => '$ ' + formatearImporte(cell.getValue())}
             ]
         });
 
-        this.tablaEmitidos.on("rowDblClick", function(e, row) {
-            var datos = row.getData();
-            abrirModal('views/forms/checks/view_cheque.html').then(modalContainer =>{
-                return ChequeTemplates.fillChequeModal(datos, modalContainer);
-            }).catch(err =>{
-                console.error("Error al hacer doble click en CH Propios", err)
-            });
-        });
+        this.tablaCartera.on("rowDblClick", this.abrirVisor);
 
-        return this.tablaEmitidos;
+        return this.tablaCartera;
     },
 
-    crearTablaChequesACobrar: async function(data) {
-        if (this.tablaACobrar) {
-            try { await this.tablaACobrar.destroy(); } catch (e) {}
-            this.tablaACobrar = null;
+    //////////////////////////////////////////////
+    // 📊 TABLA - HISTORIAL
+    //////////////////////////////////////////////
+
+    crearTablaHistorial: async function(data) {
+        if (this.tablaHistorial) {
+            try { await this.tablaHistorial.destroy(); } catch (e) {}
+            this.tablaHistorial = null;
         }
 
-        const selectorACobrar = document.querySelector("#tabla-cheques-acobrar") ? "#tabla-cheques-acobrar" : "#tabla-cheques-historial";
-        this.tablaACobrar = new Tabulator(selectorACobrar, {
-            index: "id_cheque",
-            data: data,
-            height: this.alturaTabla(selectorACobrar),
-            columnDefaults: {headerSort:false, resizable:false},
-            layout: "fitColumns",
-            rowFormatter: this.formatearFilaEstado,
-            columns: [
-                { title: "",                field: "tipo",            widthGrow: 1, hozAlign: "center"},
-                { title: "AÑO",             field: "fecha_pago",      widthGrow: 5, hozAlign: "center", formatter: (cell) => this.formatearAnio(cell) || '--'},
-                { title: "FECHA COBRO",     field: "fecha_pago",      widthGrow: 11, hozAlign: "center", formatter: (cell) => invertirFecha(this.formatearFechaCobro(cell)) || '--'},
-                { title: "CLIENTE",         field: "clipro_emision",  widthGrow: 14},
-                { title: "BANCO",           field: "banco_emision",   widthGrow: 16},
-                { title: "NÚMERO",          field: "numero",          widthGrow: 16},
-                { title: "IMPORTE",         field: "importe",         widthGrow: 14, hozAlign: "right", formatter: "money", formatterParams: {symbol: "$", symbolAfter: false, precision: 2}},
-                { title: "FECHA DESTINO",   field: "fecha_destino",   widthGrow: 12, hozAlign: "center", formatter: (cell) => invertirFecha(cell.getValue()) || '--'},
-                { title: "DESTINO", field: "clipro_imputar", widthGrow: 14, formatter: (cell) => {
-                    const d = cell.getData();
-                    const valor = d.uso === 'D' ? d.cuenta_propia_imputar : d.clipro_imputar;
-                    cell.getElement().style.textAlign = valor ? '' : 'center';
-                    return valor || '--';
-                    } 
-                },
-            ]
-        });
-
-        this.tablaACobrar.on("rowDblClick", function(e, row) {
-            var datos = row.getData();
-            abrirModal('views/forms/checks/view_cheque.html').then(modalContainer =>{
-                return ChequeTemplates.fillChequeModal(datos, modalContainer);
-            }).catch(err =>{
-                console.error("Error al hacer doble click en CH Terceros", err)
-            });
-        });
-
-        return this.tablaACobrar;
-    },
-
-    crearTablaChequesRechAnul: async function(data) {
-        if (this.tablaRechAnul) {
-            try { await this.tablaRechAnul.destroy(); } catch (e) {}
-            this.tablaRechAnul = null;
-        }
-
-        this.tablaRechAnul = new Tabulator("#tabla-cheques-historial", {
+        this.tablaHistorial = new Tabulator("#tabla-cheques-historial", {
             index: "id_cheque",
             data: data,
             height: this.alturaTabla("#tabla-cheques-historial"),
@@ -193,26 +149,42 @@ window.ChequeTemplates = {
             layout: "fitColumns",
             rowFormatter: this.formatearFilaEstado,
             columns: [
-                { title: "FECHA DESTINO",                field: "fecha_destino",            widthGrow: 12, hozAlign: "center", formatter: (cell) => invertirFecha((cell.getValue())) || '--'},
-                { title: "NÚMERO",                field: "numero",            widthGrow: 16},
-                { title: "IMPORTE",                field: "importe",            widthGrow: 14, hozAlign: "right"},
-                { title: "CLIENT/PROV EMISIÓN",                field: "clipro_emision",            widthGrow: 20},
-                { title: "CUENTA EMISIÓN",         field: "cuenta_propia_emision",  widthGrow: 16, formatter: (cell) => { const d = cell.getData(); return d.clase === 'P' ? (d.cuenta_propia_emision || '--') : (d.banco_emision || '--'); } },
-                { title: "USUARIO",                field: "usuario",            widthGrow: 14},
-                { title: "MOTIVO",                field: "motivo",            widthGrow: 20}
+                { title: "FECHA DESTINO", field: "fecha_destino",          widthGrow: 12, hozAlign: "center", formatter: (cell) => invertirFecha(cell.getValue()) || '--'},
+                { title: "CLASE",         field: "clase",                  widthGrow: 9,  hozAlign: "center", formatter: this.formatearClase},
+                { title: "NÚMERO",        field: "numero",                 widthGrow: 16},
+                { title: "IMPORTE",       field: "importe",                widthGrow: 14, hozAlign: "right", formatter: (cell) => '$ ' + formatearImporte(cell.getValue())},
+                { title: "CLIENTE/PROV",  field: "clipro_emision",         widthGrow: 20},
+                { title: "CUENTA/BANCO",  field: "cuenta_propia_emision",  widthGrow: 16, formatter: this.formatearCuentaBanco},
+                { title: "USUARIO",       field: "usuario",                widthGrow: 14},
+                { title: "MOTIVO",        field: "motivo",                 widthGrow: 20}
             ]
         });
 
-        this.tablaRechAnul.on("rowDblClick", function(e, row) {
-            var datos = row.getData();
-            abrirModal('views/forms/checks/view_cheque.html').then(modalContainer =>{
-                return ChequeTemplates.fillChequeModal(datos, modalContainer);
-            }).catch(err =>{
-                console.error("Error al hacer doble click en CH Terceros", err)
-            });
-        });
+        this.tablaHistorial.on("rowDblClick", this.abrirVisor);
 
-        return this.tablaRechAnul;
+        return this.tablaHistorial;
+    },
+
+    //////////////////////////////////////////////
+    // 🧩 AUXILIARES DE TABLAS
+    //////////////////////////////////////////////
+
+    abrirVisor: function(e, row) {
+        const datos = row.getData();
+        abrirModal('views/forms/checks/view_cheque.html').then(modalContainer => {
+            return ChequeTemplates.fillChequeModal(datos, modalContainer);
+        }).catch(err => {
+            console.error("Error al hacer doble click en la lista de cheques", err);
+        });
+    },
+
+    formatearClase: function(cell) {
+        return cell.getValue() === 'P' ? 'Propio' : 'Tercero';
+    },
+
+    formatearCuentaBanco: function(cell) {
+        const d = cell.getData();
+        return (d.clase === 'P' ? d.cuenta_propia_emision : d.banco_emision) || '--';
     },
 
     // Alto hasta el borde inferior útil de #content, para que la tabla scrollee por dentro

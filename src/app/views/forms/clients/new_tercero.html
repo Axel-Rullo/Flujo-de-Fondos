@@ -1,0 +1,52 @@
+<h2 class="form-title">REGISTRAR NUEVO CLIENTE/PROVEEDOR</h2>
+
+<form id="form_new_tercero" class="form">
+    <div id="new_clipro" class="form-grid">
+
+        <div class="form-group">
+            <label for="razon_social">Razón Social <span>*</span></label>
+            <input type="text" id="razon_social" name="razon_social" maxlength="100" placeholder="Razón Social..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="dni">DNI/CUIT <span>*</span></label>
+            <div class="input-select">
+                <input type="text" id="dni" name="dni" inputmode="numeric" placeholder="DNI..." data-documento required>
+                <select id="doc_type" name="doc_type" data-documento-tipo required>
+                    <option value="DNI">DNI</option>
+                    <option value="CUIT">CUIT</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Telefono <span>*</span></label>
+            <input type="text" id="phone_number" name="phone_number" maxlength="15" inputmode="numeric" pattern="\d{10,15}" title="Entre 10 y 15 números, sin guiones" placeholder="Telefono..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Correo Electrónico <span>*</span></label>
+            <input type="email" id="email" name="email" maxlength="100" pattern="[^@\s.]+(\.[^@\s.]+)*@[^@\s.]+(\.[^@\s.]+)*\.[A-Za-z]{2,}" title="Ingresá un correo electrónico válido" placeholder="Correo Electrónico..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Tipo <span>*</span></label>
+            <select id="type" name="type" required>
+                <option value="" disabled selected hidden>Elije una opción...</option>
+                <option value="C">Cliente</option>
+                <option value="P">Proveedor</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="localidad">Localidad <span>*</span></label>
+            <input type="text" id="localidad" name="localidad" maxlength="100" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .\-]+" title="Solo letras" placeholder="Localidad..." required>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <button type="reset" id="btn-cancel" class="btn btn-cancel" data-modal="views/forms/clients/tercero_list.html">Volver</button>
+        <button type="submit" id="btn-primary" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

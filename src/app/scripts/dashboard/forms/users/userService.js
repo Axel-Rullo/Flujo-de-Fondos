@@ -1,7 +1,6 @@
 window.UserService = {
-    getUsers: async (estado) => {
-        const ruta = estado === 'N' ? '/user/list/inactive' : '/user/list/active';
-        return await apiGet(ruta);
+    getUsers: async (estado, busqueda = '', limit = 50, offset = 0) => {
+        return await apiPost('/user/list', { estado, busqueda, limit, offset });
     },
 
     reactivateUser: async (id) => {

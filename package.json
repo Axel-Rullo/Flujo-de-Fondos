@@ -5,7 +5,7 @@
     "main":  "src/electron/main.js",
     "scripts":  {
                     "start":  "electron .",
-                    "build:backend":  "cd Backend/flujodefondos && mvnw.cmd package -DskipTests -q && copy target\\flujodefondos.jar ..\\flujodefondos.jar",
+                    "build:backend":  "cd Backend/flujodefondos && mvnw.cmd package -DskipTests -q",
                     "build":  "npm run build:backend && electron-builder"
                 },
     "keywords":  [
@@ -34,12 +34,11 @@
                   "productName":  "Flujo de Fondos",
                   "files":  [
                                 "package.json",
-                                "src/**/*",
-                                "Profiles/**/*"
+                                "src/**/*"
                             ],
                   "extraResources":  [
                                          {
-                                             "from":  "Backend/flujodefondos.jar",
+                                             "from":  "Backend/flujodefondos/target/flujodefondos.jar",
                                              "to":  "Backend/flujodefondos.jar"
                                          },
                                          {

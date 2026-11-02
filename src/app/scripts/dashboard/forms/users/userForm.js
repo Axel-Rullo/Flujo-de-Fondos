@@ -10,7 +10,7 @@
             e.preventDefault();
 
             const user = {
-                nombre: form.querySelector('#name').value + ' ' + form.querySelector('#lastname').value,
+                nombre: form.querySelector('#lastname').value + ' ' + form.querySelector('#name').value,
                 usuario: form.querySelector('#username').value,
                 password: form.querySelector('#password').value,
                 dni: form.querySelector('#dni').value,
@@ -33,7 +33,7 @@
                 } else {
                     user.photo = form.dataset.photo || null;
                 }
-                
+
                 if (form.id === 'form_new_user') {
                     const res = await window.UserService.newUser(user);
                     if (!res.ok) {

@@ -24,14 +24,9 @@ public class UserController {
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
-    @GetMapping("/user/list/active")
-    public List<User> listAllActive() {
-        return userService.listAllActive();
-    }
-    
-    @GetMapping("/user/list/inactive")
-    public List<User> listAllInactive() {
-        return userService.listAllInactive();
+    @PostMapping("/user/list")
+    public List<User> listUsers(@RequestBody Map<String, Object> body) {
+        return userService.listUsers((String) body.get("estado"), (String) body.get("busqueda"), (int) body.get("limit"), (int) body.get("offset"));
     }
 
     // ── ALTA ─────────────────────────────────────────────────────────

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/tercero")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class TerceroController {
@@ -20,34 +20,30 @@ public class TerceroController {
 
     // ── LISTADO ──────────────────────────────────────────────────────
 
-    @GetMapping("/tercero/list/names")
+    @GetMapping("/list/names")
     public List<Tercero> findAllTercerosNames() {
         return terceroService.findAllTercerosNames();
     }
 
-    @GetMapping("/tercero/list/active")
-    public List<Tercero> listAllActive() {
-        return terceroService.listAllActive();
-    }
-
-    @GetMapping("/tercero/list/inactive")
-    public List<Tercero> listAllInactive() {
-        return terceroService.listAllInactive();
+    @GetMapping("/list")
+    public List<Tercero> listTerceros(
+            @RequestParam(defaultValue = "E") String estado,
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "50") int limit,
+            @RequestParam(defaultValue = "0") int offset) {
+        return terceroService.listTerceros(estado, search, limit, offset);
     }
 
     // ── ALTA ─────────────────────────────────────────────────────────
 
-    @PostMapping("/tercero/new")
+    @PostMapping("/new")
     public ResponseEntity<Map<String, Object>> newTercero(@RequestBody Tercero tercero) {
-        if (!terceroService.createTercero(tercero)) {
-            return ResponseEntity.ok(Map.of("ok", false, "mensaje", "El DNI/CUIT ingresado ya existe"));
-        }
-        return ResponseEntity.ok(Map.of("ok", true));
+        return toResponse(terceroService.createTercero(tercero));
     }
 
     // ── REACTIVACION ─────────────────────────────────────────────────
 
-    @PostMapping("/tercero/reactive")
+    @PostMapping("/reactive")
     public ResponseEntity<Map<String, Object>> reactiveTercero(@RequestBody Map<String, Long> body) {
         terceroService.reactiveTercero(body.get("id"));
         return ResponseEntity.ok(Map.of("ok", true));
@@ -55,17 +51,25 @@ public class TerceroController {
 
     // ── EDICIÓN ──────────────────────────────────────────────────────
 
-    @PostMapping("/tercero/edit")
+    @PostMapping("/edit")
     public ResponseEntity<Map<String, Object>> editTercero(@RequestBody Tercero tercero) {
-        terceroService.updateTercero(tercero);
-        return ResponseEntity.ok(Map.of("ok", true));
+        return toResponse(terceroService.updateTercero(tercero));
     }
 
     // ── BAJA ─────────────────────────────────────────────────────────
 
-    @PostMapping("/tercero/delete")
+    @PostMapping("/delete")
     public ResponseEntity<Map<String, Object>> deleteTercero(@RequestBody Map<String, Long> body) {
         terceroService.deleteTercero(body.get("id"));
+        return ResponseEntity.ok(Map.of("ok", true));
+    }
+
+    // ── RESPUESTA ────────────────────────────────────────────────────
+
+    private ResponseEntity<Map<String, Object>> toResponse(String error) {
+        if (error != null) {
+            return ResponseEntity.ok(Map.of("ok", false, "mensaje", error));
+        }
         return ResponseEntity.ok(Map.of("ok", true));
     }
 }
