@@ -7,7 +7,9 @@
         const total_ingreso = container.querySelector('.total_ingreso');
         const total_egreso = container.querySelector('.total_egreso');
         const total_flujo_neto = container.querySelector('.total_flujo_neto');
-        const cuentas_saldo_total = container.querySelector('.total_saldos_cuentas');
+
+        const container_saldo_total = document.querySelector('#saldo-cuenta-general-data');
+        const cuentas_saldo_total = container_saldo_total.querySelector('.total_saldos_cuentas');
 
         const totales = await window.movimientoService.mostrarTotales();
         const ingresos = totales.ingreso;

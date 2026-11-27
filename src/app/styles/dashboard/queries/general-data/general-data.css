@@ -141,6 +141,19 @@
     color: var(--white);
 }
 
+.total_saldos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.total_saldos .value,
+.total_saldos h2 {
+    color: var(--white);
+    font-size: 1.2rem;
+}
+
 /* ── CHEQUES: emitidos vs a cobrar, todo el ancho ──── */
 
 .cheque-header {

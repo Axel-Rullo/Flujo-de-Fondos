@@ -184,11 +184,13 @@ ipcMain.handle('window-is-maximized', () => win?.isMaximized() ?? false);
 //////////////////////////////////////////////
 
 function setupAutoUpdater() {
-    autoUpdater.checkForUpdatesAndNotify();
-
+    // 1. Registrar los eventos antes de consultar para no perder ninguna notificación
     autoUpdater.on('update-available',  () => console.log('🔄 Actualización disponible'));
     autoUpdater.on('update-downloaded', () => console.log('✅ Actualización descargada'));
     autoUpdater.on('error', (err)       => console.error('❌ Error en la auto-update:', err));
+
+    // 2. Buscar actualizaciones en GitHub Releases, descargarlas en segundo plano y notificar al usuario
+    autoUpdater.checkForUpdatesAndNotify();
 }
 
 //////////////////////////////////////////////
@@ -196,26 +198,39 @@ function setupAutoUpdater() {
 //////////////////////////////////////////////
 
 app.whenReady().then(async () => {
+    // 1. Arrancar el servidor Spring Boot (solo en producción; en desarrollo se corre aparte)
     startJavaBackend();
+
+    // 2. Crear y mostrar la ventana principal con la pantalla de carga
     createWindow();
+
+    // 3. Activar el auto-updater únicamente en la app empaquetada (no en modo desarrollo)
     if (app.isPackaged) setupAutoUpdater();
 
+    // 4. Vigilar inactividad del sistema cada 1 segundo (bloquea la sesión tras 5 min = 300 s)
     setInterval(() => {
         const idleSeconds = powerMonitor.getSystemIdleTime();
         if (idleSeconds >= 300 && !yaAvisado) {
             yaAvisado = true;
-            win.webContents.send('sesion-inactiva');
+            // Evitar error si la ventana ya fue cerrada o destruida
+            if (win && !win.isDestroyed()) {
+                win.webContents.send('sesion-inactiva');
+            }
         } else if (idleSeconds < 300 && yaAvisado) {
+            // Reiniciar la bandera cuando el usuario vuelve a tener actividad
             yaAvisado = false;
         }
     }, 1000);
 
+    // Helper para enviar mensajes al renderer asegurando que el HTML ya terminó de cargar
     async function sendToRenderer(channel) {
+        if (!win || win.isDestroyed()) return;
         if (win.webContents.isLoading())
             await new Promise(r => win.webContents.once('did-finish-load', r));
-        win.webContents.send(channel);
+        if (!win.isDestroyed()) win.webContents.send(channel);
     }
 
+    // 5. Esperar a que el backend responda en el puerto 8080 y avisar a la vista (login o error)
     try {
         await waitForBackend();
         await sendToRenderer('backend-ready');
@@ -224,6 +239,7 @@ app.whenReady().then(async () => {
         await sendToRenderer('backend-error');
     }
 
+    // 6. En macOS, volver a crear la ventana si se hace clic en el ícono del dock sin ventanas abiertas
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });

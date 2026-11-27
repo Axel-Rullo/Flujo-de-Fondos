@@ -6,6 +6,21 @@
         window.__ReportesInit = true;
 
         // ==================== REPORTES ====================
+        async function armarReporte(form, exportar) {
+            if (form.id === 'form_report_mensual') {
+                const desde = form.querySelector('#desde').value;
+                const hasta = form.querySelector('#hasta').value;
+                window.exportFecha = desde + ' ' + hasta;
+                const reporte = await window.movimientoService.reporteMensual(desde, hasta);
+                await window.movimientoTemplates.crearReporteMensual(reporte, desde, hasta, exportar);
+            } else {
+                const anio = parseInt(form.querySelector('#año').value);
+                window.exportFecha = anio;
+                const reporte = await window.movimientoService.reporteAnual(anio);
+                await window.movimientoTemplates.crearReporteAnual(reporte, exportar);
+            }
+        }
+
         document.addEventListener('submit', async (e) => {
             const form = e.target.closest('#form_report_anual, #form_report_mensual');
             if (!form) return;
@@ -13,23 +28,43 @@
             e.preventDefault();
 
             try {
-                if (form.id === 'form_report_mensual') {
-                    const desde = form.querySelector('#desde').value;
-                    const hasta = form.querySelector('#hasta').value;
-                    window.exportFecha = desde + ' ' + hasta;
-                    const reporte = await window.movimientoService.reporteMensual(desde, hasta);
-                    await window.movimientoTemplates.crearReporteMensual(reporte, desde, hasta);
-                } else if (form.id === 'form_report_anual') {
-                    const anio = parseInt(form.querySelector('#año').value);
-                    window.exportFecha = anio;
-                    const reporte = await window.movimientoService.reporteAnual(anio);
-                    await window.movimientoTemplates.crearReporteAnual(reporte);
-                }
+                await armarReporte(form, false);
                 form.reset();
                 window.cerrarModal();
             } catch (err) {
                 showAlert('Error al generar el reporte Anual/Mensual', 'error', 3000, 'center', true);
                 console.error('Error al generar el reporte anual/mensual:', err);
+            }
+        });
+
+        // ==================== EXPORTAR REPORTE ====================
+        document.addEventListener('click', async (e) => {
+            const boton = e.target.closest('#btn-export');
+            if (!boton) return;
+
+            const form = boton.closest('#form_report_anual, #form_report_mensual');
+            if (!form) {
+                showAlert('El botón Exportar no está dentro del formulario del reporte', 'error', 3000, 'center', true);
+                return;
+            }
+            if (!form.reportValidity()) {
+                showAlert('Completá los datos del reporte antes de exportar', 'warning', 3000, 'center', true);
+                return;
+            }
+
+            try {
+                await armarReporte(form, true);
+                const modal = await window.abrirModal('views/forms/reports/formato_report.html');
+                // abrirModal no avisa si no encuentra el html: se controla que el selector exista
+                if (!modal || !modal.querySelector('#new_report')) {
+                    showAlert('No se pudo abrir el selector de formato\nRevisá la ruta de formato_report.html', 'error', 4000, 'center', true);
+                    return;
+                }
+                // Al cerrar el selector de formato se descarta la tabla fuera de pantalla
+                window.addEventListener('modal:cerrado', () => window.movimientoTemplates.destruirReportes(), { once: true });
+            } catch (err) {
+                showAlert('Error al exportar el reporte Anual/Mensual', 'error', 3000, 'center', true);
+                console.error('Error al exportar el reporte anual/mensual:', err);
             }
         });
     }

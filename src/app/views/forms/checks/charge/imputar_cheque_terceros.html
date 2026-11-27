@@ -4,7 +4,7 @@
         <label for="fecha_destino">Fecha Destino <span>*</span></label>
         <input type="date" id="fecha_destino" name="fecha_destino" required>
     </div>
-    
+
     <div class="form-group">
         <label for="uso">Uso <span>*</span></label>
         <select id="uso" name="uso" required>
@@ -26,7 +26,12 @@
 
     <div class="form-group">
         <label for="id_concepto_imputar">Cuenta de Salida <span>*</span><small> (endoso)</small></label>
-        <select id="id_concepto_imputar" name="id_concepto_imputar" placeholder="Elije una opción..." disabled></select>
+        <div class="input-select">
+            <select id="id_concepto_imputar" name="id_concepto_imputar" placeholder="Elije una opción..." disabled></select>
+            <button type="button" id="btn_nuevo_concepto" data-submodal="views\forms\concepts\new_concepto.html" title="Nuevo concepto" aria-label="Nuevo concepto">
+                <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-reactive" xlink:href="#icon-reactive"/></svg>
+            </button>
+        </div>
     </div>
 
     <div class="form-actions">

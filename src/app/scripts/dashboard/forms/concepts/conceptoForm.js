@@ -3,6 +3,16 @@
     window.__conceptoFormsInit = true;
 
     function initConceptoForms() {
+        // ── ATAJO DESDE OTROS FORMULARIOS ──
+        document.addEventListener('click', e => {
+            if (e.target.closest('#btn_nuevo_concepto')) {
+                window.__conceptoDesdeForm = true;
+            } else if (e.target.closest('#form_new_concepto [data-close-modal]')) {
+                window.__conceptoDesdeForm = false;
+            }
+        });
+
+        // ── ALTA Y EDICIÓN DE CONCEPTO ──
         document.addEventListener('submit', async e => {
             const form = e.target;
             if (form.id !== 'form_new_concepto' && form.id !== 'form_edit_concepto') return;
@@ -10,7 +20,7 @@
             e.preventDefault();
             const concepto = {};
             concepto.nombre = form.querySelector('#name').value;
-            
+
                 try {
                     if (form.id === 'form_new_concepto') {
                         concepto.codigo = form.querySelector('#codigo').value
@@ -21,9 +31,16 @@
                             showAlert(res.mensaje, 'error', 3000, 'center', true);
                         } else {
                             showAlert('¡Concepto ingresado exitosamente!', 'success', 2000, 'top', false);
+                            const desdeForm = window.__conceptoDesdeForm;
+                            window.__conceptoDesdeForm = false;
                             form.reset();
-                            window.cerrarModal();
-                            cargarParcial('views/queries/conceptos.html')
+                            if (desdeForm) {
+                                window.cerrarSubModal();
+                                window.recargarConceptos?.();
+                            } else {
+                                window.cerrarModal();
+                                cargarParcial('views/queries/conceptos.html');
+                            }
                         }
                     } else {
                         concepto.id = Number(form.dataset.id);

@@ -321,3 +321,13 @@ async function loadFechaHoy (container) {
 }
 
 window.formLoaders = [loadSucursales, loadConceptos, loadTerceros, loadCuentasPropias, loadCuentasTerceros, loadFechaHoy];
+
+// Destruye los TomSelect de conceptos en el modal y los vuelve a crear
+window.recargarConceptos = function() {
+    const container = document.getElementById('modal-body');
+    if (!container) return;
+    container.querySelectorAll('#id_concepto_emision, #id_concepto_imputar, #id_concepto').forEach(select => {
+        if (select.tomselect) select.tomselect.destroy();
+    });
+    loadConceptos(container);
+};

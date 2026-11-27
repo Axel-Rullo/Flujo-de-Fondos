@@ -89,11 +89,25 @@ window.movimientoTemplates = {
                 this[nombre] = null;
             }
         }
+        // Quita el contenedor fuera de pantalla usado para exportar
+        if (this.contenedorExport) {
+            this.contenedorExport.remove();
+            this.contenedorExport = null;
+        }
+    },
+
+    // Contenedor fuera de pantalla: la tabla solo sirve para exportar
+    crearContenedorExport: function() {
+        const contenedor = document.createElement('div');
+        contenedor.style.cssText = 'position:absolute;left:-10000px;top:0;width:1200px;';
+        document.body.appendChild(contenedor);
+        this.contenedorExport = contenedor;
+        return contenedor;
     },
 
     // ===== REPORTE ANUAL =====
 
-    crearReporteAnual: async function(data) {
+    crearReporteAnual: async function(data, exportar = false) {
         await this.destruirReportes();
 
         // Nombre de cada clasificación
@@ -114,9 +128,14 @@ window.movimientoTemplates = {
             return Math.round(total * 100) / 100;
         };
 
-        // Oculta el panel del reporte y deja que la tabla tome el ancho de sus columnas
-        document.getElementById('report_panel').style.display = 'none';
-        document.getElementById('report_table').style.minWidth = 'max-content';
+        // Si se exporta, la tabla se arma fuera de pantalla; si no, se muestra en el panel
+        let contenedor = "#report_table";
+        if (exportar) {
+            contenedor = this.crearContenedorExport();
+        } else {
+            document.getElementById('report_panel').style.display = 'none';
+            document.getElementById('report_table').style.minWidth = 'max-content';
+        }
 
         // ----- Columnas -----
         const columnas = [
@@ -150,7 +169,7 @@ window.movimientoTemplates = {
         });
 
         // ----- Tabla -----
-        this.tablaReporteAnual = new Tabulator("#report_table", {
+        this.tablaReporteAnual = new Tabulator(contenedor, {
             index: "concepto",
             data: data,
             renderVertical: "basic",
@@ -186,7 +205,7 @@ window.movimientoTemplates = {
 
     // ===== REPORTE MENSUAL =====
 
-    crearReporteMensual: async function(datos, desde, hasta) {
+    crearReporteMensual: async function(datos, desde, hasta, exportar = false) {
         await this.destruirReportes();
 
                 const clasificaciones = { 1: "INGRESOS OPERATIVOS", 1.5: "EGRESOS OPERATIVOS", 2: "FINANCIACIÓN", 3: "INVERSIÓN" };
@@ -219,9 +238,14 @@ window.movimientoTemplates = {
         // Tabulator recibe una lista de filas
         const data = Object.values(filas);
 
-        // Oculta el panel del reporte y deja que la tabla tome el ancho de sus columnas
-        document.getElementById('report_panel').style.display = 'none';
-        document.getElementById('report_table').style.minWidth = 'max-content';
+        // Si se exporta, la tabla se arma fuera de pantalla; si no, se muestra en el panel
+        let contenedor = "#report_table";
+        if (exportar) {
+            contenedor = this.crearContenedorExport();
+        } else {
+            document.getElementById('report_panel').style.display = 'none';
+            document.getElementById('report_table').style.minWidth = 'max-content';
+        }
 
         // ----- Columnas -----
         const columnas = [
@@ -257,7 +281,7 @@ window.movimientoTemplates = {
         });
 
         // ----- Tabla -----
-        this.tablaReporteMensual = new Tabulator("#report_table", {
+        this.tablaReporteMensual = new Tabulator(contenedor, {
             index: "concepto",
             data: data,
             renderVertical: "basic",

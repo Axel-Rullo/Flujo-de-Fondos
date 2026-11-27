@@ -182,14 +182,16 @@
 }
 
 /* Botón utilizado para eliminar registros */
-.btn-delete {
+.btn-delete,
+.btn-export {
     background: var(--red);
     color: var(--white);
     border: 2px solid transparent;
 }
 
 /* Efecto al pasar el cursor sobre el botón de eliminar */
-.btn-delete:hover {
+.btn-delete:hover,
+.btn-export:hover {
     background: transparent;
     border: 2px solid var(--red);
 }
@@ -234,6 +236,29 @@
     border-left: 1px solid var(--gray);
     font-weight: bold;
     cursor: pointer;
+}
+
+/* El botón se adapta a su contenido y se separa del input con una línea */
+.input-select button {
+    flex: 0 0 auto;
+    background: var(--white);
+    color: var(--black);
+    border: 2px solid transparent;
+    border-left: 1px solid var(--gray);
+    padding: 8px 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Efecto al pasar el cursor sobre el botón */
+.input-select button:hover {
+    border: 2px solid var(--button-1);
+}
+
+/* El Tom Select dentro del campo ocupa todo el espacio que deja el botón */
+.input-select .ts-wrapper {
+    flex: 1;
+    min-width: 0;
 }
 
 /* ── TOM SELECT ───────────────────────────────────── */
